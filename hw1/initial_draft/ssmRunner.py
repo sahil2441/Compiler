@@ -1,5 +1,6 @@
 from stack import Stack
 from constants import KEYWORD
+from label import Label
 class SSM(object):
         
     def userSSMInput(self):
