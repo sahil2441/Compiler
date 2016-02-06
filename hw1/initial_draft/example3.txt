@@ -1,0 +1,63 @@
+x=10;
+y = - x 1;
+z = * x * y + x y;
+
+ildc 0 # 0 is at top of stack
+ildc 10 # 10 is at top of stack
+store # pop top 2 elements (0 and 10) and store value 10 at register 0
+ildc 1 # 1 is at top of stack
+ildc 0 # 0 is at top of stack
+load # the store value at register 0 (which is 10) is pushed to replace 0 at top of stack
+stack: 1,10
+
+ildc 1
+stack: 1,10,1
+
+isub
+stack: 1,9
+
+store # store value 9 at register 1
+stack: empty
+
+ildc 2
+stack: 2
+
+ildc 0
+stack: 2,0
+
+load # the sotre value of register 0 (which is 10) is pushed to replace 0 at top of stack
+stack: 2,10
+
+ildc 1
+stack: 2,10,1
+
+load # the store value of register 1(which is 9) is pushed to replace 1 at top of stack
+stack: 2,10,9
+
+ildc 0
+stack: 2,10,9,0
+
+load
+stack: 2,10,9,10
+
+ildc 1
+stack: 2,10,9,10,1
+
+load
+stack: 2,10,9,10,9
+
+iadd
+stack: 2,10,9,19
+
+imul
+stack: 2,10,9*19
+
+imul:
+stack: 2,10*9*19
+
+store: store 10*9*19 at register 2
+
+
+load: the top most element of the stack is the address in store, say 'a'
+	  the instruction pops the top-most element, and pushes the value at
+	  address a in store
