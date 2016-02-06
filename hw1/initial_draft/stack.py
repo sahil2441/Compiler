@@ -78,6 +78,17 @@ class Stack(object):
     # return top value from the stack    
     def getTop(self):
         return self.stackValues[-1]
+    
+    def stackLoad(self, register):
+        a = self.pop()
+        val = register[a]
+        self.push(val)
+    
+    def store(self, register):
+        a = self.pop()
+        i = self.pop()
+        register[a] = i
+    
                     
     def __str__(self):
         return '['+', '.join([str(i) for i in self.stackValues])+']'
