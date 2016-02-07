@@ -19,7 +19,7 @@ class Stack(object):
             topValue = self.stackValues[stackLength - 1]
             del self.stackValues[-1]
         else:
-            raise CustomException()
+            raise CustomException('Stack is Empty')
         return topValue
  
     # pop top two elements from stack, add them, and push their sum to the top of stack

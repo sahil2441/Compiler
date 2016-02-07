@@ -1,8 +1,11 @@
 from stack import Stack
 from constants import KEYWORD
-from label import Label
+from textParser import TextScanner
+import re
 class SSM(object):
         
+    def __init__(self):
+        self.labelPointers = dict()
     def userSSMInput(self):
         instText = ''
         while True:
@@ -24,36 +27,19 @@ class SSM(object):
             the index in the input arraylist.
             (Labels are separated by semi colons)
         
-        here:
-            here2:
-                here3:    
-        there:
-            jmp here
-            
-        ['ildc',
-        '20',   
-        'ildc',
-        '5',
-        'here:',
-        'ildc',
-        '1',
-        'isub',
-        'dup',
-        'jz',
-        'there',
-        'swap',
-        'ildc',
-        '10',
-        'iadd',
-        'swap',
-        'jmp',
-        'here',
-        'there:',
-        'pop']
-        
-        '''        
+    '''
+    
+    def prepareLabelPointers(self, iArray):
+        length = len(iArray)
+        index = 0
+        while index < length:
+            element = iArray[index]
+            if re.match(r"^[a-zA-Z][a-zA-Z0-9_]+:$", element):
+                self.labelPointers[element] = index
+            index += 1 
+    
 
-    def processInstructions(self,instructions):
+    def processInstructions(self, instructions):
         """
         This function processes the instruction list as received by user from commond line
         """
@@ -64,35 +50,33 @@ class SSM(object):
     
         # define new stack for program
         stack = Stack()    
-        register = dict()
+        register = dict()        
         while (True):
             if (index == len(instructions)):
                 # this flag indicates that instructions were processed successfully
                 flag=1
-                break
-    
+                break    
             elt = instructions[index]
             if (elt == KEYWORD.ILDC):
-                if (index + 1 >= len(instructions)):
-                    break
                 stack.push(int(instructions[index + 1]))  # just made this as parse int
                 index += 2
-            elif (elt == KEYWORD.JZ):       # jump Zero
-                # first check if the top most element is 0 in the stack
-                # if the element is not 0, proceed to next instruction                
-                if (index + 1 >= len(instructions)):
-                    break    
+            elif (elt == KEYWORD.JZ):                     # jump Zero                                    
                 stackTop = stack.pop()    
-                label = (instructions[index + 1])    
-                if (stackTop != 0):
-                    index += 2  # If the top element is not 0 in the stack 
-            elif (elt == KEYWORD.JNZ):       # jump Not Zero
-                # first check if the top most element is 0 in the stack
-                # if the element is not 0, proceed to next instruction                
-                if (index + 1 >= len(instructions)):
-                    break    
-                label = (instructions[index + 1])    
-                index += 2  # If the top element is 0 in the stack       
+                if (stackTop == 0):                       # if the top most element is 0 in the stack, then move instruction index to the label
+                    label = instructions[index + 1]    
+                    index = self.labelPointers[label+':']
+                else:
+                    index += 2                             # If the top element is not 0 in the stack , proceed to next instruction 
+            elif (elt == KEYWORD.JNZ):                    # jump Not Zero
+                stackTop = stack.pop()    
+                if (stackTop != 0):                       # if the top most element is NOT 0 in the stack, then move index to the label
+                    label = instructions[index + 1]    
+                    index = self.labelPointers[label+':']
+                else:
+                    index += 2                            # If the top element is equal to 0 in the stack , proceed to next instruction 
+            elif (elt == KEYWORD.JMP):
+                label = instructions[index + 1]
+                index = self.labelPointers[label+':']    
             elif (elt == KEYWORD.IADD):            
                 stack.stackAdd()  # 
                 index += 1 
@@ -119,25 +103,35 @@ class SSM(object):
                 index += 1         
             elif (elt == KEYWORD.STORE):            
                 stack.store(register)  # 
-                index += 1    
+                index += 1   
+            elif (elt == KEYWORD.POP):
+                stack.pop() 
+                index += 1
+            else:
+                index += 1
         # Check if instructions were processed successfully; if not flag will be =0
         if(flag):
-            print stack.pop()
+            print stack
         else:
             print "Exception Raised: Due to fault in input"
 
-
 if __name__ == "__main__":
-    ssm = SSM()
+    ssm = SSM() 
+    # get input from the user
     instructions = ssm.userSSMInput()
+    txtScan = TextScanner()
+    #SANITIZATION of Instructions
+    instructions = txtScan.removeComment(instructions)
+    txtScan.scanTextForSyntaxAndSemantics(instructions)
     iArray = instructions.split()
-    print iArray
+    ssm.prepareLabelPointers(iArray)
+    ssm.processInstructions(iArray)
+    
+    #print instructions
+    
+    #print iArray
 
     # TODO parse array to store labels into map -- Label are identified by statements terminating with a colon
 
     # TODO check and match whether each instruction belong to the given list of valid instructions -- or it could
     # belong to the set of labels
-
-    ssm.processInstructions(iArray)
-
-
