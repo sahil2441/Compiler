@@ -111,7 +111,7 @@ class SSM(object):
                 index += 1
         # Check if instructions were processed successfully; if not flag will be =0
         if(flag):
-            print stack
+            print stack.pop()
         else:
             print "Exception Raised: Due to fault in input"
 
@@ -121,17 +121,13 @@ if __name__ == "__main__":
     instructions = ssm.userSSMInput()
     txtScan = TextScanner()
     #SANITIZATION of Instructions
+    # remove comments
     instructions = txtScan.removeComment(instructions)
+    # scan text for proper form
     txtScan.scanTextForSyntaxAndSemantics(instructions)
     iArray = instructions.split()
+    # prepare pointers for label indexes
     ssm.prepareLabelPointers(iArray)
+    # Finally Run the Code
     ssm.processInstructions(iArray)
     
-    #print instructions
-    
-    #print iArray
-
-    # TODO parse array to store labels into map -- Label are identified by statements terminating with a colon
-
-    # TODO check and match whether each instruction belong to the given list of valid instructions -- or it could
-    # belong to the set of labels
