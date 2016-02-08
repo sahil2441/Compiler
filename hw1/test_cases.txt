@@ -58,3 +58,11 @@ jmp here
 here:
 jmp there
 there:
+
+
+################
+Example 3 (SC):
+Input:
+   x = 10;
+   y = - x 1;
+   z = * x * y + x y;
