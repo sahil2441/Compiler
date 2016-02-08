@@ -34,7 +34,13 @@ class SimpleCalculator(object):
 if __name__ == "__main__":
     sc = SimpleCalculator()
     # iText = sc.getUserInput()
-    iText = "x = 10;"
+
+    # Testing input
+    iText = "x = 10;" \
+            "y = - x 1;   " \
+            "z = * x * y + x y;"
+
+    # iText = "x = y;"\
 
     validate =Validate()
     validate.validateText(iText)

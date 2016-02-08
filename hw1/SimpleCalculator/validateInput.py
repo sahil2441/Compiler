@@ -8,18 +8,14 @@ class Validate(object):
         if not re.match(r"[a-z0-9_;=+ - *\s]", input):
             raise CustomException("Unsupported instruction found")
 
-        # split input based on semi colon so tht we have each statement
-        input=input.strip()
-        mylist = input.split(';')
-
-        if not self.analyzeStatement(mylist):
+        if not self.analyzeStatement(input):
             raise CustomException("Unsupported instruction found")
 
 
 
         return input
 
-    def analyzeStatement(self,mylist):
+    def analyzeStatement(self,input):
         """
         This method analyses each statement passed to it in a list.
         1. Each statement must have only one =
@@ -30,34 +26,45 @@ class Validate(object):
 
         :return: True/False
         """
+         # split input based on semi colon so tht we have each statement
+        input=input.strip()
+
+        if len(input)<1:
+            return False
+        if not input.endswith(';'):
+            return False
+
+        input=input[:len(input)-1]
+        mylist = input.split(';')
+
         # set to hold characters
         mySet=set()
 
         for statement in mylist:
             if len(statement)<1:
-                continue
+                return False
 
             statement=statement.strip()
             if statement.count('=') is not 1:
                 return False
 
             index =statement.index('=')
-            left=statement[:index]
-            right=statement[index+1:]
+            left=statement[:index].strip()
+            right=statement[index+1:].strip()
 
             if not self.isValidVariable(left):
-                return False
+                raise CustomException("Not a valid variable on LHS")
             if not self.isValidPrefixExpression(right):
-                return False
+                raise CustomException("Not a valid prefix expression")
             if not self.isVariablesInitialized(mySet,right):
-                return False
+                raise CustomException("Variables not initialized properly")
 
             #      Enter the current variable in the map/set.
             mySet.add(left)
 
         return True
 
-    def isVariablesInitialized(self,set,right):
+    def isVariablesInitialized(self, myset, right):
         """
         Confirm that each variable has been initialized and hence exists in map.
         :return: Boolean
@@ -68,11 +75,10 @@ class Validate(object):
         index=len(list)-1
 
         for element in reversed(list):
-
             if self.isInt(element):
               continue
 
-            elif(self.isValidVariable(element) and not set.__contains__(element)):
+            elif(self.isValidVariable(element) and not myset.__contains__(element)):
                 return False
         return True
 
@@ -113,7 +119,6 @@ class Validate(object):
             return True
 
         stack=Stack()
-        index=n-1
 
         # set of all operations
         mySet=set()
@@ -123,20 +128,17 @@ class Validate(object):
         mySet.add('*')
         mySet.add('-')
 
-
-        while(index>=0):
-            element=list[index]
+        # traverse list from right to left
+        for element in reversed(list):
             if self.isInt(element):
                 stack.push(element)
 
             elif self.isValidVariable(element):
-                stack.push(self,element)
+                stack.push(element)
 
             elif mySet.__contains__(element):
                 # equivalent to evaluating an expression and pushing the result
                 stack.pop()
-
-            index-=1
 
         stack.pop()
         return stack.stackValues == []
