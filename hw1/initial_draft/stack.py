@@ -78,15 +78,19 @@ class Stack(object):
     # return top value from the stack    
     def getTop(self):
         return self.stackValues[-1]
-    
+
+    # load: the top-most element of the stack is the address in store, say a.
+    # This instruction pops the top-most element, and pushes the value at address a in store.
     def stackLoad(self, register):
         a = self.pop()
         val = register[a]
         self.push(val)
-    
+
+    # store: Treat the second-to-top element on the stack as an address a, and the top-most element as an integer i.
+    # Pop the top two elements from stack. The cell at address a in the store is updated with integer i.
     def store(self, register):
-        a = self.pop()
         i = self.pop()
+        a = self.pop()
         register[a] = i
     
                     

@@ -14,9 +14,12 @@ class TextScanner(object):
         length = len(instText)
         if re.match(r"\s*$",instText):          # If the input is only having white spaces or empty string
             raise CustomException("No instructions found")
+
         while index < length:
             nextChar = instText[index]
-            if (nextChar == '#'):              # If '#' is encountered, then escape the remaining line from the input(till newline)
+
+            # If '#' is encountered, then escape the remaining line from the input(till newline)
+            if (nextChar == '#'):
                 while nextChar != '\n' and index < length:
                     index += 1
                     nextChar = instText[index]
@@ -26,20 +29,32 @@ class TextScanner(object):
         return noCommentText     
         
     def scanTextForSyntaxAndSemantics(self, instText):
-        nextChar = ''        
+        """ If the input string passes this function then it's a valid input and therefore can be
+        evaluated. This function checks whether it's a valid input.
+        :param instText:
+        :return:
+        """
+
+        nextChar = ''
         length = len(instText)
         currentText = ''
         prevText = ''
         index = 0
         labelList = list()
         labelVerifiedDict = dict()
+
         while index < length:
             nextChar = instText[index]    
-            if not re.match(r"[a-z0-9:_\s|-]", nextChar):                      # If we ever encounter a symbol which is not in the character set, then input is wrong
+
+            # If we ever encounter a symbol which is not in the character set, then input is wrong
+            if not re.match(r"[a-z0-9:_\s|-]", nextChar):
                 raise CustomException("Unsupported instruction found")        
-            if re.match(r"\s", nextChar):                 
-                if currentText != '':  
-                    if re.match(r"^-?[0-9]+$", currentText):                   # If the current text matches an integer
+
+            if re.match(r"\s", nextChar):
+                if currentText != '':
+
+                    # If the current text matches an integer
+                    if re.match(r"^-?[0-9]+$", currentText):
                         if prevText == '' or (prevText != '' and not prevText in KEYWORD.keysWithIntegerArguments):
                             raise CustomException('Bad instruction - Integer provided without supporting command')
                     elif prevText != '' and prevText in KEYWORD.keyList:
@@ -55,6 +70,7 @@ class TextScanner(object):
                         raise CustomException('Unsupported instruction found- '+ currentText )
                     prevText = currentText          
                 currentText = ''
+
             elif nextChar == ':':
                 currentText = currentText.strip()
                 if re.search(r"^[a-z][a-z0-9]*$", currentText):
@@ -75,7 +91,9 @@ class TextScanner(object):
             if not value:
                 raise CustomException('Undefined Label found- '+ key)
         return labelList                        
-            
+
+
+
     '''def areElementsValid(self, instList, labelList):
         index = 0
         length = len(instList)

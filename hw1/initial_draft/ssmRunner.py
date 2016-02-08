@@ -60,8 +60,8 @@ class SSM(object):
             if (elt == KEYWORD.ILDC):
                 stack.push(int(instructions[index + 1]))  # just made this as parse int
                 index += 2
-            elif (elt == KEYWORD.JZ):                     # jump Zero                                    
-                stackTop = stack.pop()    
+            elif (elt == KEYWORD.JZ):                     # jump Zero
+                stackTop = stack.pop()
                 if (stackTop == 0):                       # if the top most element is 0 in the stack, then move instruction index to the label
                     label = instructions[index + 1]    
                     index = self.labelPointers[label+':']
@@ -76,7 +76,8 @@ class SSM(object):
                     index += 2                            # If the top element is equal to 0 in the stack , proceed to next instruction 
             elif (elt == KEYWORD.JMP):
                 label = instructions[index + 1]
-                index = self.labelPointers[label+':']    
+                index = self.labelPointers[label+':']
+
             elif (elt == KEYWORD.IADD):            
                 stack.stackAdd()  # 
                 index += 1 
@@ -120,14 +121,18 @@ if __name__ == "__main__":
     # get input from the user
     instructions = ssm.userSSMInput()
     txtScan = TextScanner()
+
     #SANITIZATION of Instructions
     # remove comments
     instructions = txtScan.removeComment(instructions)
+
     # scan text for proper form
     txtScan.scanTextForSyntaxAndSemantics(instructions)
     iArray = instructions.split()
+
     # prepare pointers for label indexes
     ssm.prepareLabelPointers(iArray)
+
     # Finally Run the Code
     ssm.processInstructions(iArray)
     
