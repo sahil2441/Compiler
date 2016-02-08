@@ -91,7 +91,7 @@ class SimpleCalculator(object):
 if __name__ == "__main__":
     sc = SimpleCalculator()
     #iText = sc.getUserInput()
-    iText = "x = ~10;   y = - x 1;   z = * x * y + x y;    "
+    # iText = "x = ~10;   y = - x 1;   z = * x * y + x y;    "
     #iText = "x = 10;   y = - x 1;"
     # iText = sc.getUserInput()
     # Testing input
@@ -100,7 +100,8 @@ if __name__ == "__main__":
             "z = * x * y + x y;"
     # iText = "x = y;"\
     validate =Validate()
-    #validate.validateText(iText)
+    validate.validateText(iText)
+    print "Input Validated: \n" +iText
     sc.compile(iText)
 
     

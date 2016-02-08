@@ -5,13 +5,11 @@ import re
 
 class Validate(object):
     def validateText(self, input):
-        if not re.match(r"[a-z0-9_;=+ - *\s]", input):
+        if not re.match(r"[a-z0-9_;=+ - *~\s]", input):
             raise CustomException("Unsupported instruction found")
 
         if not self.analyzeStatement(input):
             raise CustomException("Unsupported instruction found")
-
-
 
         return input
 
@@ -41,13 +39,16 @@ class Validate(object):
         mySet=set()
 
         for statement in mylist:
+            # TODO: check ;; <--case
             if len(statement)<1:
                 return False
 
             statement=statement.strip()
+            # Step 1
             if statement.count('=') is not 1:
                 return False
 
+            # Break about '='
             index =statement.index('=')
             left=statement[:index].strip()
             right=statement[index+1:].strip()
@@ -64,13 +65,13 @@ class Validate(object):
 
         return True
 
-    def isVariablesInitialized(self, myset, right):
+    def isVariablesInitialized(self, variableSet, right):
         """
         Confirm that each variable has been initialized and hence exists in map.
         :return: Boolean
         """
         right=right.strip()
-        list=right.split(' ');
+        list=right.split();
 
         index=len(list)-1
 
@@ -78,7 +79,7 @@ class Validate(object):
             if self.isInt(element):
               continue
 
-            elif(self.isValidVariable(element) and not myset.__contains__(element)):
+            elif(self.isValidVariable(element) and not variableSet.__contains__(element)):
                 return False
         return True
 
@@ -91,7 +92,7 @@ class Validate(object):
         :return: True/False
         """
         left=left.strip()
-        pattern = '^\w+$'
+        pattern = '^[A-Za-z0-9_]+$'
 
         if not left[0].isalpha():
             return False
@@ -111,7 +112,7 @@ class Validate(object):
         :return: Boolean
         """
         right=right.strip()
-        list=right.split(' ');
+        list=right.split();
         n=len(list)
 
         # base case
@@ -127,6 +128,8 @@ class Validate(object):
         mySet.add('/')
         mySet.add('*')
         mySet.add('-')
+
+        # + * 4 3 - 2 3
 
         # traverse list from right to left
         for element in reversed(list):
@@ -144,12 +147,21 @@ class Validate(object):
         return stack.stackValues == []
 
     def isInt(self,x):
+        # if first character is ~ , then remove it
+        if x[0] is '~':
+            x=x[1:]
         try:
             int(x)
             return True
         except ValueError:
             return False
 
-
+if __name__ == '__main__':
+    iText = "x = * * 10 20 * 20 ~30;"
+            # "y = - x 1;   " \
+            # "z = * x * y + x y;"
+    val=Validate()
+    if Validate.validateText(val,iText):
+        print iText
 
 
