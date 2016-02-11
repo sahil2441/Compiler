@@ -115,6 +115,9 @@ class Validate(object):
 
             #      Enter the current variable in the map/set.
             mySet.add(left)
+            #     Also add the neagtive of current variable
+            mySet.add('~'+left)
+
 
         return True
 
@@ -144,6 +147,11 @@ class Validate(object):
 
         :return: True/False
         """
+        if len(left)<1:
+            return False
+        if left[0] is '~':
+            left=left[1:]
+
         left=left.strip()
         pattern = '^[A-Za-z0-9_]+$'
 
@@ -203,6 +211,10 @@ class Validate(object):
         # if first character is ~ , then remove it
         if x[0] is '~':
             x=x[1:]
+        pattern = '^[0-9]+$'
+        if not re.match(pattern,x):
+            return False
+
         try:
             int(x)
             return True
@@ -296,36 +308,49 @@ class SimpleCalculator(object):
                 index -= 1  
             instructionList.append(KEYWORD.STORE)                           
         for i in instructionList:
-            print i            
-                        
+            print i
+
+def fetchTestCases():
+    """
+    Function to generate a list of test cases.
+    :return:
+    """
+    list=[
+    'x ',
+    '= ',
+    '-1 ',
+    '~1 ',
+    ';   ',
+    'x = -1; ',
+    'x = ~1; ',
+    'x = x + 1; ',
+    'x = + x 1; ',
+    'x = x 1 +; ',
+    'x = - ~x ~1 ',
+    'x = - ~x ~1; ',
+    'x = * 1 ~x; ',
+    'x = * 1 6; ',
+    'x = 10; y = x;',
+    'x = 1; y = ~x; ',
+    'x = 1; y = * x x;',
+    'x = -1;y = 5;x = x  + y;']
+
+    return list
+
 if __name__ == "__main__":
     sc = SimpleCalculator()
     #iText = sc.getUserInput()
-    iText = 'x = 10; y = ~x; '
-    validate =Validate()
-    validate.validateText(iText)    
-    sc.compile(iText)
-    
-'''
 
-TEST CASES: 
-    x #invalid
-    = #invalid 
-    -1 #invalid
-    ~1 #invalid
-    ;   #invalid  
-    x = -1; #invalid   FAIL
-    x = ~1; #VALID
-    x = x + 1; #invalid
-    x = + x 1; #VALID
-    x = x 1 +; #invalid
-    x = - ~x ~1 #invalid
-    x = - ~x ~1; #invalid
-    x = * 1 ~x; #invalid  
-    x = * 1 6; #VALID
-    x = 10; y = x;#VALID
-    x = 1; y = ~x; #VALID   FAIL
-    x = 1; y = * x x;#VALID
-    x = -1;y = 5;x = x  + y;
-    
-'''
+    list=fetchTestCases()
+    validate =Validate()
+
+    # Automated testing ;)
+
+    for input in list:
+        try:
+            validate.validateText(input)
+            print "Validating Input: "+ input+ " PASSED"
+        except Exception:
+            print "Validating Input: "+ input+" FAILED"
+
+    # sc.compile(input)
