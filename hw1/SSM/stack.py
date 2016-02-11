@@ -83,7 +83,10 @@ class Stack(object):
     # This instruction pops the top-most element, and pushes the value at address a in store.
     def stackLoad(self, register):
         a = self.pop()
-        val = register[a]
+        if register.has_key(a):
+            val = register[a]
+        else:
+            raise CustomException("Compilation Error: invalid load address")
         self.push(val)
 
     # store: Treat the second-to-top element on the stack as an address a, and the top-most element as an integer i.

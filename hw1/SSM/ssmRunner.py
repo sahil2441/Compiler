@@ -34,8 +34,12 @@ class SSM(object):
         index = 0
         while index < length:
             element = iArray[index]
-            if re.match(r"^[a-zA-Z][a-zA-Z0-9_]+:$", element):
-                self.labelPointers[element] = index
+            if re.match(r"^[a-zA-Z][a-zA-Z0-9_]*\s*:$", element) or re.match(r"^:$",element):
+                if re.match(r"^:$",element):
+                    prevElement = iArray[index - 1]
+                    self.labelPointers[prevElement + element] = index
+                else:
+                    self.labelPointers[element] = index
             index += 1 
     
 
@@ -120,19 +124,32 @@ if __name__ == "__main__":
     ssm = SSM() 
     # get input from the user
     instructions = ssm.userSSMInput()
+    #instructions = "ildc 10 ildc 0 jz there here : ildc 44 there : ildc 10 imul dup swap "
     txtScan = TextScanner()
-
     #SANITIZATION of Instructions
     # remove comments
     instructions = txtScan.removeComment(instructions)
-
-    # scan text for proper form
-    txtScan.scanTextForSyntaxAndSemantics(instructions)
     iArray = instructions.split()
-
+    # scan text for proper form
+    txtScan.areElementsValid(iArray)
     # prepare pointers for label indexes
     ssm.prepareLabelPointers(iArray)
-
     # Finally Run the Code
     ssm.processInstructions(iArray)
     
+'''
+TEST CASES:
+     
+     a
+     ildc
+     ildc 10
+     iadd
+     store
+     load
+     :
+     here:
+     here :
+     here: ildc 10 ildc 20 iadd
+     ildc 10 # load value 10
+     ildc 10 ildc 0 jz there here : ildc 44 there : ildc 10 imul               
+'''
