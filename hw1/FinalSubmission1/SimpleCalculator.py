@@ -337,15 +337,13 @@ def fetchTestCases():
 
     return list
 
-if __name__ == "__main__":
-    sc = SimpleCalculator()
-    #iText = sc.getUserInput()
 
+def test():
     list=fetchTestCases()
     validate =Validate()
+    sc = SimpleCalculator()
 
-    # Automated testing ;)
-
+    # Test the first part of HW -- Validate
     for input in list:
         try:
             validate.validateText(input)
@@ -353,4 +351,29 @@ if __name__ == "__main__":
         except Exception:
             print "Validating Input: "+ input+" FAILED"
 
-    # sc.compile(input)
+    print '\n'
+
+    # Test the second part of HW -- Compile
+    for input in list:
+        try:
+            sc.compile(input)
+            print "Compiling Input: "+ input+ " PASSED"
+        except Exception:
+            print "Compiling Input: "+ input+" FAILED"
+
+
+
+
+
+if __name__ == "__main__":
+
+    # TODO: This needs to uncommented before submission
+
+    # sc = SimpleCalculator()
+    #iText = sc.getUserInput()
+    # validate =Validate()
+    # validate.validateText(iText)
+    # sc.compile(iText)
+
+    # TODO: Comment this before submission
+    test()
