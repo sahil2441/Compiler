@@ -333,7 +333,10 @@ def fetchTestCases():
     'x = 10; y = x;',
     'x = 1; y = ~x; ',
     'x = 1; y = * x x;',
-    'x = -1;y = 5;x = x  + y;']
+    'x = -1;y = 5;x = x  + y;',
+    'x=1;sasaas___sasa=* ~x ~1;'
+
+    ]
 
     return list
 
@@ -354,12 +357,12 @@ def test():
     print '\n'
 
     # Test the second part of HW -- Compile
-    for input in list:
-        try:
-            sc.compile(input)
-            print "Compiling Input: "+ input+ " PASSED"
-        except Exception:
-            print "Compiling Input: "+ input+" FAILED"
+    # for input in list:
+    #     try:
+    #         sc.compile(input)
+    #         print "Compiling Input: "+ input+ " PASSED"
+    #     except Exception:
+    #         print "Compiling Input: "+ input+" FAILED"
 
 
 
