@@ -342,6 +342,10 @@ def fetchTestCases():
 
 
 def test():
+    """
+    Method to automate testing the working of the program
+    :return:
+    """
     list=fetchTestCases()
     validate =Validate()
     sc = SimpleCalculator()
@@ -369,14 +373,10 @@ def test():
 
 
 if __name__ == "__main__":
+    sc = SimpleCalculator()
+    iText = sc.getUserInput()
+    validate =Validate()
+    validate.validateText(iText)
+    sc.compile(iText)
 
-    # TODO: This needs to uncommented before submission
-
-    # sc = SimpleCalculator()
-    #iText = sc.getUserInput()
-    # validate =Validate()
-    # validate.validateText(iText)
-    # sc.compile(iText)
-
-    # TODO: Comment this before submission
-    test()
+    # test()
