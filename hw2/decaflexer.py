@@ -30,17 +30,28 @@ reserved = {
     'while' : 'WHILE'} 
 
 tokens = list(reserved.values()) + \
-         ['IDENTIFIER', 'INTEGERCONSTANT','FLOATCONSTANT','STRINGCONSTANT', 'COMMENT',
+         ['IDENTIFIER', 'INTEGERCONSTANT','FLOATCONSTANTFIRST','FLOATCONSTANTSECOND','STRINGCONSTANT', 'COMMENT',
           'GEQ', 'LEQ', 'GT', 'LT', 'EQUALS', 'PLUS', 'MINUS', 'MULT', 'DIV', 'SEMICOLON','COLON',
-          'COMMA', 'ASSIGN','SPACE']
+          'COMMA', 'ASSIGN','SPACE','LPAREN','RPAREN','LCURLY','RCURLY','DOT']
 
 t_INTEGERCONSTANT = r'(\+|-)?[0-9]+$'
-    
-t_FLOATCONSTANT = r'[0-9]+(\.[0-9]+|((.)?[0-9]+)?(e|E)(\-|\+)?[0-9]+)$'
-    
+t_FLOATCONSTANTFIRST=r'[-+]?([0-9]+[.][0-9]+)'
+t_FLOATCONSTANTSECOND = r'[0-9]+(\.[0-9]+|((.)?[0-9]+)?(e|E)(\-|\+)?[0-9]+)$'
 t_ignore_COMMENT = r'(//.*|\/\*.*\*\/)'
-    
-t_STRINGCONSTANT = r'\"\"$' #TODO
+
+# A string containing ignored characters (spaces and tabs)
+t_ignore  = ' \t'
+
+"""
+String constants begin and end with a double quote ("). If the string itself contains a double
+quote, it is \escaped" with a backslash (\) as in the example string: "\"What?\" she exclaimed.".
+Escape sequences, such as \n and \t are used to place special characters such as newlines and tabs
+in a string. If the string contains a backslash, that is escaped too (e.g., "The computer simply
+responded with \"A:\\>\""). Strings must be contained within a single line.
+"""
+
+#TODO
+t_STRINGCONSTANT = r'\" \"$'
 
 t_GEQ = r'>='
 t_LEQ = r'<='
@@ -55,6 +66,12 @@ t_SEMICOLON = r';'
 t_COLON = r':'
 t_COMMA = r','
 t_ASSIGN = r'='
+t_LPAREN  = r'\('
+t_RPAREN  = r'\)'
+t_LCURLY  = r'\{'
+t_RCURLY  = r'\}'
+t_DOT= r'\.'
+
 
 
 def t_IDENTIFIER(t):
@@ -73,34 +90,25 @@ def t_error(t):
     
 lexer = lex.lex()
 
+def feedInput():
+    file=open('test_case_1.txt')
+    data = file.read()
+    file.close()
+    # Give the lexer some input
+    lexer.input(data)
+
+
+def print_token():
+    # Tokenize
+    while True:
+        tok = lexer.token()
+        if not tok:
+            break      # No more input
+        print(tok)
+
 if __name__ == '__main__':
-     lex.runmain()
-
-# Test it out
-data = '''class nrfib{
-public static void main() {
-int n, i, fn, fn_prev;
-n = In.scan_int();
-fn = 1;
-fn_1 = 0;
-for(i=1; i<n; i=i+1) {
-fn = fn_prev + fn;
-fn_prev = fn - fn_prev;
-}
-Out.print("Fib = ");
-Out.print(fn);
-Out.print("\n");
-}
-}'''
-
-# Give the lexer some input
-lexer.input(data)
-
-# Tokenize
-while True:
-    tok = lexer.token()
-    if not tok: 
-        break      # No more input
-    print(tok)
-    
+    feedInput()
+    lex.lex()
+    # lex.runmain()
+    print_token()
   
