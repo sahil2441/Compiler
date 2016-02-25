@@ -28,7 +28,7 @@ def p_classdecl(p):
 def p_class_body_decl_helper(p):
     ''' class_body_decl_helper : class_body_decl
                                 | class_body_decl class_body_decl_helper '''
-    
+
 def p_class_body_decl(p):
    '''class_body_decl : field_decl
                        | method_decl
@@ -42,7 +42,8 @@ def p_modifier(p):
                 | PRIVATE
                 | STATIC
                 | PUBLIC STATIC
-                | PRIVATE STATIC '''
+                | PRIVATE STATIC
+                | empty'''
 
 def p_var_decl(p):
     'var_decl : type variables SEMICOLON'
@@ -64,6 +65,56 @@ def p_variable(p):
 def p_variable_array(p):
     '''variable_array : LSQUARE RSQUARE
                     |  LSQUARE RSQUARE variable_array '''
+
+def p_method_decl(p):
+    '''method_decl :  modifier type id LPAREN RPAREN block
+                    | modifier type id LPAREN formals RPAREN block
+                    | modifier VOID id LPAREN RPAREN block
+                    | modifier VOID id LPAREN formals RPAREN block'''
+
+def p_constructor_decl(p):
+    '''constructor_decl : modifier IDENTIFIER LPAREN RPAREN block
+                        | modifier IDENTIFIER LPAREN formals RPAREN block'''
+
+def p_formals(p):
+    '''formals : formal_param
+               | formal_param,formal_param'''
+
+def p_formal_param(p):
+    '''formal_param : type variable'''
+
+def p_block(p):
+    '''block : LCURLY stmthelper RCURLY
+              | LCURLY RCURLY'''
+
+def p_stmthelper(p):
+    '''stmthelper : stmt | stmt stmthelper'''
+
+def p_stmt(p):
+    '''stmt : IF LPAREN expr RPAREN stmt
+             | IF LPAREN expr RPAREN stmt ELSE stmt
+             | WHILE LPAREN expr RPAREN stmt
+             | FOR LPAREN SEMICOLON SEMICOLON RPAREN stmt
+             | FOR LPAREN stmt_expr SEMICOLON SEMICOLON RPAREN stmt
+             | FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON RPAREN stmt
+             | FOR LPAREN stmt_expr SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+             | FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt
+             | FOR LPAREN SEMICOLON expr SEMICOLON RPAREN stmt
+             | FOR LPAREN SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt
+             | FOR LPAREN SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+             | FOR LPAREN SEMICOLON SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+             | RETURN SEMICOLON
+             | RETURN expr SEMICOLON
+             | stmt_expr SEMICOLON
+             | BREAK SEMICOLON
+             | CONTINUE SEMICOLON
+             | block
+             | var_decl
+             | SEMICOLON'''
+
+def p_empty(t):
+    'empty : '
+    pass
 
 def p_error(t):
     print("Whoa. Error!")
