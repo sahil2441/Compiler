@@ -3,140 +3,2661 @@ Created by PLY version 3.8 (http://www.dabeaz.com/ply)
 Unused terminals:
 
     DO
-    FLOATCONSTANTFIRST
-    RETURN
     STRINGCONSTANT
     NOTEQUALS
-    VOID
-    INTEGERCONSTANT
-    WHILE
-    NEW
     DIV
-    NULL
-    TRUE
     MINUS
     MULT
     COMMENT
     GEQ
-    RPAREN
     LEQ
     LT
-    CONTINUE
     PLUS
-    DOT
     COLON
     GT
-    FOR
     SPACE
     ASSIGN
     EQUALS
-    ELSE
-    LPAREN
-    IF
     AND
-    FLOATCONSTANTSECOND
-    FALSE
     OR
-    BREAK
-    THIS
     NOT
-    SUPER
 
 Grammar
 
 Rule 0     S' -> classdecl
-Rule 1     classdecl -> CLASS IDENTIFIER LCURLY class_body_decl RCURLY
-Rule 2     classdecl -> CLASS IDENTIFIER EXTENDS IDENTIFIER LCURLY class_body_decl RCURLY
-Rule 3     class_body_decl -> field_decl
-Rule 4     class_body_decl -> method_decl
-Rule 5     class_body_decl -> constructor_decl
-Rule 6     field_decl -> modifier var_decl
-Rule 7     modifier -> PUBLIC
-Rule 8     modifier -> PRIVATE
-Rule 9     modifier -> STATIC
-Rule 10    modifier -> PUBLIC STATIC
-Rule 11    modifier -> PRIVATE STATIC
-Rule 12    var_decl -> type variables SEMICOLON
-Rule 13    type -> INT
-Rule 14    type -> FLOAT
-Rule 15    type -> BOOLEAN
-Rule 16    type -> IDENTIFIER
-Rule 17    variables -> variable
-Rule 18    variables -> variable COMMA variables
-Rule 19    variable -> IDENTIFIER
-Rule 20    variable -> IDENTIFIER variable_array
-Rule 21    variable_array -> LSQUARE RSQUARE
-Rule 22    variable_array -> LSQUARE RSQUARE variable_array
+Rule 1     classdecl -> CLASS IDENTIFIER LCURLY class_body_decl_helper RCURLY
+Rule 2     classdecl -> CLASS IDENTIFIER EXTENDS IDENTIFIER LCURLY class_body_decl_helper RCURLY
+Rule 3     class_body_decl_helper -> class_body_decl
+Rule 4     class_body_decl_helper -> class_body_decl class_body_decl_helper
+Rule 5     class_body_decl -> field_decl
+Rule 6     class_body_decl -> method_decl
+Rule 7     class_body_decl -> constructor_decl
+Rule 8     field_decl -> modifier var_decl
+Rule 9     modifier -> PUBLIC
+Rule 10    modifier -> PRIVATE
+Rule 11    modifier -> STATIC
+Rule 12    modifier -> PUBLIC STATIC
+Rule 13    modifier -> PRIVATE STATIC
+Rule 14    modifier -> empty
+Rule 15    var_decl -> type variables SEMICOLON
+Rule 16    type -> INT
+Rule 17    type -> FLOAT
+Rule 18    type -> BOOLEAN
+Rule 19    type -> IDENTIFIER
+Rule 20    variables -> variable
+Rule 21    variables -> variable COMMA variables
+Rule 22    variable -> IDENTIFIER
+Rule 23    variable -> IDENTIFIER variable_array
+Rule 24    variable_array -> LSQUARE RSQUARE
+Rule 25    variable_array -> LSQUARE RSQUARE variable_array
+Rule 26    method_decl -> modifier type IDENTIFIER LPAREN RPAREN block
+Rule 27    method_decl -> modifier type IDENTIFIER LPAREN formals RPAREN block
+Rule 28    method_decl -> modifier VOID IDENTIFIER LPAREN RPAREN block
+Rule 29    method_decl -> modifier VOID IDENTIFIER LPAREN formals RPAREN block
+Rule 30    constructor_decl -> modifier IDENTIFIER LPAREN RPAREN block
+Rule 31    constructor_decl -> modifier IDENTIFIER LPAREN formals RPAREN block
+Rule 32    formals -> formal_param
+Rule 33    formals -> formal_param COMMA formal_param
+Rule 34    formal_param -> type variable
+Rule 35    block -> LCURLY stmthelper RCURLY
+Rule 36    block -> LCURLY RCURLY
+Rule 37    stmthelper -> stmt
+Rule 38    stmthelper -> stmt stmthelper
+Rule 39    stmt -> IF LPAREN expr RPAREN stmt
+Rule 40    stmt -> IF LPAREN expr RPAREN stmt ELSE stmt
+Rule 41    stmt -> WHILE LPAREN expr RPAREN stmt
+Rule 42    stmt -> FOR LPAREN SEMICOLON SEMICOLON RPAREN stmt
+Rule 43    stmt -> FOR LPAREN stmt_expr SEMICOLON SEMICOLON RPAREN stmt
+Rule 44    stmt -> FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON RPAREN stmt
+Rule 45    stmt -> FOR LPAREN stmt_expr SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+Rule 46    stmt -> FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt
+Rule 47    stmt -> FOR LPAREN SEMICOLON expr SEMICOLON RPAREN stmt
+Rule 48    stmt -> FOR LPAREN SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt
+Rule 49    stmt -> FOR LPAREN SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+Rule 50    stmt -> FOR LPAREN SEMICOLON SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+Rule 51    stmt -> RETURN SEMICOLON
+Rule 52    stmt -> RETURN expr SEMICOLON
+Rule 53    stmt -> stmt_expr SEMICOLON
+Rule 54    stmt -> BREAK SEMICOLON
+Rule 55    stmt -> CONTINUE SEMICOLON
+Rule 56    stmt -> block
+Rule 57    stmt -> var_decl
+Rule 58    stmt -> SEMICOLON
+Rule 59    expr -> empty
+Rule 60    stmt_expr -> empty
+Rule 61    literal -> INTEGERCONSTANT
+Rule 62    literal -> FLOATCONSTANTFIRST
+Rule 63    literal -> FLOATCONSTANTSECOND
+Rule 64    literal -> NULL
+Rule 65    literal -> TRUE
+Rule 66    literal -> FALSE
+Rule 67    primary -> literal
+Rule 68    primary -> THIS
+Rule 69    primary -> SUPER
+Rule 70    primary -> LPAREN expr RPAREN
+Rule 71    primary -> NEW IDENTIFIER LPAREN arguments RPAREN
+Rule 72    primary -> lhs
+Rule 73    primary -> method_invocation
+Rule 74    arguments -> expr
+Rule 75    arguments -> COMMA arguments
+Rule 76    lhs -> field_access
+Rule 77    lhs -> array_access
+Rule 78    method_invocation -> field_access LPAREN RPAREN
+Rule 79    method_invocation -> field_access LPAREN expr RPAREN
+Rule 80    field_access -> primary DOT IDENTIFIER
+Rule 81    field_access -> IDENTIFIER
+Rule 82    array_access -> primary LPAREN expr RPAREN
+Rule 83    empty -> <empty>
 
 Terminals, with rules where they appear
 
 AND                  : 
 ASSIGN               : 
-BOOLEAN              : 15
-BREAK                : 
+BOOLEAN              : 18
+BREAK                : 54
 CLASS                : 1 2
 COLON                : 
-COMMA                : 18
+COMMA                : 21 33 75
 COMMENT              : 
-CONTINUE             : 
+CONTINUE             : 55
 DIV                  : 
 DO                   : 
-DOT                  : 
-ELSE                 : 
+DOT                  : 80
+ELSE                 : 40
 EQUALS               : 
 EXTENDS              : 2
-FALSE                : 
-FLOAT                : 14
-FLOATCONSTANTFIRST   : 
-FLOATCONSTANTSECOND  : 
-FOR                  : 
+FALSE                : 66
+FLOAT                : 17
+FLOATCONSTANTFIRST   : 62
+FLOATCONSTANTSECOND  : 63
+FOR                  : 42 43 44 45 46 47 48 49 50
 GEQ                  : 
 GT                   : 
-IDENTIFIER           : 1 2 2 16 19 20
-IF                   : 
-INT                  : 13
-INTEGERCONSTANT      : 
-LCURLY               : 1 2
+IDENTIFIER           : 1 2 2 19 22 23 26 27 28 29 30 31 71 80 81
+IF                   : 39 40
+INT                  : 16
+INTEGERCONSTANT      : 61
+LCURLY               : 1 2 35 36
 LEQ                  : 
-LPAREN               : 
-LSQUARE              : 21 22
+LPAREN               : 26 27 28 29 30 31 39 40 41 42 43 44 45 46 47 48 49 50 70 71 78 79 82
+LSQUARE              : 24 25
 LT                   : 
 MINUS                : 
 MULT                 : 
-NEW                  : 
+NEW                  : 71
 NOT                  : 
 NOTEQUALS            : 
-NULL                 : 
+NULL                 : 64
 OR                   : 
 PLUS                 : 
-PRIVATE              : 8 11
-PUBLIC               : 7 10
-RCURLY               : 1 2
-RETURN               : 
-RPAREN               : 
-RSQUARE              : 21 22
-SEMICOLON            : 12
+PRIVATE              : 10 13
+PUBLIC               : 9 12
+RCURLY               : 1 2 35 36
+RETURN               : 51 52
+RPAREN               : 26 27 28 29 30 31 39 40 41 42 43 44 45 46 47 48 49 50 70 71 78 79 82
+RSQUARE              : 24 25
+SEMICOLON            : 15 42 42 43 43 44 44 45 45 46 46 47 47 48 48 49 49 50 50 50 51 52 53 54 55 58
 SPACE                : 
-STATIC               : 9 10 11
+STATIC               : 11 12 13
 STRINGCONSTANT       : 
-SUPER                : 
-THIS                 : 
-TRUE                 : 
-VOID                 : 
-WHILE                : 
+SUPER                : 69
+THIS                 : 68
+TRUE                 : 65
+VOID                 : 28 29
+WHILE                : 41
 error                : 
 
 Nonterminals, with rules where they appear
 
-class_body_decl      : 1 2
+arguments            : 71 75
+array_access         : 77
+block                : 26 27 28 29 30 31 56
+class_body_decl      : 3 4
+class_body_decl_helper : 1 2 4
 classdecl            : 0
-constructor_decl     : 5
-field_decl           : 3
-method_decl          : 4
-modifier             : 6
-type                 : 12
-var_decl             : 6
-variable             : 17 18
-variable_array       : 20 22
-variables            : 12 18
+constructor_decl     : 7
+empty                : 14 59 60
+expr                 : 39 40 41 44 46 47 48 52 70 74 79 82
+field_access         : 76 78 79
+field_decl           : 5
+formal_param         : 32 33 33
+formals              : 27 29 31
+lhs                  : 72
+literal              : 67
+method_decl          : 6
+method_invocation    : 73
+modifier             : 8 26 27 28 29 30 31
+primary              : 80 82
+stmt                 : 37 38 39 40 40 41 42 43 44 45 46 47 48 49 50
+stmt_expr            : 43 44 45 45 46 46 48 49 50 53
+stmthelper           : 35 38
+type                 : 15 26 27 34
+var_decl             : 8 57
+variable             : 20 21 34
+variable_array       : 23 25
+variables            : 15 21
 
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . classdecl
+    (1) classdecl -> . CLASS IDENTIFIER LCURLY class_body_decl_helper RCURLY
+    (2) classdecl -> . CLASS IDENTIFIER EXTENDS IDENTIFIER LCURLY class_body_decl_helper RCURLY
+
+    CLASS           shift and go to state 2
+
+    classdecl                      shift and go to state 1
+
+state 1
+
+    (0) S' -> classdecl .
+
+
+
+state 2
+
+    (1) classdecl -> CLASS . IDENTIFIER LCURLY class_body_decl_helper RCURLY
+    (2) classdecl -> CLASS . IDENTIFIER EXTENDS IDENTIFIER LCURLY class_body_decl_helper RCURLY
+
+    IDENTIFIER      shift and go to state 3
+
+
+state 3
+
+    (1) classdecl -> CLASS IDENTIFIER . LCURLY class_body_decl_helper RCURLY
+    (2) classdecl -> CLASS IDENTIFIER . EXTENDS IDENTIFIER LCURLY class_body_decl_helper RCURLY
+
+    LCURLY          shift and go to state 4
+    EXTENDS         shift and go to state 5
+
+
+state 4
+
+    (1) classdecl -> CLASS IDENTIFIER LCURLY . class_body_decl_helper RCURLY
+    (3) class_body_decl_helper -> . class_body_decl
+    (4) class_body_decl_helper -> . class_body_decl class_body_decl_helper
+    (5) class_body_decl -> . field_decl
+    (6) class_body_decl -> . method_decl
+    (7) class_body_decl -> . constructor_decl
+    (8) field_decl -> . modifier var_decl
+    (26) method_decl -> . modifier type IDENTIFIER LPAREN RPAREN block
+    (27) method_decl -> . modifier type IDENTIFIER LPAREN formals RPAREN block
+    (28) method_decl -> . modifier VOID IDENTIFIER LPAREN RPAREN block
+    (29) method_decl -> . modifier VOID IDENTIFIER LPAREN formals RPAREN block
+    (30) constructor_decl -> . modifier IDENTIFIER LPAREN RPAREN block
+    (31) constructor_decl -> . modifier IDENTIFIER LPAREN formals RPAREN block
+    (9) modifier -> . PUBLIC
+    (10) modifier -> . PRIVATE
+    (11) modifier -> . STATIC
+    (12) modifier -> . PUBLIC STATIC
+    (13) modifier -> . PRIVATE STATIC
+    (14) modifier -> . empty
+    (83) empty -> .
+
+    PUBLIC          shift and go to state 11
+    PRIVATE         shift and go to state 14
+    STATIC          shift and go to state 13
+    VOID            reduce using rule 83 (empty -> .)
+    IDENTIFIER      reduce using rule 83 (empty -> .)
+    INT             reduce using rule 83 (empty -> .)
+    FLOAT           reduce using rule 83 (empty -> .)
+    BOOLEAN         reduce using rule 83 (empty -> .)
+
+    class_body_decl_helper         shift and go to state 15
+    class_body_decl                shift and go to state 7
+    field_decl                     shift and go to state 8
+    constructor_decl               shift and go to state 9
+    method_decl                    shift and go to state 10
+    empty                          shift and go to state 12
+    modifier                       shift and go to state 6
+
+state 5
+
+    (2) classdecl -> CLASS IDENTIFIER EXTENDS . IDENTIFIER LCURLY class_body_decl_helper RCURLY
+
+    IDENTIFIER      shift and go to state 16
+
+
+state 6
+
+    (8) field_decl -> modifier . var_decl
+    (26) method_decl -> modifier . type IDENTIFIER LPAREN RPAREN block
+    (27) method_decl -> modifier . type IDENTIFIER LPAREN formals RPAREN block
+    (28) method_decl -> modifier . VOID IDENTIFIER LPAREN RPAREN block
+    (29) method_decl -> modifier . VOID IDENTIFIER LPAREN formals RPAREN block
+    (30) constructor_decl -> modifier . IDENTIFIER LPAREN RPAREN block
+    (31) constructor_decl -> modifier . IDENTIFIER LPAREN formals RPAREN block
+    (15) var_decl -> . type variables SEMICOLON
+    (16) type -> . INT
+    (17) type -> . FLOAT
+    (18) type -> . BOOLEAN
+    (19) type -> . IDENTIFIER
+
+    VOID            shift and go to state 18
+    IDENTIFIER      shift and go to state 22
+    INT             shift and go to state 17
+    FLOAT           shift and go to state 19
+    BOOLEAN         shift and go to state 21
+
+    var_decl                       shift and go to state 20
+    type                           shift and go to state 23
+
+state 7
+
+    (3) class_body_decl_helper -> class_body_decl .
+    (4) class_body_decl_helper -> class_body_decl . class_body_decl_helper
+    (3) class_body_decl_helper -> . class_body_decl
+    (4) class_body_decl_helper -> . class_body_decl class_body_decl_helper
+    (5) class_body_decl -> . field_decl
+    (6) class_body_decl -> . method_decl
+    (7) class_body_decl -> . constructor_decl
+    (8) field_decl -> . modifier var_decl
+    (26) method_decl -> . modifier type IDENTIFIER LPAREN RPAREN block
+    (27) method_decl -> . modifier type IDENTIFIER LPAREN formals RPAREN block
+    (28) method_decl -> . modifier VOID IDENTIFIER LPAREN RPAREN block
+    (29) method_decl -> . modifier VOID IDENTIFIER LPAREN formals RPAREN block
+    (30) constructor_decl -> . modifier IDENTIFIER LPAREN RPAREN block
+    (31) constructor_decl -> . modifier IDENTIFIER LPAREN formals RPAREN block
+    (9) modifier -> . PUBLIC
+    (10) modifier -> . PRIVATE
+    (11) modifier -> . STATIC
+    (12) modifier -> . PUBLIC STATIC
+    (13) modifier -> . PRIVATE STATIC
+    (14) modifier -> . empty
+    (83) empty -> .
+
+    RCURLY          reduce using rule 3 (class_body_decl_helper -> class_body_decl .)
+    PUBLIC          shift and go to state 11
+    PRIVATE         shift and go to state 14
+    STATIC          shift and go to state 13
+    VOID            reduce using rule 83 (empty -> .)
+    IDENTIFIER      reduce using rule 83 (empty -> .)
+    INT             reduce using rule 83 (empty -> .)
+    FLOAT           reduce using rule 83 (empty -> .)
+    BOOLEAN         reduce using rule 83 (empty -> .)
+
+    class_body_decl_helper         shift and go to state 24
+    class_body_decl                shift and go to state 7
+    field_decl                     shift and go to state 8
+    constructor_decl               shift and go to state 9
+    method_decl                    shift and go to state 10
+    empty                          shift and go to state 12
+    modifier                       shift and go to state 6
+
+state 8
+
+    (5) class_body_decl -> field_decl .
+
+    PUBLIC          reduce using rule 5 (class_body_decl -> field_decl .)
+    PRIVATE         reduce using rule 5 (class_body_decl -> field_decl .)
+    STATIC          reduce using rule 5 (class_body_decl -> field_decl .)
+    VOID            reduce using rule 5 (class_body_decl -> field_decl .)
+    IDENTIFIER      reduce using rule 5 (class_body_decl -> field_decl .)
+    INT             reduce using rule 5 (class_body_decl -> field_decl .)
+    FLOAT           reduce using rule 5 (class_body_decl -> field_decl .)
+    BOOLEAN         reduce using rule 5 (class_body_decl -> field_decl .)
+    RCURLY          reduce using rule 5 (class_body_decl -> field_decl .)
+
+
+state 9
+
+    (7) class_body_decl -> constructor_decl .
+
+    PUBLIC          reduce using rule 7 (class_body_decl -> constructor_decl .)
+    PRIVATE         reduce using rule 7 (class_body_decl -> constructor_decl .)
+    STATIC          reduce using rule 7 (class_body_decl -> constructor_decl .)
+    VOID            reduce using rule 7 (class_body_decl -> constructor_decl .)
+    IDENTIFIER      reduce using rule 7 (class_body_decl -> constructor_decl .)
+    INT             reduce using rule 7 (class_body_decl -> constructor_decl .)
+    FLOAT           reduce using rule 7 (class_body_decl -> constructor_decl .)
+    BOOLEAN         reduce using rule 7 (class_body_decl -> constructor_decl .)
+    RCURLY          reduce using rule 7 (class_body_decl -> constructor_decl .)
+
+
+state 10
+
+    (6) class_body_decl -> method_decl .
+
+    PUBLIC          reduce using rule 6 (class_body_decl -> method_decl .)
+    PRIVATE         reduce using rule 6 (class_body_decl -> method_decl .)
+    STATIC          reduce using rule 6 (class_body_decl -> method_decl .)
+    VOID            reduce using rule 6 (class_body_decl -> method_decl .)
+    IDENTIFIER      reduce using rule 6 (class_body_decl -> method_decl .)
+    INT             reduce using rule 6 (class_body_decl -> method_decl .)
+    FLOAT           reduce using rule 6 (class_body_decl -> method_decl .)
+    BOOLEAN         reduce using rule 6 (class_body_decl -> method_decl .)
+    RCURLY          reduce using rule 6 (class_body_decl -> method_decl .)
+
+
+state 11
+
+    (9) modifier -> PUBLIC .
+    (12) modifier -> PUBLIC . STATIC
+
+    VOID            reduce using rule 9 (modifier -> PUBLIC .)
+    IDENTIFIER      reduce using rule 9 (modifier -> PUBLIC .)
+    INT             reduce using rule 9 (modifier -> PUBLIC .)
+    FLOAT           reduce using rule 9 (modifier -> PUBLIC .)
+    BOOLEAN         reduce using rule 9 (modifier -> PUBLIC .)
+    STATIC          shift and go to state 25
+
+
+state 12
+
+    (14) modifier -> empty .
+
+    VOID            reduce using rule 14 (modifier -> empty .)
+    IDENTIFIER      reduce using rule 14 (modifier -> empty .)
+    INT             reduce using rule 14 (modifier -> empty .)
+    FLOAT           reduce using rule 14 (modifier -> empty .)
+    BOOLEAN         reduce using rule 14 (modifier -> empty .)
+
+
+state 13
+
+    (11) modifier -> STATIC .
+
+    VOID            reduce using rule 11 (modifier -> STATIC .)
+    IDENTIFIER      reduce using rule 11 (modifier -> STATIC .)
+    INT             reduce using rule 11 (modifier -> STATIC .)
+    FLOAT           reduce using rule 11 (modifier -> STATIC .)
+    BOOLEAN         reduce using rule 11 (modifier -> STATIC .)
+
+
+state 14
+
+    (10) modifier -> PRIVATE .
+    (13) modifier -> PRIVATE . STATIC
+
+    VOID            reduce using rule 10 (modifier -> PRIVATE .)
+    IDENTIFIER      reduce using rule 10 (modifier -> PRIVATE .)
+    INT             reduce using rule 10 (modifier -> PRIVATE .)
+    FLOAT           reduce using rule 10 (modifier -> PRIVATE .)
+    BOOLEAN         reduce using rule 10 (modifier -> PRIVATE .)
+    STATIC          shift and go to state 26
+
+
+state 15
+
+    (1) classdecl -> CLASS IDENTIFIER LCURLY class_body_decl_helper . RCURLY
+
+    RCURLY          shift and go to state 27
+
+
+state 16
+
+    (2) classdecl -> CLASS IDENTIFIER EXTENDS IDENTIFIER . LCURLY class_body_decl_helper RCURLY
+
+    LCURLY          shift and go to state 28
+
+
+state 17
+
+    (16) type -> INT .
+
+    IDENTIFIER      reduce using rule 16 (type -> INT .)
+
+
+state 18
+
+    (28) method_decl -> modifier VOID . IDENTIFIER LPAREN RPAREN block
+    (29) method_decl -> modifier VOID . IDENTIFIER LPAREN formals RPAREN block
+
+    IDENTIFIER      shift and go to state 29
+
+
+state 19
+
+    (17) type -> FLOAT .
+
+    IDENTIFIER      reduce using rule 17 (type -> FLOAT .)
+
+
+state 20
+
+    (8) field_decl -> modifier var_decl .
+
+    PUBLIC          reduce using rule 8 (field_decl -> modifier var_decl .)
+    PRIVATE         reduce using rule 8 (field_decl -> modifier var_decl .)
+    STATIC          reduce using rule 8 (field_decl -> modifier var_decl .)
+    VOID            reduce using rule 8 (field_decl -> modifier var_decl .)
+    IDENTIFIER      reduce using rule 8 (field_decl -> modifier var_decl .)
+    INT             reduce using rule 8 (field_decl -> modifier var_decl .)
+    FLOAT           reduce using rule 8 (field_decl -> modifier var_decl .)
+    BOOLEAN         reduce using rule 8 (field_decl -> modifier var_decl .)
+    RCURLY          reduce using rule 8 (field_decl -> modifier var_decl .)
+
+
+state 21
+
+    (18) type -> BOOLEAN .
+
+    IDENTIFIER      reduce using rule 18 (type -> BOOLEAN .)
+
+
+state 22
+
+    (30) constructor_decl -> modifier IDENTIFIER . LPAREN RPAREN block
+    (31) constructor_decl -> modifier IDENTIFIER . LPAREN formals RPAREN block
+    (19) type -> IDENTIFIER .
+
+    LPAREN          shift and go to state 30
+    IDENTIFIER      reduce using rule 19 (type -> IDENTIFIER .)
+
+
+state 23
+
+    (26) method_decl -> modifier type . IDENTIFIER LPAREN RPAREN block
+    (27) method_decl -> modifier type . IDENTIFIER LPAREN formals RPAREN block
+    (15) var_decl -> type . variables SEMICOLON
+    (20) variables -> . variable
+    (21) variables -> . variable COMMA variables
+    (22) variable -> . IDENTIFIER
+    (23) variable -> . IDENTIFIER variable_array
+
+    IDENTIFIER      shift and go to state 33
+
+    variables                      shift and go to state 31
+    variable                       shift and go to state 32
+
+state 24
+
+    (4) class_body_decl_helper -> class_body_decl class_body_decl_helper .
+
+    RCURLY          reduce using rule 4 (class_body_decl_helper -> class_body_decl class_body_decl_helper .)
+
+
+state 25
+
+    (12) modifier -> PUBLIC STATIC .
+
+    VOID            reduce using rule 12 (modifier -> PUBLIC STATIC .)
+    IDENTIFIER      reduce using rule 12 (modifier -> PUBLIC STATIC .)
+    INT             reduce using rule 12 (modifier -> PUBLIC STATIC .)
+    FLOAT           reduce using rule 12 (modifier -> PUBLIC STATIC .)
+    BOOLEAN         reduce using rule 12 (modifier -> PUBLIC STATIC .)
+
+
+state 26
+
+    (13) modifier -> PRIVATE STATIC .
+
+    VOID            reduce using rule 13 (modifier -> PRIVATE STATIC .)
+    IDENTIFIER      reduce using rule 13 (modifier -> PRIVATE STATIC .)
+    INT             reduce using rule 13 (modifier -> PRIVATE STATIC .)
+    FLOAT           reduce using rule 13 (modifier -> PRIVATE STATIC .)
+    BOOLEAN         reduce using rule 13 (modifier -> PRIVATE STATIC .)
+
+
+state 27
+
+    (1) classdecl -> CLASS IDENTIFIER LCURLY class_body_decl_helper RCURLY .
+
+    $end            reduce using rule 1 (classdecl -> CLASS IDENTIFIER LCURLY class_body_decl_helper RCURLY .)
+
+
+state 28
+
+    (2) classdecl -> CLASS IDENTIFIER EXTENDS IDENTIFIER LCURLY . class_body_decl_helper RCURLY
+    (3) class_body_decl_helper -> . class_body_decl
+    (4) class_body_decl_helper -> . class_body_decl class_body_decl_helper
+    (5) class_body_decl -> . field_decl
+    (6) class_body_decl -> . method_decl
+    (7) class_body_decl -> . constructor_decl
+    (8) field_decl -> . modifier var_decl
+    (26) method_decl -> . modifier type IDENTIFIER LPAREN RPAREN block
+    (27) method_decl -> . modifier type IDENTIFIER LPAREN formals RPAREN block
+    (28) method_decl -> . modifier VOID IDENTIFIER LPAREN RPAREN block
+    (29) method_decl -> . modifier VOID IDENTIFIER LPAREN formals RPAREN block
+    (30) constructor_decl -> . modifier IDENTIFIER LPAREN RPAREN block
+    (31) constructor_decl -> . modifier IDENTIFIER LPAREN formals RPAREN block
+    (9) modifier -> . PUBLIC
+    (10) modifier -> . PRIVATE
+    (11) modifier -> . STATIC
+    (12) modifier -> . PUBLIC STATIC
+    (13) modifier -> . PRIVATE STATIC
+    (14) modifier -> . empty
+    (83) empty -> .
+
+    PUBLIC          shift and go to state 11
+    PRIVATE         shift and go to state 14
+    STATIC          shift and go to state 13
+    VOID            reduce using rule 83 (empty -> .)
+    IDENTIFIER      reduce using rule 83 (empty -> .)
+    INT             reduce using rule 83 (empty -> .)
+    FLOAT           reduce using rule 83 (empty -> .)
+    BOOLEAN         reduce using rule 83 (empty -> .)
+
+    class_body_decl_helper         shift and go to state 34
+    class_body_decl                shift and go to state 7
+    field_decl                     shift and go to state 8
+    constructor_decl               shift and go to state 9
+    method_decl                    shift and go to state 10
+    empty                          shift and go to state 12
+    modifier                       shift and go to state 6
+
+state 29
+
+    (28) method_decl -> modifier VOID IDENTIFIER . LPAREN RPAREN block
+    (29) method_decl -> modifier VOID IDENTIFIER . LPAREN formals RPAREN block
+
+    LPAREN          shift and go to state 35
+
+
+state 30
+
+    (30) constructor_decl -> modifier IDENTIFIER LPAREN . RPAREN block
+    (31) constructor_decl -> modifier IDENTIFIER LPAREN . formals RPAREN block
+    (32) formals -> . formal_param
+    (33) formals -> . formal_param COMMA formal_param
+    (34) formal_param -> . type variable
+    (16) type -> . INT
+    (17) type -> . FLOAT
+    (18) type -> . BOOLEAN
+    (19) type -> . IDENTIFIER
+
+    RPAREN          shift and go to state 36
+    INT             shift and go to state 17
+    FLOAT           shift and go to state 19
+    BOOLEAN         shift and go to state 21
+    IDENTIFIER      shift and go to state 38
+
+    formal_param                   shift and go to state 37
+    type                           shift and go to state 39
+    formals                        shift and go to state 40
+
+state 31
+
+    (15) var_decl -> type variables . SEMICOLON
+
+    SEMICOLON       shift and go to state 41
+
+
+state 32
+
+    (20) variables -> variable .
+    (21) variables -> variable . COMMA variables
+
+    SEMICOLON       reduce using rule 20 (variables -> variable .)
+    COMMA           shift and go to state 42
+
+
+state 33
+
+    (26) method_decl -> modifier type IDENTIFIER . LPAREN RPAREN block
+    (27) method_decl -> modifier type IDENTIFIER . LPAREN formals RPAREN block
+    (22) variable -> IDENTIFIER .
+    (23) variable -> IDENTIFIER . variable_array
+    (24) variable_array -> . LSQUARE RSQUARE
+    (25) variable_array -> . LSQUARE RSQUARE variable_array
+
+    LPAREN          shift and go to state 44
+    COMMA           reduce using rule 22 (variable -> IDENTIFIER .)
+    SEMICOLON       reduce using rule 22 (variable -> IDENTIFIER .)
+    LSQUARE         shift and go to state 43
+
+    variable_array                 shift and go to state 45
+
+state 34
+
+    (2) classdecl -> CLASS IDENTIFIER EXTENDS IDENTIFIER LCURLY class_body_decl_helper . RCURLY
+
+    RCURLY          shift and go to state 46
+
+
+state 35
+
+    (28) method_decl -> modifier VOID IDENTIFIER LPAREN . RPAREN block
+    (29) method_decl -> modifier VOID IDENTIFIER LPAREN . formals RPAREN block
+    (32) formals -> . formal_param
+    (33) formals -> . formal_param COMMA formal_param
+    (34) formal_param -> . type variable
+    (16) type -> . INT
+    (17) type -> . FLOAT
+    (18) type -> . BOOLEAN
+    (19) type -> . IDENTIFIER
+
+    RPAREN          shift and go to state 47
+    INT             shift and go to state 17
+    FLOAT           shift and go to state 19
+    BOOLEAN         shift and go to state 21
+    IDENTIFIER      shift and go to state 38
+
+    formal_param                   shift and go to state 37
+    type                           shift and go to state 39
+    formals                        shift and go to state 48
+
+state 36
+
+    (30) constructor_decl -> modifier IDENTIFIER LPAREN RPAREN . block
+    (35) block -> . LCURLY stmthelper RCURLY
+    (36) block -> . LCURLY RCURLY
+
+    LCURLY          shift and go to state 49
+
+    block                          shift and go to state 50
+
+state 37
+
+    (32) formals -> formal_param .
+    (33) formals -> formal_param . COMMA formal_param
+
+    RPAREN          reduce using rule 32 (formals -> formal_param .)
+    COMMA           shift and go to state 51
+
+
+state 38
+
+    (19) type -> IDENTIFIER .
+
+    IDENTIFIER      reduce using rule 19 (type -> IDENTIFIER .)
+
+
+state 39
+
+    (34) formal_param -> type . variable
+    (22) variable -> . IDENTIFIER
+    (23) variable -> . IDENTIFIER variable_array
+
+    IDENTIFIER      shift and go to state 53
+
+    variable                       shift and go to state 52
+
+state 40
+
+    (31) constructor_decl -> modifier IDENTIFIER LPAREN formals . RPAREN block
+
+    RPAREN          shift and go to state 54
+
+
+state 41
+
+    (15) var_decl -> type variables SEMICOLON .
+
+    IF              reduce using rule 15 (var_decl -> type variables SEMICOLON .)
+    WHILE           reduce using rule 15 (var_decl -> type variables SEMICOLON .)
+    FOR             reduce using rule 15 (var_decl -> type variables SEMICOLON .)
+    RETURN          reduce using rule 15 (var_decl -> type variables SEMICOLON .)
+    BREAK           reduce using rule 15 (var_decl -> type variables SEMICOLON .)
+    CONTINUE        reduce using rule 15 (var_decl -> type variables SEMICOLON .)
+    SEMICOLON       reduce using rule 15 (var_decl -> type variables SEMICOLON .)
+    LCURLY          reduce using rule 15 (var_decl -> type variables SEMICOLON .)
+    INT             reduce using rule 15 (var_decl -> type variables SEMICOLON .)
+    FLOAT           reduce using rule 15 (var_decl -> type variables SEMICOLON .)
+    BOOLEAN         reduce using rule 15 (var_decl -> type variables SEMICOLON .)
+    IDENTIFIER      reduce using rule 15 (var_decl -> type variables SEMICOLON .)
+    RCURLY          reduce using rule 15 (var_decl -> type variables SEMICOLON .)
+    ELSE            reduce using rule 15 (var_decl -> type variables SEMICOLON .)
+    PUBLIC          reduce using rule 15 (var_decl -> type variables SEMICOLON .)
+    PRIVATE         reduce using rule 15 (var_decl -> type variables SEMICOLON .)
+    STATIC          reduce using rule 15 (var_decl -> type variables SEMICOLON .)
+    VOID            reduce using rule 15 (var_decl -> type variables SEMICOLON .)
+
+
+state 42
+
+    (21) variables -> variable COMMA . variables
+    (20) variables -> . variable
+    (21) variables -> . variable COMMA variables
+    (22) variable -> . IDENTIFIER
+    (23) variable -> . IDENTIFIER variable_array
+
+    IDENTIFIER      shift and go to state 53
+
+    variable                       shift and go to state 32
+    variables                      shift and go to state 55
+
+state 43
+
+    (24) variable_array -> LSQUARE . RSQUARE
+    (25) variable_array -> LSQUARE . RSQUARE variable_array
+
+    RSQUARE         shift and go to state 56
+
+
+state 44
+
+    (26) method_decl -> modifier type IDENTIFIER LPAREN . RPAREN block
+    (27) method_decl -> modifier type IDENTIFIER LPAREN . formals RPAREN block
+    (32) formals -> . formal_param
+    (33) formals -> . formal_param COMMA formal_param
+    (34) formal_param -> . type variable
+    (16) type -> . INT
+    (17) type -> . FLOAT
+    (18) type -> . BOOLEAN
+    (19) type -> . IDENTIFIER
+
+    RPAREN          shift and go to state 57
+    INT             shift and go to state 17
+    FLOAT           shift and go to state 19
+    BOOLEAN         shift and go to state 21
+    IDENTIFIER      shift and go to state 38
+
+    formal_param                   shift and go to state 37
+    type                           shift and go to state 39
+    formals                        shift and go to state 58
+
+state 45
+
+    (23) variable -> IDENTIFIER variable_array .
+
+    COMMA           reduce using rule 23 (variable -> IDENTIFIER variable_array .)
+    SEMICOLON       reduce using rule 23 (variable -> IDENTIFIER variable_array .)
+    RPAREN          reduce using rule 23 (variable -> IDENTIFIER variable_array .)
+
+
+state 46
+
+    (2) classdecl -> CLASS IDENTIFIER EXTENDS IDENTIFIER LCURLY class_body_decl_helper RCURLY .
+
+    $end            reduce using rule 2 (classdecl -> CLASS IDENTIFIER EXTENDS IDENTIFIER LCURLY class_body_decl_helper RCURLY .)
+
+
+state 47
+
+    (28) method_decl -> modifier VOID IDENTIFIER LPAREN RPAREN . block
+    (35) block -> . LCURLY stmthelper RCURLY
+    (36) block -> . LCURLY RCURLY
+
+    LCURLY          shift and go to state 49
+
+    block                          shift and go to state 59
+
+state 48
+
+    (29) method_decl -> modifier VOID IDENTIFIER LPAREN formals . RPAREN block
+
+    RPAREN          shift and go to state 60
+
+
+state 49
+
+    (35) block -> LCURLY . stmthelper RCURLY
+    (36) block -> LCURLY . RCURLY
+    (37) stmthelper -> . stmt
+    (38) stmthelper -> . stmt stmthelper
+    (39) stmt -> . IF LPAREN expr RPAREN stmt
+    (40) stmt -> . IF LPAREN expr RPAREN stmt ELSE stmt
+    (41) stmt -> . WHILE LPAREN expr RPAREN stmt
+    (42) stmt -> . FOR LPAREN SEMICOLON SEMICOLON RPAREN stmt
+    (43) stmt -> . FOR LPAREN stmt_expr SEMICOLON SEMICOLON RPAREN stmt
+    (44) stmt -> . FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON RPAREN stmt
+    (45) stmt -> . FOR LPAREN stmt_expr SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (46) stmt -> . FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt
+    (47) stmt -> . FOR LPAREN SEMICOLON expr SEMICOLON RPAREN stmt
+    (48) stmt -> . FOR LPAREN SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt
+    (49) stmt -> . FOR LPAREN SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (50) stmt -> . FOR LPAREN SEMICOLON SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (51) stmt -> . RETURN SEMICOLON
+    (52) stmt -> . RETURN expr SEMICOLON
+    (53) stmt -> . stmt_expr SEMICOLON
+    (54) stmt -> . BREAK SEMICOLON
+    (55) stmt -> . CONTINUE SEMICOLON
+    (56) stmt -> . block
+    (57) stmt -> . var_decl
+    (58) stmt -> . SEMICOLON
+    (60) stmt_expr -> . empty
+    (35) block -> . LCURLY stmthelper RCURLY
+    (36) block -> . LCURLY RCURLY
+    (15) var_decl -> . type variables SEMICOLON
+    (83) empty -> .
+    (16) type -> . INT
+    (17) type -> . FLOAT
+    (18) type -> . BOOLEAN
+    (19) type -> . IDENTIFIER
+
+  ! shift/reduce conflict for SEMICOLON resolved as shift
+    RCURLY          shift and go to state 64
+    IF              shift and go to state 70
+    WHILE           shift and go to state 62
+    FOR             shift and go to state 68
+    RETURN          shift and go to state 61
+    BREAK           shift and go to state 73
+    CONTINUE        shift and go to state 74
+    SEMICOLON       shift and go to state 63
+    LCURLY          shift and go to state 49
+    INT             shift and go to state 17
+    FLOAT           shift and go to state 19
+    BOOLEAN         shift and go to state 21
+    IDENTIFIER      shift and go to state 38
+
+  ! SEMICOLON       [ reduce using rule 83 (empty -> .) ]
+
+    stmthelper                     shift and go to state 71
+    var_decl                       shift and go to state 72
+    stmt_expr                      shift and go to state 65
+    empty                          shift and go to state 67
+    stmt                           shift and go to state 69
+    type                           shift and go to state 66
+    block                          shift and go to state 75
+
+state 50
+
+    (30) constructor_decl -> modifier IDENTIFIER LPAREN RPAREN block .
+
+    PUBLIC          reduce using rule 30 (constructor_decl -> modifier IDENTIFIER LPAREN RPAREN block .)
+    PRIVATE         reduce using rule 30 (constructor_decl -> modifier IDENTIFIER LPAREN RPAREN block .)
+    STATIC          reduce using rule 30 (constructor_decl -> modifier IDENTIFIER LPAREN RPAREN block .)
+    VOID            reduce using rule 30 (constructor_decl -> modifier IDENTIFIER LPAREN RPAREN block .)
+    IDENTIFIER      reduce using rule 30 (constructor_decl -> modifier IDENTIFIER LPAREN RPAREN block .)
+    INT             reduce using rule 30 (constructor_decl -> modifier IDENTIFIER LPAREN RPAREN block .)
+    FLOAT           reduce using rule 30 (constructor_decl -> modifier IDENTIFIER LPAREN RPAREN block .)
+    BOOLEAN         reduce using rule 30 (constructor_decl -> modifier IDENTIFIER LPAREN RPAREN block .)
+    RCURLY          reduce using rule 30 (constructor_decl -> modifier IDENTIFIER LPAREN RPAREN block .)
+
+
+state 51
+
+    (33) formals -> formal_param COMMA . formal_param
+    (34) formal_param -> . type variable
+    (16) type -> . INT
+    (17) type -> . FLOAT
+    (18) type -> . BOOLEAN
+    (19) type -> . IDENTIFIER
+
+    INT             shift and go to state 17
+    FLOAT           shift and go to state 19
+    BOOLEAN         shift and go to state 21
+    IDENTIFIER      shift and go to state 38
+
+    formal_param                   shift and go to state 76
+    type                           shift and go to state 39
+
+state 52
+
+    (34) formal_param -> type variable .
+
+    RPAREN          reduce using rule 34 (formal_param -> type variable .)
+    COMMA           reduce using rule 34 (formal_param -> type variable .)
+
+
+state 53
+
+    (22) variable -> IDENTIFIER .
+    (23) variable -> IDENTIFIER . variable_array
+    (24) variable_array -> . LSQUARE RSQUARE
+    (25) variable_array -> . LSQUARE RSQUARE variable_array
+
+    COMMA           reduce using rule 22 (variable -> IDENTIFIER .)
+    SEMICOLON       reduce using rule 22 (variable -> IDENTIFIER .)
+    RPAREN          reduce using rule 22 (variable -> IDENTIFIER .)
+    LSQUARE         shift and go to state 43
+
+    variable_array                 shift and go to state 45
+
+state 54
+
+    (31) constructor_decl -> modifier IDENTIFIER LPAREN formals RPAREN . block
+    (35) block -> . LCURLY stmthelper RCURLY
+    (36) block -> . LCURLY RCURLY
+
+    LCURLY          shift and go to state 49
+
+    block                          shift and go to state 77
+
+state 55
+
+    (21) variables -> variable COMMA variables .
+
+    SEMICOLON       reduce using rule 21 (variables -> variable COMMA variables .)
+
+
+state 56
+
+    (24) variable_array -> LSQUARE RSQUARE .
+    (25) variable_array -> LSQUARE RSQUARE . variable_array
+    (24) variable_array -> . LSQUARE RSQUARE
+    (25) variable_array -> . LSQUARE RSQUARE variable_array
+
+    COMMA           reduce using rule 24 (variable_array -> LSQUARE RSQUARE .)
+    SEMICOLON       reduce using rule 24 (variable_array -> LSQUARE RSQUARE .)
+    RPAREN          reduce using rule 24 (variable_array -> LSQUARE RSQUARE .)
+    LSQUARE         shift and go to state 43
+
+    variable_array                 shift and go to state 78
+
+state 57
+
+    (26) method_decl -> modifier type IDENTIFIER LPAREN RPAREN . block
+    (35) block -> . LCURLY stmthelper RCURLY
+    (36) block -> . LCURLY RCURLY
+
+    LCURLY          shift and go to state 49
+
+    block                          shift and go to state 79
+
+state 58
+
+    (27) method_decl -> modifier type IDENTIFIER LPAREN formals . RPAREN block
+
+    RPAREN          shift and go to state 80
+
+
+state 59
+
+    (28) method_decl -> modifier VOID IDENTIFIER LPAREN RPAREN block .
+
+    PUBLIC          reduce using rule 28 (method_decl -> modifier VOID IDENTIFIER LPAREN RPAREN block .)
+    PRIVATE         reduce using rule 28 (method_decl -> modifier VOID IDENTIFIER LPAREN RPAREN block .)
+    STATIC          reduce using rule 28 (method_decl -> modifier VOID IDENTIFIER LPAREN RPAREN block .)
+    VOID            reduce using rule 28 (method_decl -> modifier VOID IDENTIFIER LPAREN RPAREN block .)
+    IDENTIFIER      reduce using rule 28 (method_decl -> modifier VOID IDENTIFIER LPAREN RPAREN block .)
+    INT             reduce using rule 28 (method_decl -> modifier VOID IDENTIFIER LPAREN RPAREN block .)
+    FLOAT           reduce using rule 28 (method_decl -> modifier VOID IDENTIFIER LPAREN RPAREN block .)
+    BOOLEAN         reduce using rule 28 (method_decl -> modifier VOID IDENTIFIER LPAREN RPAREN block .)
+    RCURLY          reduce using rule 28 (method_decl -> modifier VOID IDENTIFIER LPAREN RPAREN block .)
+
+
+state 60
+
+    (29) method_decl -> modifier VOID IDENTIFIER LPAREN formals RPAREN . block
+    (35) block -> . LCURLY stmthelper RCURLY
+    (36) block -> . LCURLY RCURLY
+
+    LCURLY          shift and go to state 49
+
+    block                          shift and go to state 81
+
+state 61
+
+    (51) stmt -> RETURN . SEMICOLON
+    (52) stmt -> RETURN . expr SEMICOLON
+    (59) expr -> . empty
+    (83) empty -> .
+
+  ! shift/reduce conflict for SEMICOLON resolved as shift
+    SEMICOLON       shift and go to state 84
+
+  ! SEMICOLON       [ reduce using rule 83 (empty -> .) ]
+
+    expr                           shift and go to state 82
+    empty                          shift and go to state 83
+
+state 62
+
+    (41) stmt -> WHILE . LPAREN expr RPAREN stmt
+
+    LPAREN          shift and go to state 85
+
+
+state 63
+
+    (58) stmt -> SEMICOLON .
+
+    IF              reduce using rule 58 (stmt -> SEMICOLON .)
+    WHILE           reduce using rule 58 (stmt -> SEMICOLON .)
+    FOR             reduce using rule 58 (stmt -> SEMICOLON .)
+    RETURN          reduce using rule 58 (stmt -> SEMICOLON .)
+    BREAK           reduce using rule 58 (stmt -> SEMICOLON .)
+    CONTINUE        reduce using rule 58 (stmt -> SEMICOLON .)
+    SEMICOLON       reduce using rule 58 (stmt -> SEMICOLON .)
+    LCURLY          reduce using rule 58 (stmt -> SEMICOLON .)
+    INT             reduce using rule 58 (stmt -> SEMICOLON .)
+    FLOAT           reduce using rule 58 (stmt -> SEMICOLON .)
+    BOOLEAN         reduce using rule 58 (stmt -> SEMICOLON .)
+    IDENTIFIER      reduce using rule 58 (stmt -> SEMICOLON .)
+    RCURLY          reduce using rule 58 (stmt -> SEMICOLON .)
+    ELSE            reduce using rule 58 (stmt -> SEMICOLON .)
+
+
+state 64
+
+    (36) block -> LCURLY RCURLY .
+
+    IF              reduce using rule 36 (block -> LCURLY RCURLY .)
+    WHILE           reduce using rule 36 (block -> LCURLY RCURLY .)
+    FOR             reduce using rule 36 (block -> LCURLY RCURLY .)
+    RETURN          reduce using rule 36 (block -> LCURLY RCURLY .)
+    BREAK           reduce using rule 36 (block -> LCURLY RCURLY .)
+    CONTINUE        reduce using rule 36 (block -> LCURLY RCURLY .)
+    SEMICOLON       reduce using rule 36 (block -> LCURLY RCURLY .)
+    LCURLY          reduce using rule 36 (block -> LCURLY RCURLY .)
+    INT             reduce using rule 36 (block -> LCURLY RCURLY .)
+    FLOAT           reduce using rule 36 (block -> LCURLY RCURLY .)
+    BOOLEAN         reduce using rule 36 (block -> LCURLY RCURLY .)
+    IDENTIFIER      reduce using rule 36 (block -> LCURLY RCURLY .)
+    RCURLY          reduce using rule 36 (block -> LCURLY RCURLY .)
+    ELSE            reduce using rule 36 (block -> LCURLY RCURLY .)
+    PUBLIC          reduce using rule 36 (block -> LCURLY RCURLY .)
+    PRIVATE         reduce using rule 36 (block -> LCURLY RCURLY .)
+    STATIC          reduce using rule 36 (block -> LCURLY RCURLY .)
+    VOID            reduce using rule 36 (block -> LCURLY RCURLY .)
+
+
+state 65
+
+    (53) stmt -> stmt_expr . SEMICOLON
+
+    SEMICOLON       shift and go to state 86
+
+
+state 66
+
+    (15) var_decl -> type . variables SEMICOLON
+    (20) variables -> . variable
+    (21) variables -> . variable COMMA variables
+    (22) variable -> . IDENTIFIER
+    (23) variable -> . IDENTIFIER variable_array
+
+    IDENTIFIER      shift and go to state 53
+
+    variable                       shift and go to state 32
+    variables                      shift and go to state 31
+
+state 67
+
+    (60) stmt_expr -> empty .
+
+    SEMICOLON       reduce using rule 60 (stmt_expr -> empty .)
+    RPAREN          reduce using rule 60 (stmt_expr -> empty .)
+
+
+state 68
+
+    (42) stmt -> FOR . LPAREN SEMICOLON SEMICOLON RPAREN stmt
+    (43) stmt -> FOR . LPAREN stmt_expr SEMICOLON SEMICOLON RPAREN stmt
+    (44) stmt -> FOR . LPAREN stmt_expr SEMICOLON expr SEMICOLON RPAREN stmt
+    (45) stmt -> FOR . LPAREN stmt_expr SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (46) stmt -> FOR . LPAREN stmt_expr SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt
+    (47) stmt -> FOR . LPAREN SEMICOLON expr SEMICOLON RPAREN stmt
+    (48) stmt -> FOR . LPAREN SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt
+    (49) stmt -> FOR . LPAREN SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (50) stmt -> FOR . LPAREN SEMICOLON SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+
+    LPAREN          shift and go to state 87
+
+
+state 69
+
+    (37) stmthelper -> stmt .
+    (38) stmthelper -> stmt . stmthelper
+    (37) stmthelper -> . stmt
+    (38) stmthelper -> . stmt stmthelper
+    (39) stmt -> . IF LPAREN expr RPAREN stmt
+    (40) stmt -> . IF LPAREN expr RPAREN stmt ELSE stmt
+    (41) stmt -> . WHILE LPAREN expr RPAREN stmt
+    (42) stmt -> . FOR LPAREN SEMICOLON SEMICOLON RPAREN stmt
+    (43) stmt -> . FOR LPAREN stmt_expr SEMICOLON SEMICOLON RPAREN stmt
+    (44) stmt -> . FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON RPAREN stmt
+    (45) stmt -> . FOR LPAREN stmt_expr SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (46) stmt -> . FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt
+    (47) stmt -> . FOR LPAREN SEMICOLON expr SEMICOLON RPAREN stmt
+    (48) stmt -> . FOR LPAREN SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt
+    (49) stmt -> . FOR LPAREN SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (50) stmt -> . FOR LPAREN SEMICOLON SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (51) stmt -> . RETURN SEMICOLON
+    (52) stmt -> . RETURN expr SEMICOLON
+    (53) stmt -> . stmt_expr SEMICOLON
+    (54) stmt -> . BREAK SEMICOLON
+    (55) stmt -> . CONTINUE SEMICOLON
+    (56) stmt -> . block
+    (57) stmt -> . var_decl
+    (58) stmt -> . SEMICOLON
+    (60) stmt_expr -> . empty
+    (35) block -> . LCURLY stmthelper RCURLY
+    (36) block -> . LCURLY RCURLY
+    (15) var_decl -> . type variables SEMICOLON
+    (83) empty -> .
+    (16) type -> . INT
+    (17) type -> . FLOAT
+    (18) type -> . BOOLEAN
+    (19) type -> . IDENTIFIER
+
+  ! shift/reduce conflict for SEMICOLON resolved as shift
+    RCURLY          reduce using rule 37 (stmthelper -> stmt .)
+    IF              shift and go to state 70
+    WHILE           shift and go to state 62
+    FOR             shift and go to state 68
+    RETURN          shift and go to state 61
+    BREAK           shift and go to state 73
+    CONTINUE        shift and go to state 74
+    SEMICOLON       shift and go to state 63
+    LCURLY          shift and go to state 49
+    INT             shift and go to state 17
+    FLOAT           shift and go to state 19
+    BOOLEAN         shift and go to state 21
+    IDENTIFIER      shift and go to state 38
+
+  ! SEMICOLON       [ reduce using rule 83 (empty -> .) ]
+
+    stmthelper                     shift and go to state 88
+    var_decl                       shift and go to state 72
+    stmt_expr                      shift and go to state 65
+    empty                          shift and go to state 67
+    stmt                           shift and go to state 69
+    type                           shift and go to state 66
+    block                          shift and go to state 75
+
+state 70
+
+    (39) stmt -> IF . LPAREN expr RPAREN stmt
+    (40) stmt -> IF . LPAREN expr RPAREN stmt ELSE stmt
+
+    LPAREN          shift and go to state 89
+
+
+state 71
+
+    (35) block -> LCURLY stmthelper . RCURLY
+
+    RCURLY          shift and go to state 90
+
+
+state 72
+
+    (57) stmt -> var_decl .
+
+    IF              reduce using rule 57 (stmt -> var_decl .)
+    WHILE           reduce using rule 57 (stmt -> var_decl .)
+    FOR             reduce using rule 57 (stmt -> var_decl .)
+    RETURN          reduce using rule 57 (stmt -> var_decl .)
+    BREAK           reduce using rule 57 (stmt -> var_decl .)
+    CONTINUE        reduce using rule 57 (stmt -> var_decl .)
+    SEMICOLON       reduce using rule 57 (stmt -> var_decl .)
+    LCURLY          reduce using rule 57 (stmt -> var_decl .)
+    INT             reduce using rule 57 (stmt -> var_decl .)
+    FLOAT           reduce using rule 57 (stmt -> var_decl .)
+    BOOLEAN         reduce using rule 57 (stmt -> var_decl .)
+    IDENTIFIER      reduce using rule 57 (stmt -> var_decl .)
+    RCURLY          reduce using rule 57 (stmt -> var_decl .)
+    ELSE            reduce using rule 57 (stmt -> var_decl .)
+
+
+state 73
+
+    (54) stmt -> BREAK . SEMICOLON
+
+    SEMICOLON       shift and go to state 91
+
+
+state 74
+
+    (55) stmt -> CONTINUE . SEMICOLON
+
+    SEMICOLON       shift and go to state 92
+
+
+state 75
+
+    (56) stmt -> block .
+
+    IF              reduce using rule 56 (stmt -> block .)
+    WHILE           reduce using rule 56 (stmt -> block .)
+    FOR             reduce using rule 56 (stmt -> block .)
+    RETURN          reduce using rule 56 (stmt -> block .)
+    BREAK           reduce using rule 56 (stmt -> block .)
+    CONTINUE        reduce using rule 56 (stmt -> block .)
+    SEMICOLON       reduce using rule 56 (stmt -> block .)
+    LCURLY          reduce using rule 56 (stmt -> block .)
+    INT             reduce using rule 56 (stmt -> block .)
+    FLOAT           reduce using rule 56 (stmt -> block .)
+    BOOLEAN         reduce using rule 56 (stmt -> block .)
+    IDENTIFIER      reduce using rule 56 (stmt -> block .)
+    RCURLY          reduce using rule 56 (stmt -> block .)
+    ELSE            reduce using rule 56 (stmt -> block .)
+
+
+state 76
+
+    (33) formals -> formal_param COMMA formal_param .
+
+    RPAREN          reduce using rule 33 (formals -> formal_param COMMA formal_param .)
+
+
+state 77
+
+    (31) constructor_decl -> modifier IDENTIFIER LPAREN formals RPAREN block .
+
+    PUBLIC          reduce using rule 31 (constructor_decl -> modifier IDENTIFIER LPAREN formals RPAREN block .)
+    PRIVATE         reduce using rule 31 (constructor_decl -> modifier IDENTIFIER LPAREN formals RPAREN block .)
+    STATIC          reduce using rule 31 (constructor_decl -> modifier IDENTIFIER LPAREN formals RPAREN block .)
+    VOID            reduce using rule 31 (constructor_decl -> modifier IDENTIFIER LPAREN formals RPAREN block .)
+    IDENTIFIER      reduce using rule 31 (constructor_decl -> modifier IDENTIFIER LPAREN formals RPAREN block .)
+    INT             reduce using rule 31 (constructor_decl -> modifier IDENTIFIER LPAREN formals RPAREN block .)
+    FLOAT           reduce using rule 31 (constructor_decl -> modifier IDENTIFIER LPAREN formals RPAREN block .)
+    BOOLEAN         reduce using rule 31 (constructor_decl -> modifier IDENTIFIER LPAREN formals RPAREN block .)
+    RCURLY          reduce using rule 31 (constructor_decl -> modifier IDENTIFIER LPAREN formals RPAREN block .)
+
+
+state 78
+
+    (25) variable_array -> LSQUARE RSQUARE variable_array .
+
+    COMMA           reduce using rule 25 (variable_array -> LSQUARE RSQUARE variable_array .)
+    SEMICOLON       reduce using rule 25 (variable_array -> LSQUARE RSQUARE variable_array .)
+    RPAREN          reduce using rule 25 (variable_array -> LSQUARE RSQUARE variable_array .)
+
+
+state 79
+
+    (26) method_decl -> modifier type IDENTIFIER LPAREN RPAREN block .
+
+    PUBLIC          reduce using rule 26 (method_decl -> modifier type IDENTIFIER LPAREN RPAREN block .)
+    PRIVATE         reduce using rule 26 (method_decl -> modifier type IDENTIFIER LPAREN RPAREN block .)
+    STATIC          reduce using rule 26 (method_decl -> modifier type IDENTIFIER LPAREN RPAREN block .)
+    VOID            reduce using rule 26 (method_decl -> modifier type IDENTIFIER LPAREN RPAREN block .)
+    IDENTIFIER      reduce using rule 26 (method_decl -> modifier type IDENTIFIER LPAREN RPAREN block .)
+    INT             reduce using rule 26 (method_decl -> modifier type IDENTIFIER LPAREN RPAREN block .)
+    FLOAT           reduce using rule 26 (method_decl -> modifier type IDENTIFIER LPAREN RPAREN block .)
+    BOOLEAN         reduce using rule 26 (method_decl -> modifier type IDENTIFIER LPAREN RPAREN block .)
+    RCURLY          reduce using rule 26 (method_decl -> modifier type IDENTIFIER LPAREN RPAREN block .)
+
+
+state 80
+
+    (27) method_decl -> modifier type IDENTIFIER LPAREN formals RPAREN . block
+    (35) block -> . LCURLY stmthelper RCURLY
+    (36) block -> . LCURLY RCURLY
+
+    LCURLY          shift and go to state 49
+
+    block                          shift and go to state 93
+
+state 81
+
+    (29) method_decl -> modifier VOID IDENTIFIER LPAREN formals RPAREN block .
+
+    PUBLIC          reduce using rule 29 (method_decl -> modifier VOID IDENTIFIER LPAREN formals RPAREN block .)
+    PRIVATE         reduce using rule 29 (method_decl -> modifier VOID IDENTIFIER LPAREN formals RPAREN block .)
+    STATIC          reduce using rule 29 (method_decl -> modifier VOID IDENTIFIER LPAREN formals RPAREN block .)
+    VOID            reduce using rule 29 (method_decl -> modifier VOID IDENTIFIER LPAREN formals RPAREN block .)
+    IDENTIFIER      reduce using rule 29 (method_decl -> modifier VOID IDENTIFIER LPAREN formals RPAREN block .)
+    INT             reduce using rule 29 (method_decl -> modifier VOID IDENTIFIER LPAREN formals RPAREN block .)
+    FLOAT           reduce using rule 29 (method_decl -> modifier VOID IDENTIFIER LPAREN formals RPAREN block .)
+    BOOLEAN         reduce using rule 29 (method_decl -> modifier VOID IDENTIFIER LPAREN formals RPAREN block .)
+    RCURLY          reduce using rule 29 (method_decl -> modifier VOID IDENTIFIER LPAREN formals RPAREN block .)
+
+
+state 82
+
+    (52) stmt -> RETURN expr . SEMICOLON
+
+    SEMICOLON       shift and go to state 94
+
+
+state 83
+
+    (59) expr -> empty .
+
+    SEMICOLON       reduce using rule 59 (expr -> empty .)
+    RPAREN          reduce using rule 59 (expr -> empty .)
+
+
+state 84
+
+    (51) stmt -> RETURN SEMICOLON .
+
+    IF              reduce using rule 51 (stmt -> RETURN SEMICOLON .)
+    WHILE           reduce using rule 51 (stmt -> RETURN SEMICOLON .)
+    FOR             reduce using rule 51 (stmt -> RETURN SEMICOLON .)
+    RETURN          reduce using rule 51 (stmt -> RETURN SEMICOLON .)
+    BREAK           reduce using rule 51 (stmt -> RETURN SEMICOLON .)
+    CONTINUE        reduce using rule 51 (stmt -> RETURN SEMICOLON .)
+    SEMICOLON       reduce using rule 51 (stmt -> RETURN SEMICOLON .)
+    LCURLY          reduce using rule 51 (stmt -> RETURN SEMICOLON .)
+    INT             reduce using rule 51 (stmt -> RETURN SEMICOLON .)
+    FLOAT           reduce using rule 51 (stmt -> RETURN SEMICOLON .)
+    BOOLEAN         reduce using rule 51 (stmt -> RETURN SEMICOLON .)
+    IDENTIFIER      reduce using rule 51 (stmt -> RETURN SEMICOLON .)
+    RCURLY          reduce using rule 51 (stmt -> RETURN SEMICOLON .)
+    ELSE            reduce using rule 51 (stmt -> RETURN SEMICOLON .)
+
+
+state 85
+
+    (41) stmt -> WHILE LPAREN . expr RPAREN stmt
+    (59) expr -> . empty
+    (83) empty -> .
+
+    RPAREN          reduce using rule 83 (empty -> .)
+
+    expr                           shift and go to state 95
+    empty                          shift and go to state 83
+
+state 86
+
+    (53) stmt -> stmt_expr SEMICOLON .
+
+    IF              reduce using rule 53 (stmt -> stmt_expr SEMICOLON .)
+    WHILE           reduce using rule 53 (stmt -> stmt_expr SEMICOLON .)
+    FOR             reduce using rule 53 (stmt -> stmt_expr SEMICOLON .)
+    RETURN          reduce using rule 53 (stmt -> stmt_expr SEMICOLON .)
+    BREAK           reduce using rule 53 (stmt -> stmt_expr SEMICOLON .)
+    CONTINUE        reduce using rule 53 (stmt -> stmt_expr SEMICOLON .)
+    SEMICOLON       reduce using rule 53 (stmt -> stmt_expr SEMICOLON .)
+    LCURLY          reduce using rule 53 (stmt -> stmt_expr SEMICOLON .)
+    INT             reduce using rule 53 (stmt -> stmt_expr SEMICOLON .)
+    FLOAT           reduce using rule 53 (stmt -> stmt_expr SEMICOLON .)
+    BOOLEAN         reduce using rule 53 (stmt -> stmt_expr SEMICOLON .)
+    IDENTIFIER      reduce using rule 53 (stmt -> stmt_expr SEMICOLON .)
+    RCURLY          reduce using rule 53 (stmt -> stmt_expr SEMICOLON .)
+    ELSE            reduce using rule 53 (stmt -> stmt_expr SEMICOLON .)
+
+
+state 87
+
+    (42) stmt -> FOR LPAREN . SEMICOLON SEMICOLON RPAREN stmt
+    (43) stmt -> FOR LPAREN . stmt_expr SEMICOLON SEMICOLON RPAREN stmt
+    (44) stmt -> FOR LPAREN . stmt_expr SEMICOLON expr SEMICOLON RPAREN stmt
+    (45) stmt -> FOR LPAREN . stmt_expr SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (46) stmt -> FOR LPAREN . stmt_expr SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt
+    (47) stmt -> FOR LPAREN . SEMICOLON expr SEMICOLON RPAREN stmt
+    (48) stmt -> FOR LPAREN . SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt
+    (49) stmt -> FOR LPAREN . SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (50) stmt -> FOR LPAREN . SEMICOLON SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (60) stmt_expr -> . empty
+    (83) empty -> .
+
+  ! shift/reduce conflict for SEMICOLON resolved as shift
+    SEMICOLON       shift and go to state 96
+
+  ! SEMICOLON       [ reduce using rule 83 (empty -> .) ]
+
+    stmt_expr                      shift and go to state 97
+    empty                          shift and go to state 67
+
+state 88
+
+    (38) stmthelper -> stmt stmthelper .
+
+    RCURLY          reduce using rule 38 (stmthelper -> stmt stmthelper .)
+
+
+state 89
+
+    (39) stmt -> IF LPAREN . expr RPAREN stmt
+    (40) stmt -> IF LPAREN . expr RPAREN stmt ELSE stmt
+    (59) expr -> . empty
+    (83) empty -> .
+
+    RPAREN          reduce using rule 83 (empty -> .)
+
+    expr                           shift and go to state 98
+    empty                          shift and go to state 83
+
+state 90
+
+    (35) block -> LCURLY stmthelper RCURLY .
+
+    IF              reduce using rule 35 (block -> LCURLY stmthelper RCURLY .)
+    WHILE           reduce using rule 35 (block -> LCURLY stmthelper RCURLY .)
+    FOR             reduce using rule 35 (block -> LCURLY stmthelper RCURLY .)
+    RETURN          reduce using rule 35 (block -> LCURLY stmthelper RCURLY .)
+    BREAK           reduce using rule 35 (block -> LCURLY stmthelper RCURLY .)
+    CONTINUE        reduce using rule 35 (block -> LCURLY stmthelper RCURLY .)
+    SEMICOLON       reduce using rule 35 (block -> LCURLY stmthelper RCURLY .)
+    LCURLY          reduce using rule 35 (block -> LCURLY stmthelper RCURLY .)
+    INT             reduce using rule 35 (block -> LCURLY stmthelper RCURLY .)
+    FLOAT           reduce using rule 35 (block -> LCURLY stmthelper RCURLY .)
+    BOOLEAN         reduce using rule 35 (block -> LCURLY stmthelper RCURLY .)
+    IDENTIFIER      reduce using rule 35 (block -> LCURLY stmthelper RCURLY .)
+    RCURLY          reduce using rule 35 (block -> LCURLY stmthelper RCURLY .)
+    ELSE            reduce using rule 35 (block -> LCURLY stmthelper RCURLY .)
+    PUBLIC          reduce using rule 35 (block -> LCURLY stmthelper RCURLY .)
+    PRIVATE         reduce using rule 35 (block -> LCURLY stmthelper RCURLY .)
+    STATIC          reduce using rule 35 (block -> LCURLY stmthelper RCURLY .)
+    VOID            reduce using rule 35 (block -> LCURLY stmthelper RCURLY .)
+
+
+state 91
+
+    (54) stmt -> BREAK SEMICOLON .
+
+    IF              reduce using rule 54 (stmt -> BREAK SEMICOLON .)
+    WHILE           reduce using rule 54 (stmt -> BREAK SEMICOLON .)
+    FOR             reduce using rule 54 (stmt -> BREAK SEMICOLON .)
+    RETURN          reduce using rule 54 (stmt -> BREAK SEMICOLON .)
+    BREAK           reduce using rule 54 (stmt -> BREAK SEMICOLON .)
+    CONTINUE        reduce using rule 54 (stmt -> BREAK SEMICOLON .)
+    SEMICOLON       reduce using rule 54 (stmt -> BREAK SEMICOLON .)
+    LCURLY          reduce using rule 54 (stmt -> BREAK SEMICOLON .)
+    INT             reduce using rule 54 (stmt -> BREAK SEMICOLON .)
+    FLOAT           reduce using rule 54 (stmt -> BREAK SEMICOLON .)
+    BOOLEAN         reduce using rule 54 (stmt -> BREAK SEMICOLON .)
+    IDENTIFIER      reduce using rule 54 (stmt -> BREAK SEMICOLON .)
+    RCURLY          reduce using rule 54 (stmt -> BREAK SEMICOLON .)
+    ELSE            reduce using rule 54 (stmt -> BREAK SEMICOLON .)
+
+
+state 92
+
+    (55) stmt -> CONTINUE SEMICOLON .
+
+    IF              reduce using rule 55 (stmt -> CONTINUE SEMICOLON .)
+    WHILE           reduce using rule 55 (stmt -> CONTINUE SEMICOLON .)
+    FOR             reduce using rule 55 (stmt -> CONTINUE SEMICOLON .)
+    RETURN          reduce using rule 55 (stmt -> CONTINUE SEMICOLON .)
+    BREAK           reduce using rule 55 (stmt -> CONTINUE SEMICOLON .)
+    CONTINUE        reduce using rule 55 (stmt -> CONTINUE SEMICOLON .)
+    SEMICOLON       reduce using rule 55 (stmt -> CONTINUE SEMICOLON .)
+    LCURLY          reduce using rule 55 (stmt -> CONTINUE SEMICOLON .)
+    INT             reduce using rule 55 (stmt -> CONTINUE SEMICOLON .)
+    FLOAT           reduce using rule 55 (stmt -> CONTINUE SEMICOLON .)
+    BOOLEAN         reduce using rule 55 (stmt -> CONTINUE SEMICOLON .)
+    IDENTIFIER      reduce using rule 55 (stmt -> CONTINUE SEMICOLON .)
+    RCURLY          reduce using rule 55 (stmt -> CONTINUE SEMICOLON .)
+    ELSE            reduce using rule 55 (stmt -> CONTINUE SEMICOLON .)
+
+
+state 93
+
+    (27) method_decl -> modifier type IDENTIFIER LPAREN formals RPAREN block .
+
+    PUBLIC          reduce using rule 27 (method_decl -> modifier type IDENTIFIER LPAREN formals RPAREN block .)
+    PRIVATE         reduce using rule 27 (method_decl -> modifier type IDENTIFIER LPAREN formals RPAREN block .)
+    STATIC          reduce using rule 27 (method_decl -> modifier type IDENTIFIER LPAREN formals RPAREN block .)
+    VOID            reduce using rule 27 (method_decl -> modifier type IDENTIFIER LPAREN formals RPAREN block .)
+    IDENTIFIER      reduce using rule 27 (method_decl -> modifier type IDENTIFIER LPAREN formals RPAREN block .)
+    INT             reduce using rule 27 (method_decl -> modifier type IDENTIFIER LPAREN formals RPAREN block .)
+    FLOAT           reduce using rule 27 (method_decl -> modifier type IDENTIFIER LPAREN formals RPAREN block .)
+    BOOLEAN         reduce using rule 27 (method_decl -> modifier type IDENTIFIER LPAREN formals RPAREN block .)
+    RCURLY          reduce using rule 27 (method_decl -> modifier type IDENTIFIER LPAREN formals RPAREN block .)
+
+
+state 94
+
+    (52) stmt -> RETURN expr SEMICOLON .
+
+    IF              reduce using rule 52 (stmt -> RETURN expr SEMICOLON .)
+    WHILE           reduce using rule 52 (stmt -> RETURN expr SEMICOLON .)
+    FOR             reduce using rule 52 (stmt -> RETURN expr SEMICOLON .)
+    RETURN          reduce using rule 52 (stmt -> RETURN expr SEMICOLON .)
+    BREAK           reduce using rule 52 (stmt -> RETURN expr SEMICOLON .)
+    CONTINUE        reduce using rule 52 (stmt -> RETURN expr SEMICOLON .)
+    SEMICOLON       reduce using rule 52 (stmt -> RETURN expr SEMICOLON .)
+    LCURLY          reduce using rule 52 (stmt -> RETURN expr SEMICOLON .)
+    INT             reduce using rule 52 (stmt -> RETURN expr SEMICOLON .)
+    FLOAT           reduce using rule 52 (stmt -> RETURN expr SEMICOLON .)
+    BOOLEAN         reduce using rule 52 (stmt -> RETURN expr SEMICOLON .)
+    IDENTIFIER      reduce using rule 52 (stmt -> RETURN expr SEMICOLON .)
+    RCURLY          reduce using rule 52 (stmt -> RETURN expr SEMICOLON .)
+    ELSE            reduce using rule 52 (stmt -> RETURN expr SEMICOLON .)
+
+
+state 95
+
+    (41) stmt -> WHILE LPAREN expr . RPAREN stmt
+
+    RPAREN          shift and go to state 99
+
+
+state 96
+
+    (42) stmt -> FOR LPAREN SEMICOLON . SEMICOLON RPAREN stmt
+    (47) stmt -> FOR LPAREN SEMICOLON . expr SEMICOLON RPAREN stmt
+    (48) stmt -> FOR LPAREN SEMICOLON . expr SEMICOLON stmt_expr RPAREN stmt
+    (49) stmt -> FOR LPAREN SEMICOLON . SEMICOLON stmt_expr RPAREN stmt
+    (50) stmt -> FOR LPAREN SEMICOLON . SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (59) expr -> . empty
+    (83) empty -> .
+
+  ! shift/reduce conflict for SEMICOLON resolved as shift
+    SEMICOLON       shift and go to state 100
+
+  ! SEMICOLON       [ reduce using rule 83 (empty -> .) ]
+
+    expr                           shift and go to state 101
+    empty                          shift and go to state 83
+
+state 97
+
+    (43) stmt -> FOR LPAREN stmt_expr . SEMICOLON SEMICOLON RPAREN stmt
+    (44) stmt -> FOR LPAREN stmt_expr . SEMICOLON expr SEMICOLON RPAREN stmt
+    (45) stmt -> FOR LPAREN stmt_expr . SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (46) stmt -> FOR LPAREN stmt_expr . SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt
+
+    SEMICOLON       shift and go to state 102
+
+
+state 98
+
+    (39) stmt -> IF LPAREN expr . RPAREN stmt
+    (40) stmt -> IF LPAREN expr . RPAREN stmt ELSE stmt
+
+    RPAREN          shift and go to state 103
+
+
+state 99
+
+    (41) stmt -> WHILE LPAREN expr RPAREN . stmt
+    (39) stmt -> . IF LPAREN expr RPAREN stmt
+    (40) stmt -> . IF LPAREN expr RPAREN stmt ELSE stmt
+    (41) stmt -> . WHILE LPAREN expr RPAREN stmt
+    (42) stmt -> . FOR LPAREN SEMICOLON SEMICOLON RPAREN stmt
+    (43) stmt -> . FOR LPAREN stmt_expr SEMICOLON SEMICOLON RPAREN stmt
+    (44) stmt -> . FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON RPAREN stmt
+    (45) stmt -> . FOR LPAREN stmt_expr SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (46) stmt -> . FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt
+    (47) stmt -> . FOR LPAREN SEMICOLON expr SEMICOLON RPAREN stmt
+    (48) stmt -> . FOR LPAREN SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt
+    (49) stmt -> . FOR LPAREN SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (50) stmt -> . FOR LPAREN SEMICOLON SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (51) stmt -> . RETURN SEMICOLON
+    (52) stmt -> . RETURN expr SEMICOLON
+    (53) stmt -> . stmt_expr SEMICOLON
+    (54) stmt -> . BREAK SEMICOLON
+    (55) stmt -> . CONTINUE SEMICOLON
+    (56) stmt -> . block
+    (57) stmt -> . var_decl
+    (58) stmt -> . SEMICOLON
+    (60) stmt_expr -> . empty
+    (35) block -> . LCURLY stmthelper RCURLY
+    (36) block -> . LCURLY RCURLY
+    (15) var_decl -> . type variables SEMICOLON
+    (83) empty -> .
+    (16) type -> . INT
+    (17) type -> . FLOAT
+    (18) type -> . BOOLEAN
+    (19) type -> . IDENTIFIER
+
+  ! shift/reduce conflict for SEMICOLON resolved as shift
+    IF              shift and go to state 70
+    WHILE           shift and go to state 62
+    FOR             shift and go to state 68
+    RETURN          shift and go to state 61
+    BREAK           shift and go to state 73
+    CONTINUE        shift and go to state 74
+    SEMICOLON       shift and go to state 63
+    LCURLY          shift and go to state 49
+    INT             shift and go to state 17
+    FLOAT           shift and go to state 19
+    BOOLEAN         shift and go to state 21
+    IDENTIFIER      shift and go to state 38
+
+  ! SEMICOLON       [ reduce using rule 83 (empty -> .) ]
+
+    var_decl                       shift and go to state 72
+    stmt                           shift and go to state 104
+    stmt_expr                      shift and go to state 65
+    block                          shift and go to state 75
+    type                           shift and go to state 66
+    empty                          shift and go to state 67
+
+state 100
+
+    (42) stmt -> FOR LPAREN SEMICOLON SEMICOLON . RPAREN stmt
+    (49) stmt -> FOR LPAREN SEMICOLON SEMICOLON . stmt_expr RPAREN stmt
+    (50) stmt -> FOR LPAREN SEMICOLON SEMICOLON . SEMICOLON stmt_expr RPAREN stmt
+    (60) stmt_expr -> . empty
+    (83) empty -> .
+
+  ! shift/reduce conflict for RPAREN resolved as shift
+    RPAREN          shift and go to state 105
+    SEMICOLON       shift and go to state 106
+
+  ! RPAREN          [ reduce using rule 83 (empty -> .) ]
+
+    stmt_expr                      shift and go to state 107
+    empty                          shift and go to state 67
+
+state 101
+
+    (47) stmt -> FOR LPAREN SEMICOLON expr . SEMICOLON RPAREN stmt
+    (48) stmt -> FOR LPAREN SEMICOLON expr . SEMICOLON stmt_expr RPAREN stmt
+
+    SEMICOLON       shift and go to state 108
+
+
+state 102
+
+    (43) stmt -> FOR LPAREN stmt_expr SEMICOLON . SEMICOLON RPAREN stmt
+    (44) stmt -> FOR LPAREN stmt_expr SEMICOLON . expr SEMICOLON RPAREN stmt
+    (45) stmt -> FOR LPAREN stmt_expr SEMICOLON . SEMICOLON stmt_expr RPAREN stmt
+    (46) stmt -> FOR LPAREN stmt_expr SEMICOLON . expr SEMICOLON stmt_expr RPAREN stmt
+    (59) expr -> . empty
+    (83) empty -> .
+
+  ! shift/reduce conflict for SEMICOLON resolved as shift
+    SEMICOLON       shift and go to state 109
+
+  ! SEMICOLON       [ reduce using rule 83 (empty -> .) ]
+
+    empty                          shift and go to state 83
+    expr                           shift and go to state 110
+
+state 103
+
+    (39) stmt -> IF LPAREN expr RPAREN . stmt
+    (40) stmt -> IF LPAREN expr RPAREN . stmt ELSE stmt
+    (39) stmt -> . IF LPAREN expr RPAREN stmt
+    (40) stmt -> . IF LPAREN expr RPAREN stmt ELSE stmt
+    (41) stmt -> . WHILE LPAREN expr RPAREN stmt
+    (42) stmt -> . FOR LPAREN SEMICOLON SEMICOLON RPAREN stmt
+    (43) stmt -> . FOR LPAREN stmt_expr SEMICOLON SEMICOLON RPAREN stmt
+    (44) stmt -> . FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON RPAREN stmt
+    (45) stmt -> . FOR LPAREN stmt_expr SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (46) stmt -> . FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt
+    (47) stmt -> . FOR LPAREN SEMICOLON expr SEMICOLON RPAREN stmt
+    (48) stmt -> . FOR LPAREN SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt
+    (49) stmt -> . FOR LPAREN SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (50) stmt -> . FOR LPAREN SEMICOLON SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (51) stmt -> . RETURN SEMICOLON
+    (52) stmt -> . RETURN expr SEMICOLON
+    (53) stmt -> . stmt_expr SEMICOLON
+    (54) stmt -> . BREAK SEMICOLON
+    (55) stmt -> . CONTINUE SEMICOLON
+    (56) stmt -> . block
+    (57) stmt -> . var_decl
+    (58) stmt -> . SEMICOLON
+    (60) stmt_expr -> . empty
+    (35) block -> . LCURLY stmthelper RCURLY
+    (36) block -> . LCURLY RCURLY
+    (15) var_decl -> . type variables SEMICOLON
+    (83) empty -> .
+    (16) type -> . INT
+    (17) type -> . FLOAT
+    (18) type -> . BOOLEAN
+    (19) type -> . IDENTIFIER
+
+  ! shift/reduce conflict for SEMICOLON resolved as shift
+    IF              shift and go to state 70
+    WHILE           shift and go to state 62
+    FOR             shift and go to state 68
+    RETURN          shift and go to state 61
+    BREAK           shift and go to state 73
+    CONTINUE        shift and go to state 74
+    SEMICOLON       shift and go to state 63
+    LCURLY          shift and go to state 49
+    INT             shift and go to state 17
+    FLOAT           shift and go to state 19
+    BOOLEAN         shift and go to state 21
+    IDENTIFIER      shift and go to state 38
+
+  ! SEMICOLON       [ reduce using rule 83 (empty -> .) ]
+
+    var_decl                       shift and go to state 72
+    stmt                           shift and go to state 111
+    stmt_expr                      shift and go to state 65
+    block                          shift and go to state 75
+    type                           shift and go to state 66
+    empty                          shift and go to state 67
+
+state 104
+
+    (41) stmt -> WHILE LPAREN expr RPAREN stmt .
+
+    IF              reduce using rule 41 (stmt -> WHILE LPAREN expr RPAREN stmt .)
+    WHILE           reduce using rule 41 (stmt -> WHILE LPAREN expr RPAREN stmt .)
+    FOR             reduce using rule 41 (stmt -> WHILE LPAREN expr RPAREN stmt .)
+    RETURN          reduce using rule 41 (stmt -> WHILE LPAREN expr RPAREN stmt .)
+    BREAK           reduce using rule 41 (stmt -> WHILE LPAREN expr RPAREN stmt .)
+    CONTINUE        reduce using rule 41 (stmt -> WHILE LPAREN expr RPAREN stmt .)
+    SEMICOLON       reduce using rule 41 (stmt -> WHILE LPAREN expr RPAREN stmt .)
+    LCURLY          reduce using rule 41 (stmt -> WHILE LPAREN expr RPAREN stmt .)
+    INT             reduce using rule 41 (stmt -> WHILE LPAREN expr RPAREN stmt .)
+    FLOAT           reduce using rule 41 (stmt -> WHILE LPAREN expr RPAREN stmt .)
+    BOOLEAN         reduce using rule 41 (stmt -> WHILE LPAREN expr RPAREN stmt .)
+    IDENTIFIER      reduce using rule 41 (stmt -> WHILE LPAREN expr RPAREN stmt .)
+    RCURLY          reduce using rule 41 (stmt -> WHILE LPAREN expr RPAREN stmt .)
+    ELSE            reduce using rule 41 (stmt -> WHILE LPAREN expr RPAREN stmt .)
+
+
+state 105
+
+    (42) stmt -> FOR LPAREN SEMICOLON SEMICOLON RPAREN . stmt
+    (39) stmt -> . IF LPAREN expr RPAREN stmt
+    (40) stmt -> . IF LPAREN expr RPAREN stmt ELSE stmt
+    (41) stmt -> . WHILE LPAREN expr RPAREN stmt
+    (42) stmt -> . FOR LPAREN SEMICOLON SEMICOLON RPAREN stmt
+    (43) stmt -> . FOR LPAREN stmt_expr SEMICOLON SEMICOLON RPAREN stmt
+    (44) stmt -> . FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON RPAREN stmt
+    (45) stmt -> . FOR LPAREN stmt_expr SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (46) stmt -> . FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt
+    (47) stmt -> . FOR LPAREN SEMICOLON expr SEMICOLON RPAREN stmt
+    (48) stmt -> . FOR LPAREN SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt
+    (49) stmt -> . FOR LPAREN SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (50) stmt -> . FOR LPAREN SEMICOLON SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (51) stmt -> . RETURN SEMICOLON
+    (52) stmt -> . RETURN expr SEMICOLON
+    (53) stmt -> . stmt_expr SEMICOLON
+    (54) stmt -> . BREAK SEMICOLON
+    (55) stmt -> . CONTINUE SEMICOLON
+    (56) stmt -> . block
+    (57) stmt -> . var_decl
+    (58) stmt -> . SEMICOLON
+    (60) stmt_expr -> . empty
+    (35) block -> . LCURLY stmthelper RCURLY
+    (36) block -> . LCURLY RCURLY
+    (15) var_decl -> . type variables SEMICOLON
+    (83) empty -> .
+    (16) type -> . INT
+    (17) type -> . FLOAT
+    (18) type -> . BOOLEAN
+    (19) type -> . IDENTIFIER
+
+  ! shift/reduce conflict for SEMICOLON resolved as shift
+    IF              shift and go to state 70
+    WHILE           shift and go to state 62
+    FOR             shift and go to state 68
+    RETURN          shift and go to state 61
+    BREAK           shift and go to state 73
+    CONTINUE        shift and go to state 74
+    SEMICOLON       shift and go to state 63
+    LCURLY          shift and go to state 49
+    INT             shift and go to state 17
+    FLOAT           shift and go to state 19
+    BOOLEAN         shift and go to state 21
+    IDENTIFIER      shift and go to state 38
+
+  ! SEMICOLON       [ reduce using rule 83 (empty -> .) ]
+
+    var_decl                       shift and go to state 72
+    stmt                           shift and go to state 112
+    stmt_expr                      shift and go to state 65
+    block                          shift and go to state 75
+    type                           shift and go to state 66
+    empty                          shift and go to state 67
+
+state 106
+
+    (50) stmt -> FOR LPAREN SEMICOLON SEMICOLON SEMICOLON . stmt_expr RPAREN stmt
+    (60) stmt_expr -> . empty
+    (83) empty -> .
+
+    RPAREN          reduce using rule 83 (empty -> .)
+
+    stmt_expr                      shift and go to state 113
+    empty                          shift and go to state 67
+
+state 107
+
+    (49) stmt -> FOR LPAREN SEMICOLON SEMICOLON stmt_expr . RPAREN stmt
+
+    RPAREN          shift and go to state 114
+
+
+state 108
+
+    (47) stmt -> FOR LPAREN SEMICOLON expr SEMICOLON . RPAREN stmt
+    (48) stmt -> FOR LPAREN SEMICOLON expr SEMICOLON . stmt_expr RPAREN stmt
+    (60) stmt_expr -> . empty
+    (83) empty -> .
+
+  ! shift/reduce conflict for RPAREN resolved as shift
+    RPAREN          shift and go to state 115
+
+  ! RPAREN          [ reduce using rule 83 (empty -> .) ]
+
+    empty                          shift and go to state 67
+    stmt_expr                      shift and go to state 116
+
+state 109
+
+    (43) stmt -> FOR LPAREN stmt_expr SEMICOLON SEMICOLON . RPAREN stmt
+    (45) stmt -> FOR LPAREN stmt_expr SEMICOLON SEMICOLON . stmt_expr RPAREN stmt
+    (60) stmt_expr -> . empty
+    (83) empty -> .
+
+  ! shift/reduce conflict for RPAREN resolved as shift
+    RPAREN          shift and go to state 117
+
+  ! RPAREN          [ reduce using rule 83 (empty -> .) ]
+
+    stmt_expr                      shift and go to state 118
+    empty                          shift and go to state 67
+
+state 110
+
+    (44) stmt -> FOR LPAREN stmt_expr SEMICOLON expr . SEMICOLON RPAREN stmt
+    (46) stmt -> FOR LPAREN stmt_expr SEMICOLON expr . SEMICOLON stmt_expr RPAREN stmt
+
+    SEMICOLON       shift and go to state 119
+
+
+state 111
+
+    (39) stmt -> IF LPAREN expr RPAREN stmt .
+    (40) stmt -> IF LPAREN expr RPAREN stmt . ELSE stmt
+
+  ! shift/reduce conflict for ELSE resolved as shift
+    IF              reduce using rule 39 (stmt -> IF LPAREN expr RPAREN stmt .)
+    WHILE           reduce using rule 39 (stmt -> IF LPAREN expr RPAREN stmt .)
+    FOR             reduce using rule 39 (stmt -> IF LPAREN expr RPAREN stmt .)
+    RETURN          reduce using rule 39 (stmt -> IF LPAREN expr RPAREN stmt .)
+    BREAK           reduce using rule 39 (stmt -> IF LPAREN expr RPAREN stmt .)
+    CONTINUE        reduce using rule 39 (stmt -> IF LPAREN expr RPAREN stmt .)
+    SEMICOLON       reduce using rule 39 (stmt -> IF LPAREN expr RPAREN stmt .)
+    LCURLY          reduce using rule 39 (stmt -> IF LPAREN expr RPAREN stmt .)
+    INT             reduce using rule 39 (stmt -> IF LPAREN expr RPAREN stmt .)
+    FLOAT           reduce using rule 39 (stmt -> IF LPAREN expr RPAREN stmt .)
+    BOOLEAN         reduce using rule 39 (stmt -> IF LPAREN expr RPAREN stmt .)
+    IDENTIFIER      reduce using rule 39 (stmt -> IF LPAREN expr RPAREN stmt .)
+    RCURLY          reduce using rule 39 (stmt -> IF LPAREN expr RPAREN stmt .)
+    ELSE            shift and go to state 120
+
+  ! ELSE            [ reduce using rule 39 (stmt -> IF LPAREN expr RPAREN stmt .) ]
+
+
+state 112
+
+    (42) stmt -> FOR LPAREN SEMICOLON SEMICOLON RPAREN stmt .
+
+    IF              reduce using rule 42 (stmt -> FOR LPAREN SEMICOLON SEMICOLON RPAREN stmt .)
+    WHILE           reduce using rule 42 (stmt -> FOR LPAREN SEMICOLON SEMICOLON RPAREN stmt .)
+    FOR             reduce using rule 42 (stmt -> FOR LPAREN SEMICOLON SEMICOLON RPAREN stmt .)
+    RETURN          reduce using rule 42 (stmt -> FOR LPAREN SEMICOLON SEMICOLON RPAREN stmt .)
+    BREAK           reduce using rule 42 (stmt -> FOR LPAREN SEMICOLON SEMICOLON RPAREN stmt .)
+    CONTINUE        reduce using rule 42 (stmt -> FOR LPAREN SEMICOLON SEMICOLON RPAREN stmt .)
+    SEMICOLON       reduce using rule 42 (stmt -> FOR LPAREN SEMICOLON SEMICOLON RPAREN stmt .)
+    LCURLY          reduce using rule 42 (stmt -> FOR LPAREN SEMICOLON SEMICOLON RPAREN stmt .)
+    INT             reduce using rule 42 (stmt -> FOR LPAREN SEMICOLON SEMICOLON RPAREN stmt .)
+    FLOAT           reduce using rule 42 (stmt -> FOR LPAREN SEMICOLON SEMICOLON RPAREN stmt .)
+    BOOLEAN         reduce using rule 42 (stmt -> FOR LPAREN SEMICOLON SEMICOLON RPAREN stmt .)
+    IDENTIFIER      reduce using rule 42 (stmt -> FOR LPAREN SEMICOLON SEMICOLON RPAREN stmt .)
+    RCURLY          reduce using rule 42 (stmt -> FOR LPAREN SEMICOLON SEMICOLON RPAREN stmt .)
+    ELSE            reduce using rule 42 (stmt -> FOR LPAREN SEMICOLON SEMICOLON RPAREN stmt .)
+
+
+state 113
+
+    (50) stmt -> FOR LPAREN SEMICOLON SEMICOLON SEMICOLON stmt_expr . RPAREN stmt
+
+    RPAREN          shift and go to state 121
+
+
+state 114
+
+    (49) stmt -> FOR LPAREN SEMICOLON SEMICOLON stmt_expr RPAREN . stmt
+    (39) stmt -> . IF LPAREN expr RPAREN stmt
+    (40) stmt -> . IF LPAREN expr RPAREN stmt ELSE stmt
+    (41) stmt -> . WHILE LPAREN expr RPAREN stmt
+    (42) stmt -> . FOR LPAREN SEMICOLON SEMICOLON RPAREN stmt
+    (43) stmt -> . FOR LPAREN stmt_expr SEMICOLON SEMICOLON RPAREN stmt
+    (44) stmt -> . FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON RPAREN stmt
+    (45) stmt -> . FOR LPAREN stmt_expr SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (46) stmt -> . FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt
+    (47) stmt -> . FOR LPAREN SEMICOLON expr SEMICOLON RPAREN stmt
+    (48) stmt -> . FOR LPAREN SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt
+    (49) stmt -> . FOR LPAREN SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (50) stmt -> . FOR LPAREN SEMICOLON SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (51) stmt -> . RETURN SEMICOLON
+    (52) stmt -> . RETURN expr SEMICOLON
+    (53) stmt -> . stmt_expr SEMICOLON
+    (54) stmt -> . BREAK SEMICOLON
+    (55) stmt -> . CONTINUE SEMICOLON
+    (56) stmt -> . block
+    (57) stmt -> . var_decl
+    (58) stmt -> . SEMICOLON
+    (60) stmt_expr -> . empty
+    (35) block -> . LCURLY stmthelper RCURLY
+    (36) block -> . LCURLY RCURLY
+    (15) var_decl -> . type variables SEMICOLON
+    (83) empty -> .
+    (16) type -> . INT
+    (17) type -> . FLOAT
+    (18) type -> . BOOLEAN
+    (19) type -> . IDENTIFIER
+
+  ! shift/reduce conflict for SEMICOLON resolved as shift
+    IF              shift and go to state 70
+    WHILE           shift and go to state 62
+    FOR             shift and go to state 68
+    RETURN          shift and go to state 61
+    BREAK           shift and go to state 73
+    CONTINUE        shift and go to state 74
+    SEMICOLON       shift and go to state 63
+    LCURLY          shift and go to state 49
+    INT             shift and go to state 17
+    FLOAT           shift and go to state 19
+    BOOLEAN         shift and go to state 21
+    IDENTIFIER      shift and go to state 38
+
+  ! SEMICOLON       [ reduce using rule 83 (empty -> .) ]
+
+    var_decl                       shift and go to state 72
+    stmt                           shift and go to state 122
+    stmt_expr                      shift and go to state 65
+    block                          shift and go to state 75
+    type                           shift and go to state 66
+    empty                          shift and go to state 67
+
+state 115
+
+    (47) stmt -> FOR LPAREN SEMICOLON expr SEMICOLON RPAREN . stmt
+    (39) stmt -> . IF LPAREN expr RPAREN stmt
+    (40) stmt -> . IF LPAREN expr RPAREN stmt ELSE stmt
+    (41) stmt -> . WHILE LPAREN expr RPAREN stmt
+    (42) stmt -> . FOR LPAREN SEMICOLON SEMICOLON RPAREN stmt
+    (43) stmt -> . FOR LPAREN stmt_expr SEMICOLON SEMICOLON RPAREN stmt
+    (44) stmt -> . FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON RPAREN stmt
+    (45) stmt -> . FOR LPAREN stmt_expr SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (46) stmt -> . FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt
+    (47) stmt -> . FOR LPAREN SEMICOLON expr SEMICOLON RPAREN stmt
+    (48) stmt -> . FOR LPAREN SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt
+    (49) stmt -> . FOR LPAREN SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (50) stmt -> . FOR LPAREN SEMICOLON SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (51) stmt -> . RETURN SEMICOLON
+    (52) stmt -> . RETURN expr SEMICOLON
+    (53) stmt -> . stmt_expr SEMICOLON
+    (54) stmt -> . BREAK SEMICOLON
+    (55) stmt -> . CONTINUE SEMICOLON
+    (56) stmt -> . block
+    (57) stmt -> . var_decl
+    (58) stmt -> . SEMICOLON
+    (60) stmt_expr -> . empty
+    (35) block -> . LCURLY stmthelper RCURLY
+    (36) block -> . LCURLY RCURLY
+    (15) var_decl -> . type variables SEMICOLON
+    (83) empty -> .
+    (16) type -> . INT
+    (17) type -> . FLOAT
+    (18) type -> . BOOLEAN
+    (19) type -> . IDENTIFIER
+
+  ! shift/reduce conflict for SEMICOLON resolved as shift
+    IF              shift and go to state 70
+    WHILE           shift and go to state 62
+    FOR             shift and go to state 68
+    RETURN          shift and go to state 61
+    BREAK           shift and go to state 73
+    CONTINUE        shift and go to state 74
+    SEMICOLON       shift and go to state 63
+    LCURLY          shift and go to state 49
+    INT             shift and go to state 17
+    FLOAT           shift and go to state 19
+    BOOLEAN         shift and go to state 21
+    IDENTIFIER      shift and go to state 38
+
+  ! SEMICOLON       [ reduce using rule 83 (empty -> .) ]
+
+    var_decl                       shift and go to state 72
+    stmt                           shift and go to state 123
+    stmt_expr                      shift and go to state 65
+    block                          shift and go to state 75
+    type                           shift and go to state 66
+    empty                          shift and go to state 67
+
+state 116
+
+    (48) stmt -> FOR LPAREN SEMICOLON expr SEMICOLON stmt_expr . RPAREN stmt
+
+    RPAREN          shift and go to state 124
+
+
+state 117
+
+    (43) stmt -> FOR LPAREN stmt_expr SEMICOLON SEMICOLON RPAREN . stmt
+    (39) stmt -> . IF LPAREN expr RPAREN stmt
+    (40) stmt -> . IF LPAREN expr RPAREN stmt ELSE stmt
+    (41) stmt -> . WHILE LPAREN expr RPAREN stmt
+    (42) stmt -> . FOR LPAREN SEMICOLON SEMICOLON RPAREN stmt
+    (43) stmt -> . FOR LPAREN stmt_expr SEMICOLON SEMICOLON RPAREN stmt
+    (44) stmt -> . FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON RPAREN stmt
+    (45) stmt -> . FOR LPAREN stmt_expr SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (46) stmt -> . FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt
+    (47) stmt -> . FOR LPAREN SEMICOLON expr SEMICOLON RPAREN stmt
+    (48) stmt -> . FOR LPAREN SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt
+    (49) stmt -> . FOR LPAREN SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (50) stmt -> . FOR LPAREN SEMICOLON SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (51) stmt -> . RETURN SEMICOLON
+    (52) stmt -> . RETURN expr SEMICOLON
+    (53) stmt -> . stmt_expr SEMICOLON
+    (54) stmt -> . BREAK SEMICOLON
+    (55) stmt -> . CONTINUE SEMICOLON
+    (56) stmt -> . block
+    (57) stmt -> . var_decl
+    (58) stmt -> . SEMICOLON
+    (60) stmt_expr -> . empty
+    (35) block -> . LCURLY stmthelper RCURLY
+    (36) block -> . LCURLY RCURLY
+    (15) var_decl -> . type variables SEMICOLON
+    (83) empty -> .
+    (16) type -> . INT
+    (17) type -> . FLOAT
+    (18) type -> . BOOLEAN
+    (19) type -> . IDENTIFIER
+
+  ! shift/reduce conflict for SEMICOLON resolved as shift
+    IF              shift and go to state 70
+    WHILE           shift and go to state 62
+    FOR             shift and go to state 68
+    RETURN          shift and go to state 61
+    BREAK           shift and go to state 73
+    CONTINUE        shift and go to state 74
+    SEMICOLON       shift and go to state 63
+    LCURLY          shift and go to state 49
+    INT             shift and go to state 17
+    FLOAT           shift and go to state 19
+    BOOLEAN         shift and go to state 21
+    IDENTIFIER      shift and go to state 38
+
+  ! SEMICOLON       [ reduce using rule 83 (empty -> .) ]
+
+    var_decl                       shift and go to state 72
+    stmt                           shift and go to state 125
+    stmt_expr                      shift and go to state 65
+    block                          shift and go to state 75
+    type                           shift and go to state 66
+    empty                          shift and go to state 67
+
+state 118
+
+    (45) stmt -> FOR LPAREN stmt_expr SEMICOLON SEMICOLON stmt_expr . RPAREN stmt
+
+    RPAREN          shift and go to state 126
+
+
+state 119
+
+    (44) stmt -> FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON . RPAREN stmt
+    (46) stmt -> FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON . stmt_expr RPAREN stmt
+    (60) stmt_expr -> . empty
+    (83) empty -> .
+
+  ! shift/reduce conflict for RPAREN resolved as shift
+    RPAREN          shift and go to state 127
+
+  ! RPAREN          [ reduce using rule 83 (empty -> .) ]
+
+    stmt_expr                      shift and go to state 128
+    empty                          shift and go to state 67
+
+state 120
+
+    (40) stmt -> IF LPAREN expr RPAREN stmt ELSE . stmt
+    (39) stmt -> . IF LPAREN expr RPAREN stmt
+    (40) stmt -> . IF LPAREN expr RPAREN stmt ELSE stmt
+    (41) stmt -> . WHILE LPAREN expr RPAREN stmt
+    (42) stmt -> . FOR LPAREN SEMICOLON SEMICOLON RPAREN stmt
+    (43) stmt -> . FOR LPAREN stmt_expr SEMICOLON SEMICOLON RPAREN stmt
+    (44) stmt -> . FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON RPAREN stmt
+    (45) stmt -> . FOR LPAREN stmt_expr SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (46) stmt -> . FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt
+    (47) stmt -> . FOR LPAREN SEMICOLON expr SEMICOLON RPAREN stmt
+    (48) stmt -> . FOR LPAREN SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt
+    (49) stmt -> . FOR LPAREN SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (50) stmt -> . FOR LPAREN SEMICOLON SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (51) stmt -> . RETURN SEMICOLON
+    (52) stmt -> . RETURN expr SEMICOLON
+    (53) stmt -> . stmt_expr SEMICOLON
+    (54) stmt -> . BREAK SEMICOLON
+    (55) stmt -> . CONTINUE SEMICOLON
+    (56) stmt -> . block
+    (57) stmt -> . var_decl
+    (58) stmt -> . SEMICOLON
+    (60) stmt_expr -> . empty
+    (35) block -> . LCURLY stmthelper RCURLY
+    (36) block -> . LCURLY RCURLY
+    (15) var_decl -> . type variables SEMICOLON
+    (83) empty -> .
+    (16) type -> . INT
+    (17) type -> . FLOAT
+    (18) type -> . BOOLEAN
+    (19) type -> . IDENTIFIER
+
+  ! shift/reduce conflict for SEMICOLON resolved as shift
+    IF              shift and go to state 70
+    WHILE           shift and go to state 62
+    FOR             shift and go to state 68
+    RETURN          shift and go to state 61
+    BREAK           shift and go to state 73
+    CONTINUE        shift and go to state 74
+    SEMICOLON       shift and go to state 63
+    LCURLY          shift and go to state 49
+    INT             shift and go to state 17
+    FLOAT           shift and go to state 19
+    BOOLEAN         shift and go to state 21
+    IDENTIFIER      shift and go to state 38
+
+  ! SEMICOLON       [ reduce using rule 83 (empty -> .) ]
+
+    var_decl                       shift and go to state 72
+    stmt                           shift and go to state 129
+    stmt_expr                      shift and go to state 65
+    block                          shift and go to state 75
+    type                           shift and go to state 66
+    empty                          shift and go to state 67
+
+state 121
+
+    (50) stmt -> FOR LPAREN SEMICOLON SEMICOLON SEMICOLON stmt_expr RPAREN . stmt
+    (39) stmt -> . IF LPAREN expr RPAREN stmt
+    (40) stmt -> . IF LPAREN expr RPAREN stmt ELSE stmt
+    (41) stmt -> . WHILE LPAREN expr RPAREN stmt
+    (42) stmt -> . FOR LPAREN SEMICOLON SEMICOLON RPAREN stmt
+    (43) stmt -> . FOR LPAREN stmt_expr SEMICOLON SEMICOLON RPAREN stmt
+    (44) stmt -> . FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON RPAREN stmt
+    (45) stmt -> . FOR LPAREN stmt_expr SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (46) stmt -> . FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt
+    (47) stmt -> . FOR LPAREN SEMICOLON expr SEMICOLON RPAREN stmt
+    (48) stmt -> . FOR LPAREN SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt
+    (49) stmt -> . FOR LPAREN SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (50) stmt -> . FOR LPAREN SEMICOLON SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (51) stmt -> . RETURN SEMICOLON
+    (52) stmt -> . RETURN expr SEMICOLON
+    (53) stmt -> . stmt_expr SEMICOLON
+    (54) stmt -> . BREAK SEMICOLON
+    (55) stmt -> . CONTINUE SEMICOLON
+    (56) stmt -> . block
+    (57) stmt -> . var_decl
+    (58) stmt -> . SEMICOLON
+    (60) stmt_expr -> . empty
+    (35) block -> . LCURLY stmthelper RCURLY
+    (36) block -> . LCURLY RCURLY
+    (15) var_decl -> . type variables SEMICOLON
+    (83) empty -> .
+    (16) type -> . INT
+    (17) type -> . FLOAT
+    (18) type -> . BOOLEAN
+    (19) type -> . IDENTIFIER
+
+  ! shift/reduce conflict for SEMICOLON resolved as shift
+    IF              shift and go to state 70
+    WHILE           shift and go to state 62
+    FOR             shift and go to state 68
+    RETURN          shift and go to state 61
+    BREAK           shift and go to state 73
+    CONTINUE        shift and go to state 74
+    SEMICOLON       shift and go to state 63
+    LCURLY          shift and go to state 49
+    INT             shift and go to state 17
+    FLOAT           shift and go to state 19
+    BOOLEAN         shift and go to state 21
+    IDENTIFIER      shift and go to state 38
+
+  ! SEMICOLON       [ reduce using rule 83 (empty -> .) ]
+
+    var_decl                       shift and go to state 72
+    stmt                           shift and go to state 130
+    stmt_expr                      shift and go to state 65
+    block                          shift and go to state 75
+    type                           shift and go to state 66
+    empty                          shift and go to state 67
+
+state 122
+
+    (49) stmt -> FOR LPAREN SEMICOLON SEMICOLON stmt_expr RPAREN stmt .
+
+    IF              reduce using rule 49 (stmt -> FOR LPAREN SEMICOLON SEMICOLON stmt_expr RPAREN stmt .)
+    WHILE           reduce using rule 49 (stmt -> FOR LPAREN SEMICOLON SEMICOLON stmt_expr RPAREN stmt .)
+    FOR             reduce using rule 49 (stmt -> FOR LPAREN SEMICOLON SEMICOLON stmt_expr RPAREN stmt .)
+    RETURN          reduce using rule 49 (stmt -> FOR LPAREN SEMICOLON SEMICOLON stmt_expr RPAREN stmt .)
+    BREAK           reduce using rule 49 (stmt -> FOR LPAREN SEMICOLON SEMICOLON stmt_expr RPAREN stmt .)
+    CONTINUE        reduce using rule 49 (stmt -> FOR LPAREN SEMICOLON SEMICOLON stmt_expr RPAREN stmt .)
+    SEMICOLON       reduce using rule 49 (stmt -> FOR LPAREN SEMICOLON SEMICOLON stmt_expr RPAREN stmt .)
+    LCURLY          reduce using rule 49 (stmt -> FOR LPAREN SEMICOLON SEMICOLON stmt_expr RPAREN stmt .)
+    INT             reduce using rule 49 (stmt -> FOR LPAREN SEMICOLON SEMICOLON stmt_expr RPAREN stmt .)
+    FLOAT           reduce using rule 49 (stmt -> FOR LPAREN SEMICOLON SEMICOLON stmt_expr RPAREN stmt .)
+    BOOLEAN         reduce using rule 49 (stmt -> FOR LPAREN SEMICOLON SEMICOLON stmt_expr RPAREN stmt .)
+    IDENTIFIER      reduce using rule 49 (stmt -> FOR LPAREN SEMICOLON SEMICOLON stmt_expr RPAREN stmt .)
+    RCURLY          reduce using rule 49 (stmt -> FOR LPAREN SEMICOLON SEMICOLON stmt_expr RPAREN stmt .)
+    ELSE            reduce using rule 49 (stmt -> FOR LPAREN SEMICOLON SEMICOLON stmt_expr RPAREN stmt .)
+
+
+state 123
+
+    (47) stmt -> FOR LPAREN SEMICOLON expr SEMICOLON RPAREN stmt .
+
+    IF              reduce using rule 47 (stmt -> FOR LPAREN SEMICOLON expr SEMICOLON RPAREN stmt .)
+    WHILE           reduce using rule 47 (stmt -> FOR LPAREN SEMICOLON expr SEMICOLON RPAREN stmt .)
+    FOR             reduce using rule 47 (stmt -> FOR LPAREN SEMICOLON expr SEMICOLON RPAREN stmt .)
+    RETURN          reduce using rule 47 (stmt -> FOR LPAREN SEMICOLON expr SEMICOLON RPAREN stmt .)
+    BREAK           reduce using rule 47 (stmt -> FOR LPAREN SEMICOLON expr SEMICOLON RPAREN stmt .)
+    CONTINUE        reduce using rule 47 (stmt -> FOR LPAREN SEMICOLON expr SEMICOLON RPAREN stmt .)
+    SEMICOLON       reduce using rule 47 (stmt -> FOR LPAREN SEMICOLON expr SEMICOLON RPAREN stmt .)
+    LCURLY          reduce using rule 47 (stmt -> FOR LPAREN SEMICOLON expr SEMICOLON RPAREN stmt .)
+    INT             reduce using rule 47 (stmt -> FOR LPAREN SEMICOLON expr SEMICOLON RPAREN stmt .)
+    FLOAT           reduce using rule 47 (stmt -> FOR LPAREN SEMICOLON expr SEMICOLON RPAREN stmt .)
+    BOOLEAN         reduce using rule 47 (stmt -> FOR LPAREN SEMICOLON expr SEMICOLON RPAREN stmt .)
+    IDENTIFIER      reduce using rule 47 (stmt -> FOR LPAREN SEMICOLON expr SEMICOLON RPAREN stmt .)
+    RCURLY          reduce using rule 47 (stmt -> FOR LPAREN SEMICOLON expr SEMICOLON RPAREN stmt .)
+    ELSE            reduce using rule 47 (stmt -> FOR LPAREN SEMICOLON expr SEMICOLON RPAREN stmt .)
+
+
+state 124
+
+    (48) stmt -> FOR LPAREN SEMICOLON expr SEMICOLON stmt_expr RPAREN . stmt
+    (39) stmt -> . IF LPAREN expr RPAREN stmt
+    (40) stmt -> . IF LPAREN expr RPAREN stmt ELSE stmt
+    (41) stmt -> . WHILE LPAREN expr RPAREN stmt
+    (42) stmt -> . FOR LPAREN SEMICOLON SEMICOLON RPAREN stmt
+    (43) stmt -> . FOR LPAREN stmt_expr SEMICOLON SEMICOLON RPAREN stmt
+    (44) stmt -> . FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON RPAREN stmt
+    (45) stmt -> . FOR LPAREN stmt_expr SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (46) stmt -> . FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt
+    (47) stmt -> . FOR LPAREN SEMICOLON expr SEMICOLON RPAREN stmt
+    (48) stmt -> . FOR LPAREN SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt
+    (49) stmt -> . FOR LPAREN SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (50) stmt -> . FOR LPAREN SEMICOLON SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (51) stmt -> . RETURN SEMICOLON
+    (52) stmt -> . RETURN expr SEMICOLON
+    (53) stmt -> . stmt_expr SEMICOLON
+    (54) stmt -> . BREAK SEMICOLON
+    (55) stmt -> . CONTINUE SEMICOLON
+    (56) stmt -> . block
+    (57) stmt -> . var_decl
+    (58) stmt -> . SEMICOLON
+    (60) stmt_expr -> . empty
+    (35) block -> . LCURLY stmthelper RCURLY
+    (36) block -> . LCURLY RCURLY
+    (15) var_decl -> . type variables SEMICOLON
+    (83) empty -> .
+    (16) type -> . INT
+    (17) type -> . FLOAT
+    (18) type -> . BOOLEAN
+    (19) type -> . IDENTIFIER
+
+  ! shift/reduce conflict for SEMICOLON resolved as shift
+    IF              shift and go to state 70
+    WHILE           shift and go to state 62
+    FOR             shift and go to state 68
+    RETURN          shift and go to state 61
+    BREAK           shift and go to state 73
+    CONTINUE        shift and go to state 74
+    SEMICOLON       shift and go to state 63
+    LCURLY          shift and go to state 49
+    INT             shift and go to state 17
+    FLOAT           shift and go to state 19
+    BOOLEAN         shift and go to state 21
+    IDENTIFIER      shift and go to state 38
+
+  ! SEMICOLON       [ reduce using rule 83 (empty -> .) ]
+
+    var_decl                       shift and go to state 72
+    stmt                           shift and go to state 131
+    stmt_expr                      shift and go to state 65
+    block                          shift and go to state 75
+    type                           shift and go to state 66
+    empty                          shift and go to state 67
+
+state 125
+
+    (43) stmt -> FOR LPAREN stmt_expr SEMICOLON SEMICOLON RPAREN stmt .
+
+    IF              reduce using rule 43 (stmt -> FOR LPAREN stmt_expr SEMICOLON SEMICOLON RPAREN stmt .)
+    WHILE           reduce using rule 43 (stmt -> FOR LPAREN stmt_expr SEMICOLON SEMICOLON RPAREN stmt .)
+    FOR             reduce using rule 43 (stmt -> FOR LPAREN stmt_expr SEMICOLON SEMICOLON RPAREN stmt .)
+    RETURN          reduce using rule 43 (stmt -> FOR LPAREN stmt_expr SEMICOLON SEMICOLON RPAREN stmt .)
+    BREAK           reduce using rule 43 (stmt -> FOR LPAREN stmt_expr SEMICOLON SEMICOLON RPAREN stmt .)
+    CONTINUE        reduce using rule 43 (stmt -> FOR LPAREN stmt_expr SEMICOLON SEMICOLON RPAREN stmt .)
+    SEMICOLON       reduce using rule 43 (stmt -> FOR LPAREN stmt_expr SEMICOLON SEMICOLON RPAREN stmt .)
+    LCURLY          reduce using rule 43 (stmt -> FOR LPAREN stmt_expr SEMICOLON SEMICOLON RPAREN stmt .)
+    INT             reduce using rule 43 (stmt -> FOR LPAREN stmt_expr SEMICOLON SEMICOLON RPAREN stmt .)
+    FLOAT           reduce using rule 43 (stmt -> FOR LPAREN stmt_expr SEMICOLON SEMICOLON RPAREN stmt .)
+    BOOLEAN         reduce using rule 43 (stmt -> FOR LPAREN stmt_expr SEMICOLON SEMICOLON RPAREN stmt .)
+    IDENTIFIER      reduce using rule 43 (stmt -> FOR LPAREN stmt_expr SEMICOLON SEMICOLON RPAREN stmt .)
+    RCURLY          reduce using rule 43 (stmt -> FOR LPAREN stmt_expr SEMICOLON SEMICOLON RPAREN stmt .)
+    ELSE            reduce using rule 43 (stmt -> FOR LPAREN stmt_expr SEMICOLON SEMICOLON RPAREN stmt .)
+
+
+state 126
+
+    (45) stmt -> FOR LPAREN stmt_expr SEMICOLON SEMICOLON stmt_expr RPAREN . stmt
+    (39) stmt -> . IF LPAREN expr RPAREN stmt
+    (40) stmt -> . IF LPAREN expr RPAREN stmt ELSE stmt
+    (41) stmt -> . WHILE LPAREN expr RPAREN stmt
+    (42) stmt -> . FOR LPAREN SEMICOLON SEMICOLON RPAREN stmt
+    (43) stmt -> . FOR LPAREN stmt_expr SEMICOLON SEMICOLON RPAREN stmt
+    (44) stmt -> . FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON RPAREN stmt
+    (45) stmt -> . FOR LPAREN stmt_expr SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (46) stmt -> . FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt
+    (47) stmt -> . FOR LPAREN SEMICOLON expr SEMICOLON RPAREN stmt
+    (48) stmt -> . FOR LPAREN SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt
+    (49) stmt -> . FOR LPAREN SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (50) stmt -> . FOR LPAREN SEMICOLON SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (51) stmt -> . RETURN SEMICOLON
+    (52) stmt -> . RETURN expr SEMICOLON
+    (53) stmt -> . stmt_expr SEMICOLON
+    (54) stmt -> . BREAK SEMICOLON
+    (55) stmt -> . CONTINUE SEMICOLON
+    (56) stmt -> . block
+    (57) stmt -> . var_decl
+    (58) stmt -> . SEMICOLON
+    (60) stmt_expr -> . empty
+    (35) block -> . LCURLY stmthelper RCURLY
+    (36) block -> . LCURLY RCURLY
+    (15) var_decl -> . type variables SEMICOLON
+    (83) empty -> .
+    (16) type -> . INT
+    (17) type -> . FLOAT
+    (18) type -> . BOOLEAN
+    (19) type -> . IDENTIFIER
+
+  ! shift/reduce conflict for SEMICOLON resolved as shift
+    IF              shift and go to state 70
+    WHILE           shift and go to state 62
+    FOR             shift and go to state 68
+    RETURN          shift and go to state 61
+    BREAK           shift and go to state 73
+    CONTINUE        shift and go to state 74
+    SEMICOLON       shift and go to state 63
+    LCURLY          shift and go to state 49
+    INT             shift and go to state 17
+    FLOAT           shift and go to state 19
+    BOOLEAN         shift and go to state 21
+    IDENTIFIER      shift and go to state 38
+
+  ! SEMICOLON       [ reduce using rule 83 (empty -> .) ]
+
+    var_decl                       shift and go to state 72
+    stmt                           shift and go to state 132
+    stmt_expr                      shift and go to state 65
+    block                          shift and go to state 75
+    type                           shift and go to state 66
+    empty                          shift and go to state 67
+
+state 127
+
+    (44) stmt -> FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON RPAREN . stmt
+    (39) stmt -> . IF LPAREN expr RPAREN stmt
+    (40) stmt -> . IF LPAREN expr RPAREN stmt ELSE stmt
+    (41) stmt -> . WHILE LPAREN expr RPAREN stmt
+    (42) stmt -> . FOR LPAREN SEMICOLON SEMICOLON RPAREN stmt
+    (43) stmt -> . FOR LPAREN stmt_expr SEMICOLON SEMICOLON RPAREN stmt
+    (44) stmt -> . FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON RPAREN stmt
+    (45) stmt -> . FOR LPAREN stmt_expr SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (46) stmt -> . FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt
+    (47) stmt -> . FOR LPAREN SEMICOLON expr SEMICOLON RPAREN stmt
+    (48) stmt -> . FOR LPAREN SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt
+    (49) stmt -> . FOR LPAREN SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (50) stmt -> . FOR LPAREN SEMICOLON SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (51) stmt -> . RETURN SEMICOLON
+    (52) stmt -> . RETURN expr SEMICOLON
+    (53) stmt -> . stmt_expr SEMICOLON
+    (54) stmt -> . BREAK SEMICOLON
+    (55) stmt -> . CONTINUE SEMICOLON
+    (56) stmt -> . block
+    (57) stmt -> . var_decl
+    (58) stmt -> . SEMICOLON
+    (60) stmt_expr -> . empty
+    (35) block -> . LCURLY stmthelper RCURLY
+    (36) block -> . LCURLY RCURLY
+    (15) var_decl -> . type variables SEMICOLON
+    (83) empty -> .
+    (16) type -> . INT
+    (17) type -> . FLOAT
+    (18) type -> . BOOLEAN
+    (19) type -> . IDENTIFIER
+
+  ! shift/reduce conflict for SEMICOLON resolved as shift
+    IF              shift and go to state 70
+    WHILE           shift and go to state 62
+    FOR             shift and go to state 68
+    RETURN          shift and go to state 61
+    BREAK           shift and go to state 73
+    CONTINUE        shift and go to state 74
+    SEMICOLON       shift and go to state 63
+    LCURLY          shift and go to state 49
+    INT             shift and go to state 17
+    FLOAT           shift and go to state 19
+    BOOLEAN         shift and go to state 21
+    IDENTIFIER      shift and go to state 38
+
+  ! SEMICOLON       [ reduce using rule 83 (empty -> .) ]
+
+    var_decl                       shift and go to state 72
+    stmt                           shift and go to state 133
+    stmt_expr                      shift and go to state 65
+    block                          shift and go to state 75
+    type                           shift and go to state 66
+    empty                          shift and go to state 67
+
+state 128
+
+    (46) stmt -> FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON stmt_expr . RPAREN stmt
+
+    RPAREN          shift and go to state 134
+
+
+state 129
+
+    (40) stmt -> IF LPAREN expr RPAREN stmt ELSE stmt .
+
+    IF              reduce using rule 40 (stmt -> IF LPAREN expr RPAREN stmt ELSE stmt .)
+    WHILE           reduce using rule 40 (stmt -> IF LPAREN expr RPAREN stmt ELSE stmt .)
+    FOR             reduce using rule 40 (stmt -> IF LPAREN expr RPAREN stmt ELSE stmt .)
+    RETURN          reduce using rule 40 (stmt -> IF LPAREN expr RPAREN stmt ELSE stmt .)
+    BREAK           reduce using rule 40 (stmt -> IF LPAREN expr RPAREN stmt ELSE stmt .)
+    CONTINUE        reduce using rule 40 (stmt -> IF LPAREN expr RPAREN stmt ELSE stmt .)
+    SEMICOLON       reduce using rule 40 (stmt -> IF LPAREN expr RPAREN stmt ELSE stmt .)
+    LCURLY          reduce using rule 40 (stmt -> IF LPAREN expr RPAREN stmt ELSE stmt .)
+    INT             reduce using rule 40 (stmt -> IF LPAREN expr RPAREN stmt ELSE stmt .)
+    FLOAT           reduce using rule 40 (stmt -> IF LPAREN expr RPAREN stmt ELSE stmt .)
+    BOOLEAN         reduce using rule 40 (stmt -> IF LPAREN expr RPAREN stmt ELSE stmt .)
+    IDENTIFIER      reduce using rule 40 (stmt -> IF LPAREN expr RPAREN stmt ELSE stmt .)
+    RCURLY          reduce using rule 40 (stmt -> IF LPAREN expr RPAREN stmt ELSE stmt .)
+    ELSE            reduce using rule 40 (stmt -> IF LPAREN expr RPAREN stmt ELSE stmt .)
+
+
+state 130
+
+    (50) stmt -> FOR LPAREN SEMICOLON SEMICOLON SEMICOLON stmt_expr RPAREN stmt .
+
+    IF              reduce using rule 50 (stmt -> FOR LPAREN SEMICOLON SEMICOLON SEMICOLON stmt_expr RPAREN stmt .)
+    WHILE           reduce using rule 50 (stmt -> FOR LPAREN SEMICOLON SEMICOLON SEMICOLON stmt_expr RPAREN stmt .)
+    FOR             reduce using rule 50 (stmt -> FOR LPAREN SEMICOLON SEMICOLON SEMICOLON stmt_expr RPAREN stmt .)
+    RETURN          reduce using rule 50 (stmt -> FOR LPAREN SEMICOLON SEMICOLON SEMICOLON stmt_expr RPAREN stmt .)
+    BREAK           reduce using rule 50 (stmt -> FOR LPAREN SEMICOLON SEMICOLON SEMICOLON stmt_expr RPAREN stmt .)
+    CONTINUE        reduce using rule 50 (stmt -> FOR LPAREN SEMICOLON SEMICOLON SEMICOLON stmt_expr RPAREN stmt .)
+    SEMICOLON       reduce using rule 50 (stmt -> FOR LPAREN SEMICOLON SEMICOLON SEMICOLON stmt_expr RPAREN stmt .)
+    LCURLY          reduce using rule 50 (stmt -> FOR LPAREN SEMICOLON SEMICOLON SEMICOLON stmt_expr RPAREN stmt .)
+    INT             reduce using rule 50 (stmt -> FOR LPAREN SEMICOLON SEMICOLON SEMICOLON stmt_expr RPAREN stmt .)
+    FLOAT           reduce using rule 50 (stmt -> FOR LPAREN SEMICOLON SEMICOLON SEMICOLON stmt_expr RPAREN stmt .)
+    BOOLEAN         reduce using rule 50 (stmt -> FOR LPAREN SEMICOLON SEMICOLON SEMICOLON stmt_expr RPAREN stmt .)
+    IDENTIFIER      reduce using rule 50 (stmt -> FOR LPAREN SEMICOLON SEMICOLON SEMICOLON stmt_expr RPAREN stmt .)
+    RCURLY          reduce using rule 50 (stmt -> FOR LPAREN SEMICOLON SEMICOLON SEMICOLON stmt_expr RPAREN stmt .)
+    ELSE            reduce using rule 50 (stmt -> FOR LPAREN SEMICOLON SEMICOLON SEMICOLON stmt_expr RPAREN stmt .)
+
+
+state 131
+
+    (48) stmt -> FOR LPAREN SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt .
+
+    IF              reduce using rule 48 (stmt -> FOR LPAREN SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt .)
+    WHILE           reduce using rule 48 (stmt -> FOR LPAREN SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt .)
+    FOR             reduce using rule 48 (stmt -> FOR LPAREN SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt .)
+    RETURN          reduce using rule 48 (stmt -> FOR LPAREN SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt .)
+    BREAK           reduce using rule 48 (stmt -> FOR LPAREN SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt .)
+    CONTINUE        reduce using rule 48 (stmt -> FOR LPAREN SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt .)
+    SEMICOLON       reduce using rule 48 (stmt -> FOR LPAREN SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt .)
+    LCURLY          reduce using rule 48 (stmt -> FOR LPAREN SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt .)
+    INT             reduce using rule 48 (stmt -> FOR LPAREN SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt .)
+    FLOAT           reduce using rule 48 (stmt -> FOR LPAREN SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt .)
+    BOOLEAN         reduce using rule 48 (stmt -> FOR LPAREN SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt .)
+    IDENTIFIER      reduce using rule 48 (stmt -> FOR LPAREN SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt .)
+    RCURLY          reduce using rule 48 (stmt -> FOR LPAREN SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt .)
+    ELSE            reduce using rule 48 (stmt -> FOR LPAREN SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt .)
+
+
+state 132
+
+    (45) stmt -> FOR LPAREN stmt_expr SEMICOLON SEMICOLON stmt_expr RPAREN stmt .
+
+    IF              reduce using rule 45 (stmt -> FOR LPAREN stmt_expr SEMICOLON SEMICOLON stmt_expr RPAREN stmt .)
+    WHILE           reduce using rule 45 (stmt -> FOR LPAREN stmt_expr SEMICOLON SEMICOLON stmt_expr RPAREN stmt .)
+    FOR             reduce using rule 45 (stmt -> FOR LPAREN stmt_expr SEMICOLON SEMICOLON stmt_expr RPAREN stmt .)
+    RETURN          reduce using rule 45 (stmt -> FOR LPAREN stmt_expr SEMICOLON SEMICOLON stmt_expr RPAREN stmt .)
+    BREAK           reduce using rule 45 (stmt -> FOR LPAREN stmt_expr SEMICOLON SEMICOLON stmt_expr RPAREN stmt .)
+    CONTINUE        reduce using rule 45 (stmt -> FOR LPAREN stmt_expr SEMICOLON SEMICOLON stmt_expr RPAREN stmt .)
+    SEMICOLON       reduce using rule 45 (stmt -> FOR LPAREN stmt_expr SEMICOLON SEMICOLON stmt_expr RPAREN stmt .)
+    LCURLY          reduce using rule 45 (stmt -> FOR LPAREN stmt_expr SEMICOLON SEMICOLON stmt_expr RPAREN stmt .)
+    INT             reduce using rule 45 (stmt -> FOR LPAREN stmt_expr SEMICOLON SEMICOLON stmt_expr RPAREN stmt .)
+    FLOAT           reduce using rule 45 (stmt -> FOR LPAREN stmt_expr SEMICOLON SEMICOLON stmt_expr RPAREN stmt .)
+    BOOLEAN         reduce using rule 45 (stmt -> FOR LPAREN stmt_expr SEMICOLON SEMICOLON stmt_expr RPAREN stmt .)
+    IDENTIFIER      reduce using rule 45 (stmt -> FOR LPAREN stmt_expr SEMICOLON SEMICOLON stmt_expr RPAREN stmt .)
+    RCURLY          reduce using rule 45 (stmt -> FOR LPAREN stmt_expr SEMICOLON SEMICOLON stmt_expr RPAREN stmt .)
+    ELSE            reduce using rule 45 (stmt -> FOR LPAREN stmt_expr SEMICOLON SEMICOLON stmt_expr RPAREN stmt .)
+
+
+state 133
+
+    (44) stmt -> FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON RPAREN stmt .
+
+    IF              reduce using rule 44 (stmt -> FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON RPAREN stmt .)
+    WHILE           reduce using rule 44 (stmt -> FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON RPAREN stmt .)
+    FOR             reduce using rule 44 (stmt -> FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON RPAREN stmt .)
+    RETURN          reduce using rule 44 (stmt -> FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON RPAREN stmt .)
+    BREAK           reduce using rule 44 (stmt -> FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON RPAREN stmt .)
+    CONTINUE        reduce using rule 44 (stmt -> FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON RPAREN stmt .)
+    SEMICOLON       reduce using rule 44 (stmt -> FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON RPAREN stmt .)
+    LCURLY          reduce using rule 44 (stmt -> FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON RPAREN stmt .)
+    INT             reduce using rule 44 (stmt -> FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON RPAREN stmt .)
+    FLOAT           reduce using rule 44 (stmt -> FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON RPAREN stmt .)
+    BOOLEAN         reduce using rule 44 (stmt -> FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON RPAREN stmt .)
+    IDENTIFIER      reduce using rule 44 (stmt -> FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON RPAREN stmt .)
+    RCURLY          reduce using rule 44 (stmt -> FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON RPAREN stmt .)
+    ELSE            reduce using rule 44 (stmt -> FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON RPAREN stmt .)
+
+
+state 134
+
+    (46) stmt -> FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON stmt_expr RPAREN . stmt
+    (39) stmt -> . IF LPAREN expr RPAREN stmt
+    (40) stmt -> . IF LPAREN expr RPAREN stmt ELSE stmt
+    (41) stmt -> . WHILE LPAREN expr RPAREN stmt
+    (42) stmt -> . FOR LPAREN SEMICOLON SEMICOLON RPAREN stmt
+    (43) stmt -> . FOR LPAREN stmt_expr SEMICOLON SEMICOLON RPAREN stmt
+    (44) stmt -> . FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON RPAREN stmt
+    (45) stmt -> . FOR LPAREN stmt_expr SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (46) stmt -> . FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt
+    (47) stmt -> . FOR LPAREN SEMICOLON expr SEMICOLON RPAREN stmt
+    (48) stmt -> . FOR LPAREN SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt
+    (49) stmt -> . FOR LPAREN SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (50) stmt -> . FOR LPAREN SEMICOLON SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+    (51) stmt -> . RETURN SEMICOLON
+    (52) stmt -> . RETURN expr SEMICOLON
+    (53) stmt -> . stmt_expr SEMICOLON
+    (54) stmt -> . BREAK SEMICOLON
+    (55) stmt -> . CONTINUE SEMICOLON
+    (56) stmt -> . block
+    (57) stmt -> . var_decl
+    (58) stmt -> . SEMICOLON
+    (60) stmt_expr -> . empty
+    (35) block -> . LCURLY stmthelper RCURLY
+    (36) block -> . LCURLY RCURLY
+    (15) var_decl -> . type variables SEMICOLON
+    (83) empty -> .
+    (16) type -> . INT
+    (17) type -> . FLOAT
+    (18) type -> . BOOLEAN
+    (19) type -> . IDENTIFIER
+
+  ! shift/reduce conflict for SEMICOLON resolved as shift
+    IF              shift and go to state 70
+    WHILE           shift and go to state 62
+    FOR             shift and go to state 68
+    RETURN          shift and go to state 61
+    BREAK           shift and go to state 73
+    CONTINUE        shift and go to state 74
+    SEMICOLON       shift and go to state 63
+    LCURLY          shift and go to state 49
+    INT             shift and go to state 17
+    FLOAT           shift and go to state 19
+    BOOLEAN         shift and go to state 21
+    IDENTIFIER      shift and go to state 38
+
+  ! SEMICOLON       [ reduce using rule 83 (empty -> .) ]
+
+    var_decl                       shift and go to state 72
+    stmt                           shift and go to state 135
+    stmt_expr                      shift and go to state 65
+    block                          shift and go to state 75
+    type                           shift and go to state 66
+    empty                          shift and go to state 67
+
+state 135
+
+    (46) stmt -> FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt .
+
+    IF              reduce using rule 46 (stmt -> FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt .)
+    WHILE           reduce using rule 46 (stmt -> FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt .)
+    FOR             reduce using rule 46 (stmt -> FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt .)
+    RETURN          reduce using rule 46 (stmt -> FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt .)
+    BREAK           reduce using rule 46 (stmt -> FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt .)
+    CONTINUE        reduce using rule 46 (stmt -> FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt .)
+    SEMICOLON       reduce using rule 46 (stmt -> FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt .)
+    LCURLY          reduce using rule 46 (stmt -> FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt .)
+    INT             reduce using rule 46 (stmt -> FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt .)
+    FLOAT           reduce using rule 46 (stmt -> FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt .)
+    BOOLEAN         reduce using rule 46 (stmt -> FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt .)
+    IDENTIFIER      reduce using rule 46 (stmt -> FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt .)
+    RCURLY          reduce using rule 46 (stmt -> FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt .)
+    ELSE            reduce using rule 46 (stmt -> FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt .)
+
+WARNING: 
+WARNING: Conflicts:
+WARNING: 
+WARNING: shift/reduce conflict for SEMICOLON in state 49 resolved as shift
+WARNING: shift/reduce conflict for SEMICOLON in state 61 resolved as shift
+WARNING: shift/reduce conflict for SEMICOLON in state 69 resolved as shift
+WARNING: shift/reduce conflict for SEMICOLON in state 87 resolved as shift
+WARNING: shift/reduce conflict for SEMICOLON in state 96 resolved as shift
+WARNING: shift/reduce conflict for SEMICOLON in state 99 resolved as shift
+WARNING: shift/reduce conflict for RPAREN in state 100 resolved as shift
+WARNING: shift/reduce conflict for SEMICOLON in state 102 resolved as shift
+WARNING: shift/reduce conflict for SEMICOLON in state 103 resolved as shift
+WARNING: shift/reduce conflict for SEMICOLON in state 105 resolved as shift
+WARNING: shift/reduce conflict for RPAREN in state 108 resolved as shift
+WARNING: shift/reduce conflict for RPAREN in state 109 resolved as shift
+WARNING: shift/reduce conflict for ELSE in state 111 resolved as shift
+WARNING: shift/reduce conflict for SEMICOLON in state 114 resolved as shift
+WARNING: shift/reduce conflict for SEMICOLON in state 115 resolved as shift
+WARNING: shift/reduce conflict for SEMICOLON in state 117 resolved as shift
+WARNING: shift/reduce conflict for RPAREN in state 119 resolved as shift
+WARNING: shift/reduce conflict for SEMICOLON in state 120 resolved as shift
+WARNING: shift/reduce conflict for SEMICOLON in state 121 resolved as shift
+WARNING: shift/reduce conflict for SEMICOLON in state 124 resolved as shift
+WARNING: shift/reduce conflict for SEMICOLON in state 126 resolved as shift
+WARNING: shift/reduce conflict for SEMICOLON in state 127 resolved as shift
+WARNING: shift/reduce conflict for SEMICOLON in state 134 resolved as shift

@@ -121,6 +121,53 @@ def p_expr(p):
 def p_stmt_expr(p):
     '''stmt_expr : empty'''
 
+def p_literal(p):
+    ''' literal : INTEGERCONSTANT
+                | FLOATCONSTANTFIRST
+                | FLOATCONSTANTSECOND
+                | NULL
+                | TRUE
+                | FALSE
+    '''
+
+def p_primary(p):
+    '''
+    primary : literal
+            | THIS
+            | SUPER
+            | LPAREN expr RPAREN
+            | NEW IDENTIFIER LPAREN arguments RPAREN
+            | lhs
+            | method_invocation
+    '''
+
+def p_arguments(p):
+    '''
+    arguments : expr
+              | COMMA arguments
+    '''
+
+def p_lhs(p):
+    '''
+    lhs : field_access
+        | array_access
+    '''
+
+def p_method_invocation(p):
+    '''
+    method_invocation : field_access LPAREN RPAREN
+                        | field_access LPAREN expr RPAREN
+    '''
+
+def p_field_access(p):
+    '''
+    field_access : primary DOT IDENTIFIER
+                | IDENTIFIER
+    '''
+
+def p_array_access(p):
+    'array_access : primary LPAREN expr RPAREN'
+
 def p_empty(t):
     'empty : '
     pass

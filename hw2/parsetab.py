@@ -5,9 +5,9 @@ _tabversion = '3.8'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'BF4338C6BD2D39374DFF687F40C72265'
+_lr_signature = '423CECC7049580C396AC462DCE0AD3D0'
     
-_lr_action_items = {'RCURLY':([6,10,],[8,11,]),'LCURLY':([3,7,],[4,9,]),'PLUS':([4,9,],[6,10,]),'EXTENDS':([3,],[5,]),'IDENTIFIER':([2,5,],[3,7,]),'CLASS':([0,],[2,]),'$end':([1,8,11,],[0,-1,-2,]),}
+_lr_action_items = {'RETURN':([41,49,63,64,69,72,75,84,86,90,91,92,94,99,103,104,105,111,112,114,115,117,120,121,122,123,124,125,126,127,129,130,131,132,133,134,135,],[-15,61,-58,-36,61,-57,-56,-51,-53,-35,-54,-55,-52,61,61,-41,61,-39,-42,61,61,61,61,61,-49,-47,61,-43,61,61,-40,-50,-48,-45,-44,61,-46,]),'LPAREN':([22,29,33,62,68,70,],[30,35,44,85,87,89,]),'VOID':([4,6,7,8,9,10,11,12,13,14,20,25,26,28,41,50,59,64,77,79,81,90,93,],[-83,18,-83,-5,-7,-6,-9,-14,-11,-10,-8,-12,-13,-83,-15,-30,-28,-36,-31,-26,-29,-35,-27,]),'LCURLY':([3,16,36,41,47,49,54,57,60,63,64,69,72,75,80,84,86,90,91,92,94,99,103,104,105,111,112,114,115,117,120,121,122,123,124,125,126,127,129,130,131,132,133,134,135,],[4,28,49,-15,49,49,49,49,49,-58,-36,49,-57,-56,49,-51,-53,-35,-54,-55,-52,49,49,-41,49,-39,-42,49,49,49,49,49,-49,-47,49,-43,49,49,-40,-50,-48,-45,-44,49,-46,]),'WHILE':([41,49,63,64,69,72,75,84,86,90,91,92,94,99,103,104,105,111,112,114,115,117,120,121,122,123,124,125,126,127,129,130,131,132,133,134,135,],[-15,62,-58,-36,62,-57,-56,-51,-53,-35,-54,-55,-52,62,62,-41,62,-39,-42,62,62,62,62,62,-49,-47,62,-43,62,62,-40,-50,-48,-45,-44,62,-46,]),'STATIC':([4,7,8,9,10,11,14,20,28,41,50,59,64,77,79,81,90,93,],[13,13,-5,-7,-6,25,26,-8,13,-15,-30,-28,-36,-31,-26,-29,-35,-27,]),'RSQUARE':([43,],[56,]),'RPAREN':([30,35,37,40,44,45,48,52,53,56,58,67,76,78,83,85,89,95,98,100,106,107,108,109,113,116,118,119,128,],[36,47,-32,54,57,-23,60,-34,-22,-24,80,-60,-33,-25,-59,-83,-83,99,103,105,-83,114,115,117,121,124,126,127,134,]),'SEMICOLON':([31,32,33,41,45,49,53,55,56,61,63,64,65,67,69,72,73,74,75,78,82,83,84,86,87,90,91,92,94,96,97,99,100,101,102,103,104,105,110,111,112,114,115,117,120,121,122,123,124,125,126,127,129,130,131,132,133,134,135,],[41,-20,-22,-15,-23,63,-22,-21,-24,84,-58,-36,86,-60,63,-57,91,92,-56,-25,94,-59,-51,-53,96,-35,-54,-55,-52,100,102,63,106,108,109,63,-41,63,119,-39,-42,63,63,63,63,63,-49,-47,63,-43,63,63,-40,-50,-48,-45,-44,63,-46,]),'RCURLY':([7,8,9,10,15,20,24,34,41,49,50,59,63,64,69,71,72,75,77,79,81,84,86,88,90,91,92,93,94,104,111,112,122,123,125,129,130,131,132,133,135,],[-3,-5,-7,-6,27,-8,-4,46,-15,64,-30,-28,-58,-36,-37,90,-57,-56,-31,-26,-29,-51,-53,-38,-35,-54,-55,-27,-52,-41,-39,-42,-49,-47,-43,-40,-50,-48,-45,-44,-46,]),'PRIVATE':([4,7,8,9,10,20,28,41,50,59,64,77,79,81,90,93,],[14,14,-5,-7,-6,-8,14,-15,-30,-28,-36,-31,-26,-29,-35,-27,]),'CONTINUE':([41,49,63,64,69,72,75,84,86,90,91,92,94,99,103,104,105,111,112,114,115,117,120,121,122,123,124,125,126,127,129,130,131,132,133,134,135,],[-15,74,-58,-36,74,-57,-56,-51,-53,-35,-54,-55,-52,74,74,-41,74,-39,-42,74,74,74,74,74,-49,-47,74,-43,74,74,-40,-50,-48,-45,-44,74,-46,]),'COMMA':([32,33,37,45,52,53,56,78,],[42,-22,51,-23,-34,-22,-24,-25,]),'IDENTIFIER':([2,4,5,6,7,8,9,10,11,12,13,14,17,18,19,20,21,22,23,25,26,28,30,35,38,39,41,42,44,49,50,51,59,63,64,66,69,72,75,77,79,81,84,86,90,91,92,93,94,99,103,104,105,111,112,114,115,117,120,121,122,123,124,125,126,127,129,130,131,132,133,134,135,],[3,-83,16,22,-83,-5,-7,-6,-9,-14,-11,-10,-16,29,-17,-8,-18,-19,33,-12,-13,-83,38,38,-19,53,-15,53,38,38,-30,38,-28,-58,-36,53,38,-57,-56,-31,-26,-29,-51,-53,-35,-54,-55,-27,-52,38,38,-41,38,-39,-42,38,38,38,38,38,-49,-47,38,-43,38,38,-40,-50,-48,-45,-44,38,-46,]),'CLASS':([0,],[2,]),'$end':([1,27,46,],[0,-1,-2,]),'FOR':([41,49,63,64,69,72,75,84,86,90,91,92,94,99,103,104,105,111,112,114,115,117,120,121,122,123,124,125,126,127,129,130,131,132,133,134,135,],[-15,68,-58,-36,68,-57,-56,-51,-53,-35,-54,-55,-52,68,68,-41,68,-39,-42,68,68,68,68,68,-49,-47,68,-43,68,68,-40,-50,-48,-45,-44,68,-46,]),'ELSE':([41,63,64,72,75,84,86,90,91,92,94,104,111,112,122,123,125,129,130,131,132,133,135,],[-15,-58,-36,-57,-56,-51,-53,-35,-54,-55,-52,-41,120,-42,-49,-47,-43,-40,-50,-48,-45,-44,-46,]),'EXTENDS':([3,],[5,]),'LSQUARE':([33,53,56,],[43,43,43,]),'IF':([41,49,63,64,69,72,75,84,86,90,91,92,94,99,103,104,105,111,112,114,115,117,120,121,122,123,124,125,126,127,129,130,131,132,133,134,135,],[-15,70,-58,-36,70,-57,-56,-51,-53,-35,-54,-55,-52,70,70,-41,70,-39,-42,70,70,70,70,70,-49,-47,70,-43,70,70,-40,-50,-48,-45,-44,70,-46,]),'INT':([4,6,7,8,9,10,11,12,13,14,20,25,26,28,30,35,41,44,49,50,51,59,63,64,69,72,75,77,79,81,84,86,90,91,92,93,94,99,103,104,105,111,112,114,115,117,120,121,122,123,124,125,126,127,129,130,131,132,133,134,135,],[-83,17,-83,-5,-7,-6,-9,-14,-11,-10,-8,-12,-13,-83,17,17,-15,17,17,-30,17,-28,-58,-36,17,-57,-56,-31,-26,-29,-51,-53,-35,-54,-55,-27,-52,17,17,-41,17,-39,-42,17,17,17,17,17,-49,-47,17,-43,17,17,-40,-50,-48,-45,-44,17,-46,]),'FLOAT':([4,6,7,8,9,10,11,12,13,14,20,25,26,28,30,35,41,44,49,50,51,59,63,64,69,72,75,77,79,81,84,86,90,91,92,93,94,99,103,104,105,111,112,114,115,117,120,121,122,123,124,125,126,127,129,130,131,132,133,134,135,],[-83,19,-83,-5,-7,-6,-9,-14,-11,-10,-8,-12,-13,-83,19,19,-15,19,19,-30,19,-28,-58,-36,19,-57,-56,-31,-26,-29,-51,-53,-35,-54,-55,-27,-52,19,19,-41,19,-39,-42,19,19,19,19,19,-49,-47,19,-43,19,19,-40,-50,-48,-45,-44,19,-46,]),'BREAK':([41,49,63,64,69,72,75,84,86,90,91,92,94,99,103,104,105,111,112,114,115,117,120,121,122,123,124,125,126,127,129,130,131,132,133,134,135,],[-15,73,-58,-36,73,-57,-56,-51,-53,-35,-54,-55,-52,73,73,-41,73,-39,-42,73,73,73,73,73,-49,-47,73,-43,73,73,-40,-50,-48,-45,-44,73,-46,]),'BOOLEAN':([4,6,7,8,9,10,11,12,13,14,20,25,26,28,30,35,41,44,49,50,51,59,63,64,69,72,75,77,79,81,84,86,90,91,92,93,94,99,103,104,105,111,112,114,115,117,120,121,122,123,124,125,126,127,129,130,131,132,133,134,135,],[-83,21,-83,-5,-7,-6,-9,-14,-11,-10,-8,-12,-13,-83,21,21,-15,21,21,-30,21,-28,-58,-36,21,-57,-56,-31,-26,-29,-51,-53,-35,-54,-55,-27,-52,21,21,-41,21,-39,-42,21,21,21,21,21,-49,-47,21,-43,21,21,-40,-50,-48,-45,-44,21,-46,]),'PUBLIC':([4,7,8,9,10,20,28,41,50,59,64,77,79,81,90,93,],[11,11,-5,-7,-6,-8,11,-15,-30,-28,-36,-31,-26,-29,-35,-27,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -16,7 +16,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'classdecl':([0,],[1,]),}
+_lr_goto_items = {'formals':([30,35,44,],[40,48,58,]),'class_body_decl_helper':([4,7,28,],[15,24,34,]),'variable_array':([33,53,56,],[45,45,78,]),'classdecl':([0,],[1,]),'field_decl':([4,7,28,],[8,8,8,]),'variables':([23,42,66,],[31,55,31,]),'constructor_decl':([4,7,28,],[9,9,9,]),'method_decl':([4,7,28,],[10,10,10,]),'var_decl':([6,49,69,99,103,105,114,115,117,120,121,124,126,127,134,],[20,72,72,72,72,72,72,72,72,72,72,72,72,72,72,]),'stmt':([49,69,99,103,105,114,115,117,120,121,124,126,127,134,],[69,69,104,111,112,122,123,125,129,130,131,132,133,135,]),'stmt_expr':([49,69,87,99,100,103,105,106,108,109,114,115,117,119,120,121,124,126,127,134,],[65,65,97,65,107,65,65,113,116,118,65,65,65,128,65,65,65,65,65,65,]),'formal_param':([30,35,44,51,],[37,37,37,76,]),'block':([36,47,49,54,57,60,69,80,99,103,105,114,115,117,120,121,124,126,127,134,],[50,59,75,77,79,81,75,93,75,75,75,75,75,75,75,75,75,75,75,75,]),'expr':([61,85,89,96,102,],[82,95,98,101,110,]),'variable':([23,39,42,66,],[32,52,32,32,]),'stmthelper':([49,69,],[71,88,]),'modifier':([4,7,28,],[6,6,6,]),'type':([6,30,35,44,49,51,69,99,103,105,114,115,117,120,121,124,126,127,134,],[23,39,39,39,66,39,66,66,66,66,66,66,66,66,66,66,66,66,66,]),'empty':([4,7,28,49,61,69,85,87,89,96,99,100,102,103,105,106,108,109,114,115,117,119,120,121,124,126,127,134,],[12,12,12,67,83,67,83,67,83,83,67,67,83,67,67,67,67,67,67,67,67,67,67,67,67,67,67,67,]),'class_body_decl':([4,7,28,],[7,7,7,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -26,6 +26,87 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> classdecl","S'",1,None,None,None),
-  ('classdecl -> CLASS IDENTIFIER LCURLY PLUS RCURLY','classdecl',5,'p_classdecl','decafparser.py',25),
-  ('classdecl -> CLASS IDENTIFIER EXTENDS IDENTIFIER LCURLY PLUS RCURLY','classdecl',7,'p_classdecl','decafparser.py',26),
+  ('classdecl -> CLASS IDENTIFIER LCURLY class_body_decl_helper RCURLY','classdecl',5,'p_classdecl','decafparser.py',25),
+  ('classdecl -> CLASS IDENTIFIER EXTENDS IDENTIFIER LCURLY class_body_decl_helper RCURLY','classdecl',7,'p_classdecl','decafparser.py',26),
+  ('class_body_decl_helper -> class_body_decl','class_body_decl_helper',1,'p_class_body_decl_helper','decafparser.py',29),
+  ('class_body_decl_helper -> class_body_decl class_body_decl_helper','class_body_decl_helper',2,'p_class_body_decl_helper','decafparser.py',30),
+  ('class_body_decl -> field_decl','class_body_decl',1,'p_class_body_decl','decafparser.py',33),
+  ('class_body_decl -> method_decl','class_body_decl',1,'p_class_body_decl','decafparser.py',34),
+  ('class_body_decl -> constructor_decl','class_body_decl',1,'p_class_body_decl','decafparser.py',35),
+  ('field_decl -> modifier var_decl','field_decl',2,'p_field_decl','decafparser.py',38),
+  ('modifier -> PUBLIC','modifier',1,'p_modifier','decafparser.py',41),
+  ('modifier -> PRIVATE','modifier',1,'p_modifier','decafparser.py',42),
+  ('modifier -> STATIC','modifier',1,'p_modifier','decafparser.py',43),
+  ('modifier -> PUBLIC STATIC','modifier',2,'p_modifier','decafparser.py',44),
+  ('modifier -> PRIVATE STATIC','modifier',2,'p_modifier','decafparser.py',45),
+  ('modifier -> empty','modifier',1,'p_modifier','decafparser.py',46),
+  ('var_decl -> type variables SEMICOLON','var_decl',3,'p_var_decl','decafparser.py',49),
+  ('type -> INT','type',1,'p_type','decafparser.py',52),
+  ('type -> FLOAT','type',1,'p_type','decafparser.py',53),
+  ('type -> BOOLEAN','type',1,'p_type','decafparser.py',54),
+  ('type -> IDENTIFIER','type',1,'p_type','decafparser.py',55),
+  ('variables -> variable','variables',1,'p_variables','decafparser.py',58),
+  ('variables -> variable COMMA variables','variables',3,'p_variables','decafparser.py',59),
+  ('variable -> IDENTIFIER','variable',1,'p_variable','decafparser.py',62),
+  ('variable -> IDENTIFIER variable_array','variable',2,'p_variable','decafparser.py',63),
+  ('variable_array -> LSQUARE RSQUARE','variable_array',2,'p_variable_array','decafparser.py',66),
+  ('variable_array -> LSQUARE RSQUARE variable_array','variable_array',3,'p_variable_array','decafparser.py',67),
+  ('method_decl -> modifier type IDENTIFIER LPAREN RPAREN block','method_decl',6,'p_method_decl','decafparser.py',70),
+  ('method_decl -> modifier type IDENTIFIER LPAREN formals RPAREN block','method_decl',7,'p_method_decl','decafparser.py',71),
+  ('method_decl -> modifier VOID IDENTIFIER LPAREN RPAREN block','method_decl',6,'p_method_decl','decafparser.py',72),
+  ('method_decl -> modifier VOID IDENTIFIER LPAREN formals RPAREN block','method_decl',7,'p_method_decl','decafparser.py',73),
+  ('constructor_decl -> modifier IDENTIFIER LPAREN RPAREN block','constructor_decl',5,'p_constructor_decl','decafparser.py',76),
+  ('constructor_decl -> modifier IDENTIFIER LPAREN formals RPAREN block','constructor_decl',6,'p_constructor_decl','decafparser.py',77),
+  ('formals -> formal_param','formals',1,'p_formals','decafparser.py',80),
+  ('formals -> formal_param COMMA formal_param','formals',3,'p_formals','decafparser.py',81),
+  ('formal_param -> type variable','formal_param',2,'p_formal_param','decafparser.py',84),
+  ('block -> LCURLY stmthelper RCURLY','block',3,'p_block','decafparser.py',87),
+  ('block -> LCURLY RCURLY','block',2,'p_block','decafparser.py',88),
+  ('stmthelper -> stmt','stmthelper',1,'p_stmthelper','decafparser.py',91),
+  ('stmthelper -> stmt stmthelper','stmthelper',2,'p_stmthelper','decafparser.py',92),
+  ('stmt -> IF LPAREN expr RPAREN stmt','stmt',5,'p_stmt','decafparser.py',95),
+  ('stmt -> IF LPAREN expr RPAREN stmt ELSE stmt','stmt',7,'p_stmt','decafparser.py',96),
+  ('stmt -> WHILE LPAREN expr RPAREN stmt','stmt',5,'p_stmt','decafparser.py',97),
+  ('stmt -> FOR LPAREN SEMICOLON SEMICOLON RPAREN stmt','stmt',6,'p_stmt','decafparser.py',98),
+  ('stmt -> FOR LPAREN stmt_expr SEMICOLON SEMICOLON RPAREN stmt','stmt',7,'p_stmt','decafparser.py',99),
+  ('stmt -> FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON RPAREN stmt','stmt',8,'p_stmt','decafparser.py',100),
+  ('stmt -> FOR LPAREN stmt_expr SEMICOLON SEMICOLON stmt_expr RPAREN stmt','stmt',8,'p_stmt','decafparser.py',101),
+  ('stmt -> FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt','stmt',9,'p_stmt','decafparser.py',102),
+  ('stmt -> FOR LPAREN SEMICOLON expr SEMICOLON RPAREN stmt','stmt',7,'p_stmt','decafparser.py',103),
+  ('stmt -> FOR LPAREN SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt','stmt',8,'p_stmt','decafparser.py',104),
+  ('stmt -> FOR LPAREN SEMICOLON SEMICOLON stmt_expr RPAREN stmt','stmt',7,'p_stmt','decafparser.py',105),
+  ('stmt -> FOR LPAREN SEMICOLON SEMICOLON SEMICOLON stmt_expr RPAREN stmt','stmt',8,'p_stmt','decafparser.py',106),
+  ('stmt -> RETURN SEMICOLON','stmt',2,'p_stmt','decafparser.py',107),
+  ('stmt -> RETURN expr SEMICOLON','stmt',3,'p_stmt','decafparser.py',108),
+  ('stmt -> stmt_expr SEMICOLON','stmt',2,'p_stmt','decafparser.py',109),
+  ('stmt -> BREAK SEMICOLON','stmt',2,'p_stmt','decafparser.py',110),
+  ('stmt -> CONTINUE SEMICOLON','stmt',2,'p_stmt','decafparser.py',111),
+  ('stmt -> block','stmt',1,'p_stmt','decafparser.py',112),
+  ('stmt -> var_decl','stmt',1,'p_stmt','decafparser.py',113),
+  ('stmt -> SEMICOLON','stmt',1,'p_stmt','decafparser.py',114),
+  ('expr -> empty','expr',1,'p_expr','decafparser.py',118),
+  ('stmt_expr -> empty','stmt_expr',1,'p_stmt_expr','decafparser.py',122),
+  ('literal -> INTEGERCONSTANT','literal',1,'p_literal','decafparser.py',125),
+  ('literal -> FLOATCONSTANTFIRST','literal',1,'p_literal','decafparser.py',126),
+  ('literal -> FLOATCONSTANTSECOND','literal',1,'p_literal','decafparser.py',127),
+  ('literal -> NULL','literal',1,'p_literal','decafparser.py',128),
+  ('literal -> TRUE','literal',1,'p_literal','decafparser.py',129),
+  ('literal -> FALSE','literal',1,'p_literal','decafparser.py',130),
+  ('primary -> literal','primary',1,'p_primary','decafparser.py',135),
+  ('primary -> THIS','primary',1,'p_primary','decafparser.py',136),
+  ('primary -> SUPER','primary',1,'p_primary','decafparser.py',137),
+  ('primary -> LPAREN expr RPAREN','primary',3,'p_primary','decafparser.py',138),
+  ('primary -> NEW IDENTIFIER LPAREN arguments RPAREN','primary',5,'p_primary','decafparser.py',139),
+  ('primary -> lhs','primary',1,'p_primary','decafparser.py',140),
+  ('primary -> method_invocation','primary',1,'p_primary','decafparser.py',141),
+  ('arguments -> expr','arguments',1,'p_arguments','decafparser.py',146),
+  ('arguments -> COMMA arguments','arguments',2,'p_arguments','decafparser.py',147),
+  ('lhs -> field_access','lhs',1,'p_lhs','decafparser.py',152),
+  ('lhs -> array_access','lhs',1,'p_lhs','decafparser.py',153),
+  ('method_invocation -> field_access LPAREN RPAREN','method_invocation',3,'p_method_invocation','decafparser.py',158),
+  ('method_invocation -> field_access LPAREN expr RPAREN','method_invocation',4,'p_method_invocation','decafparser.py',159),
+  ('field_access -> primary DOT IDENTIFIER','field_access',3,'p_field_access','decafparser.py',164),
+  ('field_access -> IDENTIFIER','field_access',1,'p_field_access','decafparser.py',165),
+  ('array_access -> primary LPAREN expr RPAREN','array_access',4,'p_array_access','decafparser.py',169),
+  ('empty -> <empty>','empty',0,'p_empty','decafparser.py',172),
 ]
