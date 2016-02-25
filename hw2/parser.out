@@ -1,0 +1,207 @@
+Created by PLY version 3.8 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    DO
+    FLOATCONSTANTFIRST
+    RETURN
+    STRINGCONSTANT
+    NOTEQUALS
+    VOID
+    INTEGERCONSTANT
+    WHILE
+    STATIC
+    NEW
+    DIV
+    NULL
+    TRUE
+    MINUS
+    MULT
+    COMMENT
+    GEQ
+    RPAREN
+    SEMICOLON
+    LEQ
+    PRIVATE
+    LT
+    CONTINUE
+    DOT
+    COLON
+    GT
+    FOR
+    SPACE
+    ASSIGN
+    EQUALS
+    ELSE
+    LPAREN
+    IF
+    AND
+    FLOATCONSTANTSECOND
+    FALSE
+    INT
+    FLOAT
+    OR
+    BREAK
+    THIS
+    BOOLEAN
+    NOT
+    COMMA
+    SUPER
+    PUBLIC
+
+Grammar
+
+Rule 0     S' -> classdecl
+Rule 1     classdecl -> CLASS IDENTIFIER LCURLY PLUS RCURLY
+Rule 2     classdecl -> CLASS IDENTIFIER EXTENDS IDENTIFIER LCURLY PLUS RCURLY
+
+Terminals, with rules where they appear
+
+AND                  : 
+ASSIGN               : 
+BOOLEAN              : 
+BREAK                : 
+CLASS                : 1 2
+COLON                : 
+COMMA                : 
+COMMENT              : 
+CONTINUE             : 
+DIV                  : 
+DO                   : 
+DOT                  : 
+ELSE                 : 
+EQUALS               : 
+EXTENDS              : 2
+FALSE                : 
+FLOAT                : 
+FLOATCONSTANTFIRST   : 
+FLOATCONSTANTSECOND  : 
+FOR                  : 
+GEQ                  : 
+GT                   : 
+IDENTIFIER           : 1 2 2
+IF                   : 
+INT                  : 
+INTEGERCONSTANT      : 
+LCURLY               : 1 2
+LEQ                  : 
+LPAREN               : 
+LT                   : 
+MINUS                : 
+MULT                 : 
+NEW                  : 
+NOT                  : 
+NOTEQUALS            : 
+NULL                 : 
+OR                   : 
+PLUS                 : 1 2
+PRIVATE              : 
+PUBLIC               : 
+RCURLY               : 1 2
+RETURN               : 
+RPAREN               : 
+SEMICOLON            : 
+SPACE                : 
+STATIC               : 
+STRINGCONSTANT       : 
+SUPER                : 
+THIS                 : 
+TRUE                 : 
+VOID                 : 
+WHILE                : 
+error                : 
+
+Nonterminals, with rules where they appear
+
+classdecl            : 0
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . classdecl
+    (1) classdecl -> . CLASS IDENTIFIER LCURLY PLUS RCURLY
+    (2) classdecl -> . CLASS IDENTIFIER EXTENDS IDENTIFIER LCURLY PLUS RCURLY
+
+    CLASS           shift and go to state 2
+
+    classdecl                      shift and go to state 1
+
+state 1
+
+    (0) S' -> classdecl .
+
+
+
+state 2
+
+    (1) classdecl -> CLASS . IDENTIFIER LCURLY PLUS RCURLY
+    (2) classdecl -> CLASS . IDENTIFIER EXTENDS IDENTIFIER LCURLY PLUS RCURLY
+
+    IDENTIFIER      shift and go to state 3
+
+
+state 3
+
+    (1) classdecl -> CLASS IDENTIFIER . LCURLY PLUS RCURLY
+    (2) classdecl -> CLASS IDENTIFIER . EXTENDS IDENTIFIER LCURLY PLUS RCURLY
+
+    LCURLY          shift and go to state 4
+    EXTENDS         shift and go to state 5
+
+
+state 4
+
+    (1) classdecl -> CLASS IDENTIFIER LCURLY . PLUS RCURLY
+
+    PLUS            shift and go to state 6
+
+
+state 5
+
+    (2) classdecl -> CLASS IDENTIFIER EXTENDS . IDENTIFIER LCURLY PLUS RCURLY
+
+    IDENTIFIER      shift and go to state 7
+
+
+state 6
+
+    (1) classdecl -> CLASS IDENTIFIER LCURLY PLUS . RCURLY
+
+    RCURLY          shift and go to state 8
+
+
+state 7
+
+    (2) classdecl -> CLASS IDENTIFIER EXTENDS IDENTIFIER . LCURLY PLUS RCURLY
+
+    LCURLY          shift and go to state 9
+
+
+state 8
+
+    (1) classdecl -> CLASS IDENTIFIER LCURLY PLUS RCURLY .
+
+    $end            reduce using rule 1 (classdecl -> CLASS IDENTIFIER LCURLY PLUS RCURLY .)
+
+
+state 9
+
+    (2) classdecl -> CLASS IDENTIFIER EXTENDS IDENTIFIER LCURLY . PLUS RCURLY
+
+    PLUS            shift and go to state 10
+
+
+state 10
+
+    (2) classdecl -> CLASS IDENTIFIER EXTENDS IDENTIFIER LCURLY PLUS . RCURLY
+
+    RCURLY          shift and go to state 11
+
+
+state 11
+
+    (2) classdecl -> CLASS IDENTIFIER EXTENDS IDENTIFIER LCURLY PLUS RCURLY .
+
+    $end            reduce using rule 2 (classdecl -> CLASS IDENTIFIER EXTENDS IDENTIFIER LCURLY PLUS RCURLY .)
+

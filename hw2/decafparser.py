@@ -22,16 +22,22 @@ precedence = (
 #     'classdecl*'
 
 def p_classdecl(p):
-    '''classdecl : CLASS IDENTIFIER LCURLY PLUS RCURLY
-                  | CLASS IDENTIFIER EXTENDS IDENTIFIER LCURLY PLUS RCURLY'''
+    '''classdecl : CLASS IDENTIFIER LCURLY class_body_decl RCURLY
+                  | CLASS IDENTIFIER EXTENDS IDENTIFIER LCURLY class_body_decl RCURLY'''
              
-#def p_class_body_decl(p):
- #   '''class_body_decl : field_decl
-  #                      | method_decl
-   #                     | constructor_decl'''
+def p_class_body_decl(p):
+   '''class_body_decl : field_decl
+                       | method_decl
+                       | constructor_decl'''
     
-#def p_
-    
+def p_field_decl(p):
+    ' field_decl : modifier var_decl'
+
+def p_modifier(p):
+    ' field_decl : modifier var_decl'
+
+
+
 ROOT_FOLDER = 'F:\\MastersStonyBrook\\SemesterCourses\\Semester2\\CSE504_Compilers\\jsundar-sahjain\\hw2\\'
 
 if __name__ == '__main__':
