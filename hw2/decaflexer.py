@@ -33,7 +33,7 @@ reserved = {
 tokens = list(reserved.values()) + \
          ['IDENTIFIER', 'INTEGERCONSTANT','FLOATCONSTANTFIRST','FLOATCONSTANTSECOND','STRINGCONSTANT', 'COMMENT',
           'GEQ', 'LEQ', 'GT', 'LT', 'EQUALS', 'NOTEQUALS', 'OR', 'AND', 'NOT', 'PLUS', 'MINUS', 'MULT', 'DIV', 'SEMICOLON','COLON',
-          'COMMA', 'ASSIGN','SPACE','LPAREN','RPAREN','LCURLY','RCURLY','DOT']
+          'COMMA', 'ASSIGN','SPACE','LPAREN','RPAREN','LCURLY','RCURLY','DOT', 'LSQUARE','RSQUARE']
 
 t_INTEGERCONSTANT = r'(\+|-)?[0-9]+$'
 t_FLOATCONSTANTFIRST=r'[\-\+]?([0-9]+[.][0-9]+)'
@@ -76,7 +76,8 @@ t_RPAREN  = r'\)'
 t_LCURLY  = r'\{'
 t_RCURLY  = r'\}'
 t_DOT= r'\.'
-
+t_LSQUARE=R'\['
+t_RSQUARE=R'\]'
 
 
 def t_IDENTIFIER(t):

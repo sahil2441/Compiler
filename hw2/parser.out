@@ -10,7 +10,6 @@ Unused terminals:
     VOID
     INTEGERCONSTANT
     WHILE
-    STATIC
     NEW
     DIV
     NULL
@@ -20,11 +19,10 @@ Unused terminals:
     COMMENT
     GEQ
     RPAREN
-    SEMICOLON
     LEQ
-    PRIVATE
     LT
     CONTINUE
+    PLUS
     DOT
     COLON
     GT
@@ -38,32 +36,47 @@ Unused terminals:
     AND
     FLOATCONSTANTSECOND
     FALSE
-    INT
-    FLOAT
     OR
     BREAK
     THIS
-    BOOLEAN
     NOT
-    COMMA
     SUPER
-    PUBLIC
 
 Grammar
 
 Rule 0     S' -> classdecl
-Rule 1     classdecl -> CLASS IDENTIFIER LCURLY PLUS RCURLY
-Rule 2     classdecl -> CLASS IDENTIFIER EXTENDS IDENTIFIER LCURLY PLUS RCURLY
+Rule 1     classdecl -> CLASS IDENTIFIER LCURLY class_body_decl RCURLY
+Rule 2     classdecl -> CLASS IDENTIFIER EXTENDS IDENTIFIER LCURLY class_body_decl RCURLY
+Rule 3     class_body_decl -> field_decl
+Rule 4     class_body_decl -> method_decl
+Rule 5     class_body_decl -> constructor_decl
+Rule 6     field_decl -> modifier var_decl
+Rule 7     modifier -> PUBLIC
+Rule 8     modifier -> PRIVATE
+Rule 9     modifier -> STATIC
+Rule 10    modifier -> PUBLIC STATIC
+Rule 11    modifier -> PRIVATE STATIC
+Rule 12    var_decl -> type variables SEMICOLON
+Rule 13    type -> INT
+Rule 14    type -> FLOAT
+Rule 15    type -> BOOLEAN
+Rule 16    type -> IDENTIFIER
+Rule 17    variables -> variable
+Rule 18    variables -> variable COMMA variables
+Rule 19    variable -> IDENTIFIER
+Rule 20    variable -> IDENTIFIER variable_array
+Rule 21    variable_array -> LSQUARE RSQUARE
+Rule 22    variable_array -> LSQUARE RSQUARE variable_array
 
 Terminals, with rules where they appear
 
 AND                  : 
 ASSIGN               : 
-BOOLEAN              : 
+BOOLEAN              : 15
 BREAK                : 
 CLASS                : 1 2
 COLON                : 
-COMMA                : 
+COMMA                : 18
 COMMENT              : 
 CONTINUE             : 
 DIV                  : 
@@ -73,19 +86,20 @@ ELSE                 :
 EQUALS               : 
 EXTENDS              : 2
 FALSE                : 
-FLOAT                : 
+FLOAT                : 14
 FLOATCONSTANTFIRST   : 
 FLOATCONSTANTSECOND  : 
 FOR                  : 
 GEQ                  : 
 GT                   : 
-IDENTIFIER           : 1 2 2
+IDENTIFIER           : 1 2 2 16 19 20
 IF                   : 
-INT                  : 
+INT                  : 13
 INTEGERCONSTANT      : 
 LCURLY               : 1 2
 LEQ                  : 
 LPAREN               : 
+LSQUARE              : 21 22
 LT                   : 
 MINUS                : 
 MULT                 : 
@@ -94,15 +108,16 @@ NOT                  :
 NOTEQUALS            : 
 NULL                 : 
 OR                   : 
-PLUS                 : 1 2
-PRIVATE              : 
-PUBLIC               : 
+PLUS                 : 
+PRIVATE              : 8 11
+PUBLIC               : 7 10
 RCURLY               : 1 2
 RETURN               : 
 RPAREN               : 
-SEMICOLON            : 
+RSQUARE              : 21 22
+SEMICOLON            : 12
 SPACE                : 
-STATIC               : 
+STATIC               : 9 10 11
 STRINGCONSTANT       : 
 SUPER                : 
 THIS                 : 
@@ -113,95 +128,15 @@ error                :
 
 Nonterminals, with rules where they appear
 
+class_body_decl      : 1 2
 classdecl            : 0
-
-Parsing method: LALR
-
-state 0
-
-    (0) S' -> . classdecl
-    (1) classdecl -> . CLASS IDENTIFIER LCURLY PLUS RCURLY
-    (2) classdecl -> . CLASS IDENTIFIER EXTENDS IDENTIFIER LCURLY PLUS RCURLY
-
-    CLASS           shift and go to state 2
-
-    classdecl                      shift and go to state 1
-
-state 1
-
-    (0) S' -> classdecl .
-
-
-
-state 2
-
-    (1) classdecl -> CLASS . IDENTIFIER LCURLY PLUS RCURLY
-    (2) classdecl -> CLASS . IDENTIFIER EXTENDS IDENTIFIER LCURLY PLUS RCURLY
-
-    IDENTIFIER      shift and go to state 3
-
-
-state 3
-
-    (1) classdecl -> CLASS IDENTIFIER . LCURLY PLUS RCURLY
-    (2) classdecl -> CLASS IDENTIFIER . EXTENDS IDENTIFIER LCURLY PLUS RCURLY
-
-    LCURLY          shift and go to state 4
-    EXTENDS         shift and go to state 5
-
-
-state 4
-
-    (1) classdecl -> CLASS IDENTIFIER LCURLY . PLUS RCURLY
-
-    PLUS            shift and go to state 6
-
-
-state 5
-
-    (2) classdecl -> CLASS IDENTIFIER EXTENDS . IDENTIFIER LCURLY PLUS RCURLY
-
-    IDENTIFIER      shift and go to state 7
-
-
-state 6
-
-    (1) classdecl -> CLASS IDENTIFIER LCURLY PLUS . RCURLY
-
-    RCURLY          shift and go to state 8
-
-
-state 7
-
-    (2) classdecl -> CLASS IDENTIFIER EXTENDS IDENTIFIER . LCURLY PLUS RCURLY
-
-    LCURLY          shift and go to state 9
-
-
-state 8
-
-    (1) classdecl -> CLASS IDENTIFIER LCURLY PLUS RCURLY .
-
-    $end            reduce using rule 1 (classdecl -> CLASS IDENTIFIER LCURLY PLUS RCURLY .)
-
-
-state 9
-
-    (2) classdecl -> CLASS IDENTIFIER EXTENDS IDENTIFIER LCURLY . PLUS RCURLY
-
-    PLUS            shift and go to state 10
-
-
-state 10
-
-    (2) classdecl -> CLASS IDENTIFIER EXTENDS IDENTIFIER LCURLY PLUS . RCURLY
-
-    RCURLY          shift and go to state 11
-
-
-state 11
-
-    (2) classdecl -> CLASS IDENTIFIER EXTENDS IDENTIFIER LCURLY PLUS RCURLY .
-
-    $end            reduce using rule 2 (classdecl -> CLASS IDENTIFIER EXTENDS IDENTIFIER LCURLY PLUS RCURLY .)
+constructor_decl     : 5
+field_decl           : 3
+method_decl          : 4
+modifier             : 6
+type                 : 12
+var_decl             : 6
+variable             : 17 18
+variable_array       : 20 22
+variables            : 12 18
 
