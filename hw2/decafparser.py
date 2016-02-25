@@ -67,10 +67,10 @@ def p_variable_array(p):
                     |  LSQUARE RSQUARE variable_array '''
 
 def p_method_decl(p):
-    '''method_decl :  modifier type id LPAREN RPAREN block
-                    | modifier type id LPAREN formals RPAREN block
-                    | modifier VOID id LPAREN RPAREN block
-                    | modifier VOID id LPAREN formals RPAREN block'''
+    '''method_decl :  modifier type IDENTIFIER LPAREN RPAREN block
+                    | modifier type IDENTIFIER LPAREN formals RPAREN block
+                    | modifier VOID IDENTIFIER LPAREN RPAREN block
+                    | modifier VOID IDENTIFIER LPAREN formals RPAREN block'''
 
 def p_constructor_decl(p):
     '''constructor_decl : modifier IDENTIFIER LPAREN RPAREN block
@@ -78,7 +78,7 @@ def p_constructor_decl(p):
 
 def p_formals(p):
     '''formals : formal_param
-               | formal_param,formal_param'''
+               | formal_param COMMA formal_param'''
 
 def p_formal_param(p):
     '''formal_param : type variable'''
@@ -88,7 +88,8 @@ def p_block(p):
               | LCURLY RCURLY'''
 
 def p_stmthelper(p):
-    '''stmthelper : stmt | stmt stmthelper'''
+    '''stmthelper : stmt
+                    | stmt stmthelper'''
 
 def p_stmt(p):
     '''stmt : IF LPAREN expr RPAREN stmt
@@ -111,6 +112,14 @@ def p_stmt(p):
              | block
              | var_decl
              | SEMICOLON'''
+
+#TODO
+def p_expr(p):
+    '''expr : empty'''
+
+#TODO
+def p_stmt_expr(p):
+    '''stmt_expr : empty'''
 
 def p_empty(t):
     'empty : '
