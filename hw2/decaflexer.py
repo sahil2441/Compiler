@@ -33,11 +33,11 @@ reserved = {
 tokens = list(reserved.values()) + \
          ['IDENTIFIER', 'INTEGERCONSTANT','FLOATCONSTANTFIRST','FLOATCONSTANTSECOND','STRINGCONSTANT', 'COMMENT',
           'GEQ', 'LEQ', 'GT', 'LT', 'EQUALS', 'NOTEQUALS', 'OR', 'AND', 'NOT', 'PLUS', 'MINUS', 'MULT', 'DIV', 'SEMICOLON','COLON',
-          'COMMA', 'ASSIGN','SPACE','LPAREN','RPAREN','LCURLY','RCURLY','DOT', 'LSQUARE','RSQUARE']
+          'COMMA', 'ASSIGN','SPACE','LPAREN','RPAREN','LCURLY','RCURLY','DOT', 'LSQUARE','RSQUARE', 'PLUSPLUS', 'MINUSMINUS']
 
 t_INTEGERCONSTANT = r'(\+|-)?[0-9]+$'
-t_FLOATCONSTANTFIRST=r'[\-\+]?([0-9]+[.][0-9]+)'
-t_FLOATCONSTANTSECOND = r'[0-9]+(\.[0-9]+|((.)?[0-9]+)?(e|E)(\-|\+)?[0-9]+)$'
+t_FLOATCONSTANTFIRST=r'(\-\+)?([0-9]+[.][0-9]+)'
+t_FLOATCONSTANTSECOND = r'(\+|\-)?[0-9]+(\.[0-9]+|((.)?[0-9]+)?(e|E)(\-|\+)?[0-9]+)$'
 t_ignore_COMMENT = r'(//.*|\/\*.*\*\/)'
 
 # A string containing ignored characters (spaces and tabs)
@@ -78,6 +78,8 @@ t_RCURLY  = r'\}'
 t_DOT= r'\.'
 t_LSQUARE=R'\['
 t_RSQUARE=R'\]'
+t_PLUSPLUS = r'\+\+'
+t_MINUSMINUS = r'\-\-'
 
 
 def t_IDENTIFIER(t):

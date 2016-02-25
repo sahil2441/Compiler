@@ -113,11 +113,52 @@ def p_stmt(p):
              | var_decl
              | SEMICOLON'''
 
-#TODO
 def p_expr(p):
-    '''expr : empty'''
+    '''expr : primary
+            | assign
+            | new_array
+            | expr arith_op expr
+            | expr bool_op expr
+            | unary_op expr'''
 
-#TODO
+def p_assign(p):
+    '''assign : lhs ASSIGN expr
+               | lhs PLUSPLUS
+               | PLUSPLUS lhs
+               | lhs MINUSMINUS
+               | MINUSMINUS lhs'''
+
+def p_new_array(p):
+    '''new_array : NEW type expr_array_helper1 expr_array_helper2'''
+
+def p_expr_array_helper1(p):
+    '''expr_array_helper1 : LSQUARE expr RSQUARE
+                          | LSQUARE expr RSQUARE expr_array_helper1'''
+
+def p_expr_array_helper2(p):
+    '''expr_array_helper2 : empty
+                           | LSQUARE RSQUARE expr_array_helper2'''
+
+def p_arith_op(p):
+    '''arith_op : PLUS
+                | MINUS
+                | MULT
+                | DIV'''
+
+def p_bool_op(p):
+    '''bool_op : AND
+               | OR
+               | EQUALS
+               | NOTEQUALS
+               | LT
+               | GT
+               | LEQ
+               | GEQ'''
+
+def p_unary_op(p):
+    '''unary_op : PLUS
+                 | MINUS
+                 | NOT'''
 def p_stmt_expr(p):
     '''stmt_expr : empty'''
 
