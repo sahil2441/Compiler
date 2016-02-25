@@ -16,14 +16,14 @@ precedence = (
     ('left', 'NOT'),
 )
 
-start = 'program'
-
-def p_program(p):
-    'classdecl*'
+# start = 'program'
+#
+# def p_program(p):
+#     'classdecl*'
 
 def p_classdecl(p):
-    '''classdecl : CLASS IDENTIFIER LPAREN PLUS RPAREN
-                  | CLASS IDENTIFIER EXTENDS IDENTIFIER LPAREN PLUS RPAREN'''
+    '''classdecl : CLASS IDENTIFIER LCURLY PLUS RCURLY
+                  | CLASS IDENTIFIER EXTENDS IDENTIFIER LCURLY PLUS RCURLY'''
              
 #def p_class_body_decl(p):
  #   '''class_body_decl : field_decl
