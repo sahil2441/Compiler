@@ -1,8 +1,9 @@
 ''' PLY/lex scanner specification file '''
 import sys
-sys.path.insert(0,"../..")
-
+#sys.path.insert(0,"../..")
 import ply.lex as lex
+
+ROOT_FOLDER = 'F:\\MastersStonyBrook\\SemesterCourses\\Semester2\\CSE504_Compilers\\jsundar-sahjain\\hw2\\'
 
 reserved = {
     'boolean' : 'BOOLEAN', 
@@ -31,11 +32,11 @@ reserved = {
 
 tokens = list(reserved.values()) + \
          ['IDENTIFIER', 'INTEGERCONSTANT','FLOATCONSTANTFIRST','FLOATCONSTANTSECOND','STRINGCONSTANT', 'COMMENT',
-          'GEQ', 'LEQ', 'GT', 'LT', 'EQUALS', 'PLUS', 'MINUS', 'MULT', 'DIV', 'SEMICOLON','COLON',
+          'GEQ', 'LEQ', 'GT', 'LT', 'EQUALS', 'NOTEQUALS', 'OR', 'AND', 'NOT', 'PLUS', 'MINUS', 'MULT', 'DIV', 'SEMICOLON','COLON',
           'COMMA', 'ASSIGN','SPACE','LPAREN','RPAREN','LCURLY','RCURLY','DOT']
 
 t_INTEGERCONSTANT = r'(\+|-)?[0-9]+$'
-t_FLOATCONSTANTFIRST=r'[-+]?([0-9]+[.][0-9]+)'
+t_FLOATCONSTANTFIRST=r'[\-\+]?([0-9]+[.][0-9]+)'
 t_FLOATCONSTANTSECOND = r'[0-9]+(\.[0-9]+|((.)?[0-9]+)?(e|E)(\-|\+)?[0-9]+)$'
 t_ignore_COMMENT = r'(//.*|\/\*.*\*\/)'
 
@@ -51,13 +52,17 @@ responded with \"A:\\>\""). Strings must be contained within a single line.
 """
 
 #TODO
-t_STRINGCONSTANT = r'\" \"$'
+t_STRINGCONSTANT = r'\".*\"$'
 
 t_GEQ = r'>='
 t_LEQ = r'<='
 t_GT = r'>'
 t_LT = r'<'
 t_EQUALS = r'=='
+t_NOTEQUALS = r'!='
+t_OR = r'\|\|'
+t_AND  = r'&&'
+t_NOT = r'!'
 t_PLUS = r'\+'
 t_MINUS = r'-'
 t_MULT = r'\*'
@@ -91,7 +96,7 @@ def t_error(t):
 lexer = lex.lex()
 
 def feedInput():
-    file=open('test_case_1.txt')
+    file=open(ROOT_FOLDER+'test_case_1.txt')
     data = file.read()
     file.close()
     # Give the lexer some input
