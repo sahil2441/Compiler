@@ -12,4 +12,7 @@ Out.print("Fib = ");
 Out.print(fn);
 Out.print("\n");
 }
+/* comment here
+*/
+//comment here 22
 }
