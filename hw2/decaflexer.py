@@ -31,14 +31,14 @@ reserved = {
     'while' : 'WHILE'} 
 
 tokens = list(reserved.values()) + \
-         ['IDENTIFIER', 'INTEGERCONSTANT','FLOATCONSTANTFIRST','FLOATCONSTANTSECOND','STRINGCONSTANT', 'COMMENT',
+         ['IDENTIFIER', 'INTEGERCONSTANT','FLOATCONSTANT','STRINGCONSTANT', 'COMMENT',
           'GEQ', 'LEQ', 'GT', 'LT', 'EQUALS', 'NOTEQUALS', 'OR', 'AND', 'NOT', 'PLUS', 'MINUS', 'MULT', 'DIV', 'SEMICOLON','COLON',
-          'COMMA', 'ASSIGN','SPACE','LPAREN','RPAREN','LCURLY','RCURLY','DOT', 'LSQUARE','RSQUARE', 'PLUSPLUS', 'MINUSMINUS']
+          'COMMA', 'ASSIGN','SPACE','LPAREN','RPAREN','LCURLY','RCURLY','DOT', 'LSQUARE','RSQUARE', 'PLUSPLUS', 'MINUSMINUS',
+          'OUTPRINT', 'INSCANINT', 'INSCANFLOAT']
 
 t_INTEGERCONSTANT = r'(\+|-)?[0-9]+$'
-t_FLOATCONSTANTFIRST=r'(\-\+)?([0-9]+[.][0-9]+)'
-t_FLOATCONSTANTSECOND = r'(\+|\-)?[0-9]+(\.[0-9]+|((.)?[0-9]+)?(e|E)(\-|\+)?[0-9]+)$'
-t_ignore_COMMENT = r'(//.*|\/\*.*\*\/)'
+t_FLOATCONSTANT = r'(\+|\-)?[0-9]+(\.[0-9]+|((.)?[0-9]+)?(e|E)(\-|\+)?[0-9]+)$'
+t_ignore_COMMENT = r'(//.*|\/\*.*\*\/)$'
 
 # A string containing ignored characters (spaces and tabs)
 t_ignore  = ' \t'
@@ -80,7 +80,9 @@ t_LSQUARE=R'\['
 t_RSQUARE=R'\]'
 t_PLUSPLUS = r'\+\+'
 t_MINUSMINUS = r'\-\-'
-
+t_OUTPRINT = r'Out\.print$'
+t_INSCANINT = r'In\.scan_int$'
+t_INSCANFLOAT = r'In\.scan_float$'
 
 def t_IDENTIFIER(t):
     r'[a-zA-Z][a-zA-Z0-9_]*'

@@ -103,7 +103,6 @@ def p_stmt(p):
              | FOR LPAREN SEMICOLON expr SEMICOLON RPAREN stmt
              | FOR LPAREN SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt
              | FOR LPAREN SEMICOLON SEMICOLON stmt_expr RPAREN stmt
-             | FOR LPAREN SEMICOLON SEMICOLON SEMICOLON stmt_expr RPAREN stmt
              | RETURN SEMICOLON
              | RETURN expr SEMICOLON
              | stmt_expr SEMICOLON
@@ -117,9 +116,21 @@ def p_expr(p):
     '''expr : primary
             | assign
             | new_array
-            | expr arith_op expr
-            | expr bool_op expr
-            | unary_op expr'''
+            | expr PLUS expr
+            | expr MINUS expr
+            | expr MULT expr
+            | expr DIV expr
+            | expr OR expr
+            | expr AND expr
+            | expr EQUALS expr
+            | expr NOTEQUALS expr
+            | expr LT expr
+            | expr GT expr
+            | expr LEQ expr
+            | expr GEQ expr
+            | PLUS expr
+            | MINUS expr
+            | NOT expr'''
 
 def p_assign(p):
     '''assign : lhs ASSIGN expr
@@ -139,33 +150,12 @@ def p_expr_array_helper2(p):
     '''expr_array_helper2 : empty
                            | LSQUARE RSQUARE expr_array_helper2'''
 
-def p_arith_op(p):
-    '''arith_op : PLUS
-                | MINUS
-                | MULT
-                | DIV'''
-
-def p_bool_op(p):
-    '''bool_op : AND
-               | OR
-               | EQUALS
-               | NOTEQUALS
-               | LT
-               | GT
-               | LEQ
-               | GEQ'''
-
-def p_unary_op(p):
-    '''unary_op : PLUS
-                 | MINUS
-                 | NOT'''
 def p_stmt_expr(p):
     '''stmt_expr : empty'''
 
 def p_literal(p):
     ''' literal : INTEGERCONSTANT
-                | FLOATCONSTANTFIRST
-                | FLOATCONSTANTSECOND
+                | FLOATCONSTANT
                 | NULL
                 | TRUE
                 | FALSE
@@ -219,8 +209,8 @@ def p_error(t):
 ROOT_FOLDER = 'F:\\MastersStonyBrook\\SemesterCourses\\Semester2\\CSE504_Compilers\\jsundar-sahjain\\hw2\\'
 
 if __name__ == '__main__':
-    #file=open(ROOT_FOLDER+'test_case_1.txt')
-    #data = file.read()
-    data = 'class temp { int x; }'
+    file=open(ROOT_FOLDER+'test_case_1.txt')
+    data = file.read()
+    #data = 'class temp { int x; }'
     parser = yacc.yacc()
     p = parser.parse(data)
