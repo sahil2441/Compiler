@@ -52,7 +52,7 @@ responded with \"A:\\>\""). Strings must be contained within a single line.
 """
 
 #TODO
-t_STRINGCONSTANT = r'\".*\"'
+t_STRINGCONSTANT = r'\"(?:\\\\\"|[^\"])*?\"'
 
 t_GEQ = r'>='
 t_LEQ = r'<='
@@ -101,7 +101,7 @@ def t_error(t):
 lexer = lex.lex()
 
 def feedInput():
-    file=open('nrfib.txt')
+    file=open('test_case_1.txt')
     data = file.read()
     file.close()
     # Give the lexer some input

@@ -209,7 +209,7 @@ def p_error(t):
 # ROOT_FOLDER = 'F:\\MastersStonyBrook\\SemesterCourses\\Semester2\\CSE504_Compilers\\jsundar-sahjain\\hw2\\'
 
 if __name__ == '__main__':
-    file=open('test_case_1.txt')
+    file=open('nrfib.txt')
     data = file.read()
     #data = 'class temp { int x; }'
 
