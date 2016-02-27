@@ -36,7 +36,7 @@ tokens = list(reserved.values()) + \
           'COMMA', 'ASSIGN','SPACE','LPAREN','RPAREN','LCURLY','RCURLY','DOT', 'LSQUARE','RSQUARE', 'PLUSPLUS', 'MINUSMINUS',
           'OUTPRINT', 'INSCANINT', 'INSCANFLOAT']
 
-t_INTEGERCONSTANT = r'(\+|-)?[0-9]+$'
+t_INTEGERCONSTANT = r'(\+|-)? [0-9]+'
 t_FLOATCONSTANT = r'(\+|\-)?[0-9]+(\.[0-9]+|((.)?[0-9]+)?(e|E)(\-|\+)?[0-9]+)$'
 t_ignore_COMMENT = r'(//.*|\/\*.*\*\/)$'
 
@@ -52,7 +52,7 @@ responded with \"A:\\>\""). Strings must be contained within a single line.
 """
 
 #TODO
-t_STRINGCONSTANT = r'\".*\"$'
+t_STRINGCONSTANT = r'\".*\"'
 
 t_GEQ = r'>='
 t_LEQ = r'<='
@@ -101,7 +101,7 @@ def t_error(t):
 lexer = lex.lex()
 
 def feedInput():
-    file=open(ROOT_FOLDER+'test_case_1.txt')
+    file=open('nrfib.txt')
     data = file.read()
     file.close()
     # Give the lexer some input

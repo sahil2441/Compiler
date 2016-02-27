@@ -206,11 +206,12 @@ def p_empty(t):
 def p_error(t):
     print("Whoa. Error!")
 
-ROOT_FOLDER = 'F:\\MastersStonyBrook\\SemesterCourses\\Semester2\\CSE504_Compilers\\jsundar-sahjain\\hw2\\'
+# ROOT_FOLDER = 'F:\\MastersStonyBrook\\SemesterCourses\\Semester2\\CSE504_Compilers\\jsundar-sahjain\\hw2\\'
 
 if __name__ == '__main__':
-    file=open(ROOT_FOLDER+'test_case_1.txt')
+    file=open('test_case_1.txt')
     data = file.read()
     #data = 'class temp { int x; }'
+
     parser = yacc.yacc()
     p = parser.parse(data)
