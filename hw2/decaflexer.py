@@ -31,14 +31,15 @@ reserved = {
     'while' : 'WHILE'} 
 
 tokens = list(reserved.values()) + \
-         ['IDENTIFIER', 'INTEGERCONSTANT','FLOATCONSTANT','STRINGCONSTANT', 'COMMENT',
+         ['IDENTIFIER', 'INTEGERCONSTANT','FLOATCONSTANT','STRINGCONSTANT', 'COMMENT','BLOCKCOMMENT',
           'GEQ', 'LEQ', 'GT', 'LT', 'EQUALS', 'NOTEQUALS', 'OR', 'AND', 'NOT', 'PLUS', 'MINUS', 'MULT', 'DIV', 'SEMICOLON','COLON',
           'COMMA', 'ASSIGN','SPACE','LPAREN','RPAREN','LCURLY','RCURLY','DOT', 'LSQUARE','RSQUARE', 'PLUSPLUS', 'MINUSMINUS',
           'OUTPRINT', 'INSCANINT', 'INSCANFLOAT']
 
 t_INTEGERCONSTANT = r'(\+|-)? [0-9]+'
-t_FLOATCONSTANT = r'(\+|\-)?[0-9]+(\.[0-9]+|((.)?[0-9]+)?(e|E)(\-|\+)?[0-9]+)$'
-t_ignore_COMMENT = r'(//.*|\/\*.*\*\/)$'
+t_FLOATCONSTANT = r'(\+|\-)?[0-9]+(\.[0-9]+|((.)?[0-9]+)?(e|E)(\-|\+)?[0-9]+)'
+t_ignore_COMMENT = r'//.*'
+t_ignore_BLOCKCOMMENT = r'/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+/'
 
 # A string containing ignored characters (spaces and tabs)
 t_ignore  = ' \t'
