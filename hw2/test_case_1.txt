@@ -1,3 +1,7 @@
 class hello_world{
- public int jill[];
+
+    public hello_world(){
+
+    }
+
 }

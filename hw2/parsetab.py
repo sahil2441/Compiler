@@ -5,9 +5,9 @@ _tabversion = '3.8'
 
 _lr_method = 'LALR'
 
-_lr_signature = '67BA7FF1EB52F0E5746B953002FE1901'
+_lr_signature = '2481F5EF47E32B62F7F33A2062774EB1'
     
-_lr_action_items = {'RSQUARE':([32,],[33,]),'SEMICOLON':([24,26,31,34,],[28,-17,-18,-19,]),'RCURLY':([4,7,8,12,17,23,27,28,],[-20,20,-4,-3,-5,-20,30,-12,]),'INT':([4,6,9,10,11,12,21,22,23,],[-20,15,-6,-8,-7,-11,-9,-10,-20,]),'FLOAT':([4,6,9,10,11,12,21,22,23,],[-20,16,-6,-8,-7,-11,-9,-10,-20,]),'PRIVATE':([4,23,],[11,11,]),'PUBLIC':([4,23,],[9,9,]),'LCURLY':([3,13,],[4,23,]),'BOOLEAN':([4,6,9,10,11,12,21,22,23,],[-20,18,-6,-8,-7,-11,-9,-10,-20,]),'EXTENDS':([3,],[5,]),'LSQUARE':([29,],[32,]),'STATIC':([4,9,11,23,],[10,21,22,10,]),'IDENTIFIER':([1,4,5,6,9,10,11,12,14,15,16,18,19,21,22,23,25,29,33,],[3,-20,13,14,-6,-8,-7,-11,-16,-13,-14,-15,26,-9,-10,-20,29,26,26,]),'CLASS':([0,],[1,]),'COMMA':([14,15,16,18,19,29,33,],[-16,-13,-14,-15,25,25,25,]),'$end':([2,20,30,],[0,-1,-2,]),}
+_lr_action_items = {'RSQUARE':([43,54,],[55,63,]),'RPAREN':([29,35,37,40,44,46,47,48,50,51,53,55,56,57,69,],[-32,-32,49,52,-32,58,59,-30,-29,-19,-21,-20,64,65,-22,]),'LSQUARE':([32,42,51,],[43,54,43,]),'SEMICOLON':([30,32,51,53,55,69,],[41,-19,-19,-21,-20,-22,]),'RCURLY':([4,7,8,9,10,14,19,33,41,60,61,62,66,67,68,70,71,72,],[-32,23,-4,-6,-5,26,-7,45,-14,-32,-27,-28,-24,-25,72,-23,-26,-31,]),'INT':([4,6,11,12,13,14,24,25,27,29,34,35,36,44,],[-32,16,-8,-9,-10,-13,-11,-12,-32,16,-13,16,16,16,]),'VOID':([4,6,11,12,13,14,24,25,27,34,],[-32,17,-8,-9,-10,-13,-11,-12,-32,-13,]),'FLOAT':([4,6,11,12,13,14,24,25,27,29,34,35,36,44,],[-32,18,-8,-9,-10,-13,-11,-12,-32,18,-13,18,18,18,]),'PRIVATE':([4,27,],[12,12,]),'PUBLIC':([4,27,],[11,11,]),'LCURLY':([3,15,49,52,58,59,64,65,],[4,27,60,60,60,60,60,60,]),'BOOLEAN':([4,6,11,12,13,14,24,25,27,29,34,35,36,44,],[-32,20,-8,-9,-10,-13,-11,-12,-32,20,-13,20,20,20,]),'EXTENDS':([3,],[5,]),'LPAREN':([21,28,32,],[29,35,44,]),'STATIC':([4,11,12,27,],[13,24,25,13,]),'IDENTIFIER':([2,4,5,6,11,12,13,14,16,17,18,20,21,22,24,25,27,29,31,34,35,36,38,39,42,44,63,],[3,-32,15,21,-8,-9,-10,-13,-15,28,-16,-17,-18,32,-11,-12,-32,38,42,-13,38,38,-18,51,51,38,51,]),'CLASS':([0,],[2,]),'COMMA':([16,18,20,21,22,29,35,36,38,39,42,44,63,],[-15,-16,-17,-18,31,36,36,36,-18,31,31,36,31,]),'$end':([1,23,26,45,],[0,-2,-1,-3,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -16,7 +16,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'classdecl':([0,],[2,]),'field_decl':([4,23,],[8,8,]),'variables':([19,29,33,],[24,31,34,]),'var_decl':([6,],[17,]),'modifier':([4,23,],[6,6,]),'type':([6,],[19,]),'empty':([4,23,],[12,12,]),'class_body_decl':([4,23,],[7,27,]),}
+_lr_goto_items = {'formals':([29,35,36,44,],[40,47,48,57,]),'classdecl':([0,],[1,]),'field_decl':([4,27,],[8,8,]),'variables':([22,39,42,63,],[30,50,53,69,]),'constructor_decl':([4,27,],[9,9,]),'method_decl':([4,27,],[10,10,]),'var_decl':([6,],[19,]),'block':([49,52,58,59,64,65,],[61,62,66,67,70,71,]),'modifier':([4,27,],[6,6,]),'type':([6,29,35,36,44,],[22,39,39,39,39,]),'empty':([4,27,29,35,44,60,],[14,34,37,46,56,68,]),'class_body_decl':([4,27,],[7,33,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -26,10 +26,12 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> classdecl","S'",1,None,None,None),
-  ('classdecl -> CLASS IDENTIFIER LCURLY class_body_decl RCURLY','classdecl',5,'p_classdecl','decafparser.py',24),
-  ('classdecl -> CLASS IDENTIFIER EXTENDS IDENTIFIER LCURLY class_body_decl RCURLY','classdecl',7,'p_classdecl','decafparser.py',25),
-  ('class_body_decl -> empty','class_body_decl',1,'p_class_body_decl','decafparser.py',28),
+  ('classdecl -> CLASS IDENTIFIER LCURLY empty RCURLY','classdecl',5,'p_classdecl','decafparser.py',24),
+  ('classdecl -> CLASS IDENTIFIER LCURLY class_body_decl RCURLY','classdecl',5,'p_classdecl','decafparser.py',25),
+  ('classdecl -> CLASS IDENTIFIER EXTENDS IDENTIFIER LCURLY class_body_decl RCURLY','classdecl',7,'p_classdecl','decafparser.py',26),
   ('class_body_decl -> field_decl','class_body_decl',1,'p_class_body_decl','decafparser.py',29),
+  ('class_body_decl -> method_decl','class_body_decl',1,'p_class_body_decl','decafparser.py',30),
+  ('class_body_decl -> constructor_decl','class_body_decl',1,'p_class_body_decl','decafparser.py',31),
   ('field_decl -> modifier var_decl','field_decl',2,'p_field_decl','decafparser.py',35),
   ('modifier -> PUBLIC','modifier',1,'p_modifier','decafparser.py',38),
   ('modifier -> PRIVATE','modifier',1,'p_modifier','decafparser.py',39),
@@ -42,8 +44,18 @@ _lr_productions = [
   ('type -> FLOAT','type',1,'p_type','decafparser.py',50),
   ('type -> BOOLEAN','type',1,'p_type','decafparser.py',51),
   ('type -> IDENTIFIER','type',1,'p_type','decafparser.py',52),
-  ('variables -> IDENTIFIER','variables',1,'p_variables','decafparser.py',55),
-  ('variables -> COMMA IDENTIFIER variables','variables',3,'p_variables','decafparser.py',56),
-  ('variables -> COMMA IDENTIFIER LSQUARE RSQUARE variables','variables',5,'p_variables','decafparser.py',57),
-  ('empty -> <empty>','empty',0,'p_empty','decafparser.py',193),
+  ('variables -> IDENTIFIER','variables',1,'p_variables','decafparser.py',56),
+  ('variables -> IDENTIFIER LSQUARE RSQUARE','variables',3,'p_variables','decafparser.py',57),
+  ('variables -> COMMA IDENTIFIER variables','variables',3,'p_variables','decafparser.py',58),
+  ('variables -> COMMA IDENTIFIER LSQUARE RSQUARE variables','variables',5,'p_variables','decafparser.py',59),
+  ('method_decl -> modifier type IDENTIFIER LPAREN empty RPAREN block','method_decl',7,'p_method_decl','decafparser.py',62),
+  ('method_decl -> modifier VOID IDENTIFIER LPAREN empty RPAREN block','method_decl',7,'p_method_decl','decafparser.py',63),
+  ('method_decl -> modifier VOID IDENTIFIER LPAREN formals RPAREN block','method_decl',7,'p_method_decl','decafparser.py',64),
+  ('method_decl -> modifier type IDENTIFIER LPAREN formals RPAREN block','method_decl',7,'p_method_decl','decafparser.py',65),
+  ('constructor_decl -> modifier IDENTIFIER LPAREN empty RPAREN block','constructor_decl',6,'p_constructor_decl','decafparser.py',68),
+  ('constructor_decl -> modifier IDENTIFIER LPAREN formals RPAREN block','constructor_decl',6,'p_constructor_decl','decafparser.py',69),
+  ('formals -> type variables','formals',2,'p_formals','decafparser.py',72),
+  ('formals -> COMMA formals','formals',2,'p_formals','decafparser.py',73),
+  ('block -> LCURLY empty RCURLY','block',3,'p_block','decafparser.py',80),
+  ('empty -> <empty>','empty',0,'p_empty','decafparser.py',200),
 ]

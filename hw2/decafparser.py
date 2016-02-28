@@ -21,15 +21,16 @@ precedence = (
 )
 
 def p_classdecl(p):
-    '''classdecl : CLASS IDENTIFIER LCURLY class_body_decl RCURLY
-                  | CLASS IDENTIFIER EXTENDS IDENTIFIER LCURLY class_body_decl RCURLY'''
+    '''classdecl :  CLASS IDENTIFIER LCURLY empty RCURLY
+                |   CLASS IDENTIFIER LCURLY class_body_decl RCURLY
+                |   CLASS IDENTIFIER EXTENDS IDENTIFIER LCURLY class_body_decl RCURLY'''
 
+# TODO : Recursive call for class_body
 def p_class_body_decl(p):
-   '''class_body_decl : empty
-                        | field_decl '''
-                        # | method_decl
-                        # | constructor_decl
-                        # | class_body_decl'''
+   '''class_body_decl : field_decl
+                    | method_decl
+                    | constructor_decl '''
+                    # | class_body_decl '''
 
 def p_field_decl(p):
     'field_decl : modifier var_decl'
@@ -47,41 +48,47 @@ def p_var_decl(p):
 
 def p_type(p):
     '''type : INT
-        | FLOAT
-        | BOOLEAN
-        | IDENTIFIER '''
+            | FLOAT
+            | BOOLEAN
+            | IDENTIFIER '''
 
-# TODO array
+# TODO array is it int[][] or int fieldName[][] ?
 def p_variables(p):
     '''variables : IDENTIFIER
-                |   COMMA IDENTIFIER variables
-                |   COMMA IDENTIFIER LSQUARE RSQUARE variables '''
+                |  IDENTIFIER LSQUARE RSQUARE
+                |  COMMA IDENTIFIER variables
+                |  COMMA IDENTIFIER LSQUARE RSQUARE variables'''
 
-# def p_method_decl(p):
-#     '''method_decl :  modifier type IDENTIFIER LPAREN RPAREN block
-#                     | modifier type IDENTIFIER LPAREN formals RPAREN block
-#                     | modifier VOID IDENTIFIER LPAREN RPAREN block
-#                     | modifier VOID IDENTIFIER LPAREN formals RPAREN block'''
-#
-# def p_constructor_decl(p):
-#     '''constructor_decl : modifier IDENTIFIER LPAREN RPAREN block
-#                         | modifier IDENTIFIER LPAREN formals RPAREN block'''
-#
-# def p_formals(p):
-#     '''formals : formal_param
-#                | formal_param COMMA formal_param'''
-#
-# def p_formal_param(p):
-#     '''formal_param : type variable'''
-#
-# def p_block(p):
-#     '''block : LCURLY stmthelper RCURLY
-#               | LCURLY RCURLY'''
-#
+def p_method_decl(p):
+    '''method_decl :  modifier type IDENTIFIER LPAREN empty RPAREN block
+                    | modifier VOID IDENTIFIER LPAREN empty RPAREN block
+                    | modifier VOID IDENTIFIER LPAREN formals RPAREN block
+                    | modifier type IDENTIFIER LPAREN formals RPAREN block '''
+
+def p_constructor_decl(p):
+    '''constructor_decl : modifier IDENTIFIER LPAREN empty RPAREN block
+                        | modifier IDENTIFIER LPAREN formals RPAREN block'''
+
+def p_formals(p):
+    '''formals : type variables
+                | COMMA formals '''
+
+
+
+# TODO: Currently it supports only function empty body
+# block : LCURLY empty RCURLY
+def p_block(p):
+    ' block : LCURLY empty RCURLY'
+    # ''' block : LCURLY empty RCURLY
+    #             | LCURLY stmthelper RCURLY'''
+
 # def p_stmthelper(p):
 #     '''stmthelper : stmt
 #                     | stmt stmthelper'''
-#
+
+
+
+
 # def p_stmt(p):
 #     '''stmt : IF LPAREN expr RPAREN stmt
 #              | IF LPAREN expr RPAREN stmt ELSE stmt
@@ -198,7 +205,7 @@ def p_error(t):
     print("Whoa. Error!")
     # uncomment to print stack trace
     # traceback.print_exc()
-    # logging.exception("Something awful happened!")
+    logging.exception("Something awful happened!")
 
 
 # ROOT_FOLDER = 'F:\\MastersStonyBrook\\SemesterCourses\\Semester2\\CSE504_Compilers\\jsundar-sahjain\\hw2\\'
