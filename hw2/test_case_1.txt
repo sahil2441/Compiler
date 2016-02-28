@@ -1,7 +1,8 @@
 class hello_world{
-
-    public hello_world(){
-
+    public int x;
+    public static int e;
+    int y[], z, u[][][];
+    public hello_world(int x[][][], int a, float b)
+    {
     }
-
 }
