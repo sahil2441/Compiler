@@ -15,7 +15,7 @@ precedence = (
     ('left', 'AND'),
     ('left', 'EQUALS', 'NOTEQUALS'),    
     ('left', 'LT', 'GT', 'LEQ', 'GEQ'),
-    ('left', 'PLUS'),
+    ('left', 'PLUS', 'MINUS'),
     ('left', 'MULT', 'DIV'),
     ('left', 'NOT'),
     ('right', 'UMINUS'),
@@ -90,33 +90,29 @@ def p_stmthelper(p):
 
 def p_stmt(p):
     '''stmt : IF LPAREN expr RPAREN stmt
-             | IF LPAREN expr RPAREN stmt ELSE stmt
-             | WHILE LPAREN expr RPAREN stmt
-             | FOR LPAREN SEMICOLON SEMICOLON RPAREN stmt
-             | FOR LPAREN stmt_expr SEMICOLON SEMICOLON RPAREN stmt
-             | FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON RPAREN stmt
-             | FOR LPAREN stmt_expr SEMICOLON SEMICOLON stmt_expr RPAREN stmt
-             | FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt
-             | FOR LPAREN SEMICOLON expr SEMICOLON RPAREN stmt
-             | FOR LPAREN SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt
-             | FOR LPAREN SEMICOLON SEMICOLON stmt_expr RPAREN stmt
-             | RETURN SEMICOLON
-             | RETURN expr SEMICOLON
-             | stmt_expr SEMICOLON
-             | BREAK SEMICOLON
-             | CONTINUE SEMICOLON
-             | block
-             | var_decl
-             | SEMICOLON'''
+              | IF LPAREN expr RPAREN stmt ELSE stmt
+              | WHILE LPAREN expr RPAREN stmt
+              | FOR LPAREN SEMICOLON SEMICOLON RPAREN stmt
+              | FOR LPAREN stmt_expr SEMICOLON SEMICOLON RPAREN stmt
+              | FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON RPAREN stmt
+              | FOR LPAREN stmt_expr SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+              | FOR LPAREN stmt_expr SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt
+              | FOR LPAREN SEMICOLON expr SEMICOLON RPAREN stmt
+              | FOR LPAREN SEMICOLON expr SEMICOLON stmt_expr RPAREN stmt
+              | FOR LPAREN SEMICOLON SEMICOLON stmt_expr RPAREN stmt
+              | block
+              | var_decl
+              | stmt_expr SEMICOLON
+              | RETURN expr SEMICOLON
+              | RETURN SEMICOLON
+              | BREAK SEMICOLON
+              | CONTINUE SEMICOLON
+              | SEMICOLON'''
 
 def p_expr(p):
     '''expr : primary
             | assign
             | new_array
-            | expr PLUS expr
-            | expr MINUS expr
-            | expr MULT expr
-            | expr DIV expr
             | expr OR expr
             | expr AND expr
             | expr EQUALS expr
@@ -125,13 +121,17 @@ def p_expr(p):
             | expr GT expr
             | expr LEQ expr
             | expr GEQ expr
+            | expr PLUS expr
+            | expr MINUS expr
+            | expr MULT expr
+            | expr DIV expr
             | NOT expr'''
 
-def p_expression_uminus(p):
+def p_expr_uminus(p):
     'expr : MINUS expr %prec UMINUS'
     p[0] = -p[2]
 
-def p_expression_uplus(p):
+def p_expr_uplus(p):
     'expr : PLUS expr %prec UPLUS'
     p[0] = -p[2]
 
@@ -144,18 +144,20 @@ def p_assign(p):
                | MINUSMINUS lhs'''
 
 def p_new_array(p):
-    '''new_array : NEW type expr_array_helper1 expr_array_helper2'''
+    '''new_array : NEW type expr_array_helper'''
 
-def p_expr_array_helper1(p):
-    '''expr_array_helper1 : LSQUARE expr RSQUARE
-                          | LSQUARE expr RSQUARE expr_array_helper1'''
+def p_expr_array_helper(p):
+    '''expr_array_helper : LSQUARE expr RSQUARE
+                          | LSQUARE expr RSQUARE expr_array_helper
+                          | LSQUARE expr RSQUARE expr_array_helper2'''
 
 def p_expr_array_helper2(p):
-    '''expr_array_helper2 : empty
+    '''expr_array_helper2 : LSQUARE RSQUARE
                            | LSQUARE RSQUARE expr_array_helper2'''
 
 def p_stmt_expr(p):
-    '''stmt_expr : empty'''
+    '''stmt_expr : assign
+                 | method_invocation'''
 
 def p_literal(p):
     ''' literal : INTEGERCONSTANT

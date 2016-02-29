@@ -4,5 +4,6 @@ class hello_world{
     int y[], z, u[][][];
     public hello_world(int x[][][], int a, float b)
     {
+      return 5 ;
     }
 }
