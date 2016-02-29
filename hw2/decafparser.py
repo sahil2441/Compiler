@@ -81,7 +81,7 @@ def p_formals(p):
                 | type variables COMMA formals'''
 #TODO
 def p_block(p):
-    '''block : LCURLY RCURLY
+    '''block : LCURLY empty RCURLY
               | LCURLY stmthelper RCURLY'''
 
 def p_stmthelper(p):
@@ -162,6 +162,7 @@ def p_stmt_expr(p):
 def p_literal(p):
     ''' literal : INTEGERCONSTANT
                 | FLOATCONSTANT
+                | STRINGCONSTANT
                 | NULL
                 | TRUE
                 | FALSE
