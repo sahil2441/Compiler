@@ -20,6 +20,7 @@ precedence = (
     ('left', 'NOT'),
     ('right', 'UMINUS'),
     ('right', 'UPLUS'),
+    ('right', 'ELSE'),
 )
 
 def p_classdecl(p):
@@ -89,8 +90,8 @@ def p_stmthelper(p):
                   | stmthelper stmt'''
 
 def p_stmt(p):
-    '''stmt : IF LPAREN expr RPAREN stmt
-              | IF LPAREN expr RPAREN stmt ELSE stmt
+    '''stmt : IF LPAREN expr RPAREN stmt ELSE stmt
+              | IF LPAREN expr RPAREN stmt
               | WHILE LPAREN expr RPAREN stmt
               | FOR LPAREN SEMICOLON SEMICOLON RPAREN stmt
               | FOR LPAREN stmt_expr SEMICOLON SEMICOLON RPAREN stmt
@@ -217,12 +218,13 @@ def p_error(t):
     # traceback.print_exc()
     logging.exception("Something awful happened!")
 
-
+def parse(data):
+    yacc.yacc();
+    yacc.parse(data)
 # ROOT_FOLDER = 'F:\\MastersStonyBrook\\SemesterCourses\\Semester2\\CSE504_Compilers\\jsundar-sahjain\\hw2\\'
 
 if __name__ == '__main__':
     file=open('test_case_1.txt')
     data = file.read()
     #data = 'class temp { int x; }'
-    parser = yacc.yacc()
-    p = parser.parse(data)
+    parse(data)

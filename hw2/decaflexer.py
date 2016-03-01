@@ -3,19 +3,18 @@ import sys
 #sys.path.insert(0,"../..")
 import ply.lex as lex
 
-ROOT_FOLDER = 'F:\\MastersStonyBrook\\SemesterCourses\\Semester2\\CSE504_Compilers\\jsundar-sahjain\\hw2\\'
-
+# reserved keywords in the Decaf language
 reserved = {
-    'boolean' : 'BOOLEAN', 
-    'break' : 'BREAK', 
+    'boolean' : 'BOOLEAN',
+    'break' : 'BREAK',
     'continue' : 'CONTINUE',
     'class' : 'CLASS',
-    'do' : 'DO', 
+    'do' : 'DO',
     'else' : 'ELSE',
-    'extends' : 'EXTENDS', 
-    'false' : 'FALSE', 
-    'float' : 'FLOAT', 
-    'for' : 'FOR', 
+    'extends' : 'EXTENDS',
+    'false' : 'FALSE',
+    'float' : 'FLOAT',
+    'for' : 'FOR',
     'if' : 'IF',
     'int' : 'INT',
     'new' : 'NEW',
@@ -28,16 +27,13 @@ reserved = {
     'this' : 'THIS',
     'true' : 'TRUE',
     'void' : 'VOID',
-    'while' : 'WHILE'} 
+    'while' : 'WHILE'}
 
 tokens = list(reserved.values()) + \
          ['IDENTIFIER', 'INTEGERCONSTANT','FLOATCONSTANT','STRINGCONSTANT', 'COMMENT','BLOCKCOMMENT',
           'GEQ', 'LEQ', 'GT', 'LT', 'EQUALS', 'NOTEQUALS', 'OR', 'AND', 'NOT', 'PLUS', 'MINUS', 'MULT', 'DIV', 'SEMICOLON','COLON',
-          'COMMA', 'ASSIGN','SPACE','LPAREN','RPAREN','LCURLY','RCURLY','DOT', 'LSQUARE','RSQUARE', 'PLUSPLUS', 'MINUSMINUS',
-          'OUTPRINT', 'INSCANINT', 'INSCANFLOAT']
+          'COMMA', 'ASSIGN','SPACE','LPAREN','RPAREN','LCURLY','RCURLY','DOT', 'LSQUARE','RSQUARE', 'PLUSPLUS', 'MINUSMINUS']
 
-t_INTEGERCONSTANT = r'(\+|-)? [0-9]+'
-t_FLOATCONSTANT = r'(\+|\-)?[0-9]+(\.[0-9]+|((.)?[0-9]+)?(e|E)(\-|\+)?[0-9]+)'
 t_ignore_COMMENT = r'//.*'
 t_ignore_BLOCKCOMMENT = r'/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+/'
 
@@ -52,8 +48,9 @@ in a string. If the string contains a backslash, that is escaped too (e.g., "The
 responded with \"A:\\>\""). Strings must be contained within a single line.
 """
 
-#TODO
 t_STRINGCONSTANT = r'\"(?:\\\\\"|[^\"])*?\"'
+t_INTEGERCONSTANT = r'[0-9]+'
+t_FLOATCONSTANT = r'[0-9]+(\.[0-9]+|((.)?[0-9]+)?(e|E)(\-|\+)?[0-9]+)'
 
 t_GEQ = r'>='
 t_LEQ = r'<='
@@ -81,15 +78,12 @@ t_LSQUARE=R'\['
 t_RSQUARE=R'\]'
 t_PLUSPLUS = r'\+\+'
 t_MINUSMINUS = r'\-\-'
-t_OUTPRINT = r'Out\.print$'
-t_INSCANINT = r'In\.scan_int$'
-t_INSCANFLOAT = r'In\.scan_float$'
 
 def t_IDENTIFIER(t):
     r'[a-zA-Z][a-zA-Z0-9_]*'
     t.type = reserved.get(t.value,'IDENTIFIER')    # Check for reserved words
     return t
-    
+
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
@@ -98,28 +92,19 @@ def t_newline(t):
 def t_error(t):
     print("Illegal character '%s'" % t.value[0])
     t.lexer.skip(1)
-    
+
 lexer = lex.lex()
+# Build the lexer
+def build(**kwargs):
+    lexer = lex.lex(**kwargs)
 
-def feedInput():
-    file=open('test_case_1.txt')
-    data = file.read()
-    file.close()
-    # Give the lexer some input
+# Test it output
+def printTokens(data):
     lexer.input(data)
-
-
-def print_token():
-    # Tokenize
     while True:
-        tok = lexer.token()
-        if not tok:
-            break      # No more input
-        print(tok)
+         tok = lexer.token()
+         if not tok:
+             break
+         print(tok)
 
-if __name__ == '__main__':
-    feedInput()
-    lex.lex()
-    # lex.runmain()
-    print_token()
-  
+
