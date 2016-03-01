@@ -9,7 +9,6 @@ import decaflexer
 
 tokens = decaflexer.tokens
 
-
 precedence = (
     ('left', 'ASSIGN'),
     ('left', 'OR'),
@@ -227,13 +226,13 @@ def p_error(p):
     global globvar
     globvar=0
 
-    if p is None:
-        print("Unexpected end of input")
-    else:
-        print 'Error near token :' ,p.type
+    if p:
+        print 'Error near token :' ,p.value
         print 'Line number: ', str(p.lineno)
         print 'Lex position: ', str(p.lexpos)
         parser.errok()
+    else:
+        print("Error at the end of input file.")
 
     # Read ahead looking for a closing '}'
     # while True:
