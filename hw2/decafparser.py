@@ -225,8 +225,9 @@ def p_error(p):
     parser=yacc.yacc()
 
     if p is not None:
-        error ='Error:'
-        error+=('Line number: ')
+        print 'Error due to token :'
+        print p
+        error=('Line number: ')
         error+=str(p.lineno)
         error+=(', Lex position: ')
         error+=str(p.lexpos)
@@ -243,7 +244,7 @@ def parse(data):
     '''
     yacc.yacc();
     # yacc.parse(data)
-    yacc.parse(data, tracking=True)
+    yacc.parse(data)
 
 if __name__ == '__main__':
     file=open('test_case_1.txt')
