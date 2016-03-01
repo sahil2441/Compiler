@@ -8,7 +8,7 @@ from ply import *
 import decaflexer
 
 tokens = decaflexer.tokens
-errors_list=""
+
 
 precedence = (
     ('left', 'ASSIGN'),
@@ -221,20 +221,26 @@ def p_error(p):
     tokens until it reaches a closing '}'. Then, it restarts the parser in its initial state.
     '''
     # logging.exception("Something awful happened!")
+    parser = yacc.yacc()
 
-    parser=yacc.yacc()
+    # Set Global flag False
+    global globvar
+    globvar=0
 
-    if p is not None:
-        print 'Error due to token :'
-        print p
-        error=('Line number: ')
-        error+=str(p.lineno)
-        error+=(', Lex position: ')
-        error+=str(p.lexpos)
-        print error
-        parser.errok()
-    else:
+    if p is None:
         print("Unexpected end of input")
+    else:
+        print 'Error near token :' ,p.type
+        print 'Line number: ', str(p.lineno)
+        print 'Lex position: ', str(p.lexpos)
+        parser.errok()
+
+    # Read ahead looking for a closing '}'
+    # while True:
+    #     tok = parser.token()            # Get the next token
+    #     if not tok or tok.type == 'SEMICOLON' or tok.type == 'RCURLY':
+    #         break
+    # parser.restart()
 
 def parse(data):
     '''
@@ -247,7 +253,13 @@ def parse(data):
     yacc.parse(data)
 
 if __name__ == '__main__':
+    global globvar
+    globvar=1
+
     file=open('test_case_1.txt')
     data = file.read()
     #data = 'class temp { int x; }'
     parse(data)
+
+    if globvar is 1:
+        print 'Yes'
