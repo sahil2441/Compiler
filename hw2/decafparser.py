@@ -8,6 +8,7 @@ from ply import *
 import decaflexer
 
 tokens = decaflexer.tokens
+errors_list=""
 
 precedence = (
     ('left', 'ASSIGN'),
@@ -212,16 +213,37 @@ def p_empty(t):
     'empty : '
     pass
 
-def p_error(t):
-    print("Whoa. Error!")
-    # uncomment to print stack trace
-    # traceback.print_exc()
-    logging.exception("Something awful happened!")
+def p_error(p):
+    '''
+    An alternative error recovery scheme is to enter a panic mode recovery in which tokens are discarded to a point
+    where the parser might be able to recover in some sensible manner.
+    Panic mode recovery is implemented entirely in the p_error() function. For example, this function starts discarding
+    tokens until it reaches a closing '}'. Then, it restarts the parser in its initial state.
+    '''
+    # logging.exception("Something awful happened!")
+
+    parser=yacc.yacc()
+
+    if p is not None:
+        error ='Error:'
+        error+=('Line number: ')
+        error+=str(p.lineno)
+        error+=(', Lex position: ')
+        error+=str(p.lexpos)
+        print error
+        parser.errok()
+    else:
+        print("Unexpected end of input")
 
 def parse(data):
+    '''
+    As an optional feature, yacc.py can automatically track line numbers and positions for all of the grammar symbols
+    as well. However, this extra tracking requires extra processing and can significantly slow down parsing.
+    Therefore, it must be enabled by passing the tracking=True option to yacc.parse().
+    '''
     yacc.yacc();
-    yacc.parse(data)
-# ROOT_FOLDER = 'F:\\MastersStonyBrook\\SemesterCourses\\Semester2\\CSE504_Compilers\\jsundar-sahjain\\hw2\\'
+    # yacc.parse(data)
+    yacc.parse(data, tracking=True)
 
 if __name__ == '__main__':
     file=open('test_case_1.txt')
