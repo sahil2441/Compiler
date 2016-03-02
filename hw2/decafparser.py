@@ -260,7 +260,7 @@ def find_column(input,token):
     last_cr = input.rfind('\n',0,token.lexpos)
     if last_cr < 0:
 	last_cr = 0
-    column = (token.lexpos - last_cr) + 1
+    column = (token.lexpos - last_cr)
     return column
 
 if __name__ == '__main__':
