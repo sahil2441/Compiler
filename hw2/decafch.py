@@ -10,7 +10,7 @@ def getDataFromFile(filename):
     return data
 
 if __name__ == '__main__':
-    filename = 'intList.txt'#raw_input('Enter file name: ') # user must input file name
+    filename = 'test_case_1.txt'#raw_input('Enter file name: ') # user must input file name
     data = getDataFromFile(filename)
 
     # print tokens using lexer -- uncomment to see tokens in the input file

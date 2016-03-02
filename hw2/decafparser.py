@@ -217,15 +217,14 @@ def p_error(p):
     this function is called each time parser gets any parsing error
     '''
     # logging.exception("Something awful happened!")
-    parser = yacc.yacc()
 
     # Set Global flag False
     global globvar
     globvar=0
 
     if p:
-        print 'Error near token :' ,p.value
-        print 'Line number: ', str(p.lineno)
+        print 'Error near token :' ,p.value,
+        print 'Line number: ', str(p.lineno),
         print 'Lex position: ', str(p.lexpos)
         parser.errok()
     else:
@@ -242,6 +241,7 @@ def parse(data):
     # this global variable is used as a flag to check if our program has any error
     global globvar
     globvar=1
+    global parser
     parser=yacc.yacc()
     parser.parse(data)
 
