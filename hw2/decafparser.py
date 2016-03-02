@@ -214,10 +214,7 @@ def p_empty(t):
 
 def p_error(p):
     '''
-    An alternative error recovery scheme is to enter a panic mode recovery in which tokens are discarded to a point
-    where the parser might be able to recover in some sensible manner.
-    Panic mode recovery is implemented entirely in the p_error() function. For example, this function starts discarding
-    tokens until it reaches a closing '}'. Then, it restarts the parser in its initial state.
+    this function is called each time parser gets any parsing error
     '''
     # logging.exception("Something awful happened!")
     parser = yacc.yacc()
@@ -234,22 +231,9 @@ def p_error(p):
     else:
         print("Error at the end of input file.")
 
-    # Read ahead looking for a closing '}'
-    # while True:
-    #     tok = parser.token()            # Get the next token
-    #     if not tok or tok.type == 'SEMICOLON' or tok.type == 'RCURLY':
-    #         break
-    # parser.restart()
-
 def parse(data):
-    '''
-    As an optional feature, yacc.py can automatically track line numbers and positions for all of the grammar symbols
-    as well. However, this extra tracking requires extra processing and can significantly slow down parsing.
-    Therefore, it must be enabled by passing the tracking=True option to yacc.parse().
-    '''
-    yacc.yacc();
-    # yacc.parse(data)
-    yacc.parse(data)
+    parser=yacc.yacc()
+    parser.parse(data)
 
 if __name__ == '__main__':
     global globvar
@@ -257,7 +241,6 @@ if __name__ == '__main__':
 
     file=open('test_case_1.txt')
     data = file.read()
-    #data = 'class temp { int x; }'
     parse(data)
 
     if globvar is 1:
