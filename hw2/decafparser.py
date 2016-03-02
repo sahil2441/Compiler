@@ -223,9 +223,10 @@ def p_error(p):
     globvar=0
 
     if p:
+        col = find_column(input, p);
         print 'Error near token :' ,p.value,
         print 'Line number: ', str(p.lineno),
-        print 'Lex position: ', str(p.lexpos)
+        print 'Lex position: ', str(col)
         parser.errok()
     else:
         print("Error at the end of input file.")
@@ -237,6 +238,8 @@ def parse(data):
     :param data:
     :return:
     '''
+    global input
+    input = data
 
     # this global variable is used as a flag to check if our program has any error
     global globvar
@@ -249,6 +252,16 @@ def parse(data):
         return False
     else:
         return True
+
+# Compute column.
+#     input is the input text string
+#     token is a token instance
+def find_column(input,token):
+    last_cr = input.rfind('\n',0,token.lexpos)
+    if last_cr < 0:
+	last_cr = 0
+    column = (token.lexpos - last_cr) + 1
+    return column
 
 if __name__ == '__main__':
     file=open('nrfib.txt')
