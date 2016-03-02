@@ -10,13 +10,14 @@ def getDataFromFile(filename):
     return data
 
 if __name__ == '__main__':
-    filename = 'test_case_2.txt'#raw_input('Enter file name: ') # user must input file name
+    filename = 'intList.txt'#raw_input('Enter file name: ') # user must input file name
     data = getDataFromFile(filename)
-    decaflexer.printTokens(data) # print tokens using lexer
-    try:
-        decafparser.parse(data) # parse program using parser
+
+    # print tokens using lexer -- uncomment to see tokens in the input file
+    # decaflexer.printTokens(data)
+
+    # parse program using parser
+    if decafparser.parse(data) :
         print 'Yes'
-    except:
-        print 'The program has syntax errors'
 
 

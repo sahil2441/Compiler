@@ -232,16 +232,25 @@ def p_error(p):
         print("Error at the end of input file.")
 
 def parse(data):
+
+    '''
+    this function is called from decafch to parse the input files.
+    :param data:
+    :return:
+    '''
+
+    # this global variable is used as a flag to check if our program has any error
+    global globvar
+    globvar=1
     parser=yacc.yacc()
     parser.parse(data)
 
-if __name__ == '__main__':
-    global globvar
-    globvar=1
+    if globvar is not 1:
+        return False
+    else:
+        return True
 
-    file=open('test_case_1.txt')
+if __name__ == '__main__':
+    file=open('nrfib.txt')
     data = file.read()
     parse(data)
-
-    if globvar is 1:
-        print 'Yes'
