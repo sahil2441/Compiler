@@ -262,8 +262,3 @@ def find_column(input,token):
 	last_cr = 0
     column = (token.lexpos - last_cr)
     return column
-
-if __name__ == '__main__':
-    file=open('nrfib.txt')
-    data = file.read()
-    parse(data)
