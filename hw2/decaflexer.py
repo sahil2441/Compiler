@@ -48,7 +48,7 @@ in a string. If the string contains a backslash, that is escaped too (e.g., "The
 responded with \"A:\\>\""). Strings must be contained within a single line.
 """
 
-t_STRINGCONSTANT = r'\"(?:\\\\\"|[^\"])*?\"'
+t_STRINGCONSTANT = r'\"([^\\\n]|(\\.))*?\"'
 t_INTEGERCONSTANT = r'[0-9]+'
 t_FLOATCONSTANT = r'[0-9]+(\.[0-9]+|((.)?[0-9]+)?(e|E)(\-|\+)?[0-9]+)'
 

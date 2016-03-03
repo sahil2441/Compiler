@@ -10,12 +10,12 @@ def getDataFromFile(filename):
     return data
 
 if __name__ == '__main__':
-    # filename = 'test_case_1.txt'
+    #filename = 'test_case.txt'
     filename=raw_input('Enter file name: ') # user must input file name
     data = getDataFromFile(filename)
 
     # print tokens using lexer -- uncomment to see tokens in the input file
-    # decaflexer.printTokens(data)
+    #decaflexer.printTokens(data)
 
     # parse program using parser
     if decafparser.parse(data) :
