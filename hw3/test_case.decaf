@@ -1,26 +1,6 @@
 class A {
 int a;
-/*int b,c;
-private int d;
-public int e;
-int g[];
-int f[],g[],h;
-A i;
-private A j,k;
-public static A l,m,n;
-A o[];
-A p[][];*/
 }
 class B extends A{
-int a;
-/*int b,c;
-private int d;
-public int e;
-int g[];
-int f[],g[],h;
-A i;
-private A j,k;
-public static A l,m,n;
-A o[];
-A p[][];*/
+int b;
 }

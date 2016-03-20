@@ -25,11 +25,9 @@ precedence = (
 def init():
     decaflexer.errorflag = False
 
-classes = list()
 classesMap = dict()
 fields = list()
 counter = 1
-
 
 ### DECAF Grammar
 
@@ -58,12 +56,12 @@ def p_class_decl_error(p):
 def p_extends_id(p):
     'extends : EXTENDS ID '
     classesMap[p[-1]] = DecafClass(p[-1],p[2])
-    classes.append(classesMap[p[-1]])
+    currentClassName =""+ p[-1]
     pass
+
 def p_extends_empty(p):
     ' extends : '
     classesMap[p[-1]] = DecafClass(p[-1],'')
-    classes.append(classesMap[p[-1]])
     pass
 
 def p_class_body_decl_list_plus(p):
@@ -92,6 +90,7 @@ def p_class_body_decl_constructor(p):
 
 def p_field_decl(p):
     'field_decl : mod var_decl'
+    # print classesMap[p[-1]]
     pass
 
 def p_method_decl_void(p):
@@ -133,8 +132,10 @@ def p_storage_mod_empty(p):
 
 def p_var_decl(p):
     'var_decl : type var_list SEMICOLON'
-    #print "var " + str(p[0]) + str(p[1])+ str(p[2])+", "+str(p[-1])
-    p[0] = p[1]
+
+    # current class found at -4 index
+    # print str(p[0]) +", "+ str(p[1])+ ", "+str(p[2])+", "+str(p[-1]) +", "+str(p[-2])+", "+str(p[-3])+", "+str(p[-4])+\
+    #       ", "+str(p[-5])
     pass
 
 def p_type_int(p):
@@ -156,11 +157,34 @@ def p_type_id(p):
 
 def p_var_list_plus(p):
     'var_list : var_list COMMA var'
-    p[0] = (p[1],p[2])
+    # p[0] = (p[1],p[2])
     pass
+
 def p_var_list_single(p):
     'var_list : var'
-    p[0] = p[1]
+    # p[0] = p[1]
+
+    # This finds the current class name.
+    i=0
+    currentClassName=''
+    classFound = False
+    while(not classFound):
+        token = str(p[i])
+        for key in classesMap:
+            if token == key:
+                currentClassName=key
+                classFound = True
+                break
+        i = i-1
+
+    # print "Current Class name: " +currentClassName
+    currentClass= classesMap[currentClassName]
+    # print currentClass
+
+    fieldList = currentClass.fieldList
+    fieldList.append(Field(p[1],'1'))
+    currentClass.fieldList=fieldList
+    classesMap[currentClassName] = currentClass
     pass
 
 def p_var_id(p):
@@ -418,6 +442,12 @@ def from_file(filename):
         with open(filename, "rU") as f:
             init()
             p = parser.parse(f.read(), lexer=lex.lex(module=decaflexer), debug=0)
+
+            # prepare classes list from map
+            classes = list()
+            for key in classesMap:
+                classes.append(classesMap[key])
+
             AST = AbstractSyntaxTree(classlist = classes)
         return not decaflexer.errorflag, AST
     except IOError as e:

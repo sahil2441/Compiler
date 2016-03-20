@@ -92,7 +92,6 @@ class Validate(object):
         mySet=set()
 
         for statement in mylist:
-            # TODO: check ;; <--case
             if len(statement)<1:
                 return False
 

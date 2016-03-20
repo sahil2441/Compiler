@@ -65,7 +65,8 @@ class DecafClass(object):
         retstr += "Fields:\n";
         for field in self.fieldList:
             #retstr += field.toString();
-            retstr += ", ".join("FIELD "+field.uid, field.name, field.containingClass, field.visibility, field.applicability, field.type);
+            retstr +="FIELD "+field.id + ','+ field.name+ ','+field.containingClass+ ','+ field.visibility + \
+                      field.applicability+ ','+ field.type;
         retstr += "Constructors:\n";
         for constructor in self.constructorList:
             retstr += ", ".join("CONSTRUCTOR: " + constructor.uid, constructor.visibility);
@@ -100,6 +101,7 @@ class AbstractSyntaxTree(object):
     def toString(self):
         retStr = ""
         for structure in self.classes:
+            print structure
             retStr += structure.toString()
             retStr +="---------------------------------------------------------------------------------------------\n"
         return retStr;
