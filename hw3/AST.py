@@ -49,16 +49,13 @@ class Statement(object):
 
 
 class DecafClass(object):
-    def __init__(self, name):
+    def __init__(self, name, superclass):
         self.name = name;
-        self.superclass = "";
+        self.superclass = superclass;
         self.constructorList = list();
         self.fieldList = list();
         self.methods = list();
 
-
-    def superClass(self, superclass):
-        self.superclass = superclass;
 
 
     def toString(self):
@@ -104,7 +101,7 @@ class AbstractSyntaxTree(object):
         retStr = ""
         for structure in self.classes:
             retStr += structure.toString()
-            retStr +="\n"
+            retStr +="---------------------------------------------------------------------------------------------\n"
         return retStr;
 
 

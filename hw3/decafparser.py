@@ -26,6 +26,10 @@ def init():
     decaflexer.errorflag = False
 
 classes = list()
+classesMap = dict()
+fields = list()
+counter = 1
+
 
 ### DECAF Grammar
 
@@ -43,9 +47,9 @@ def p_class_decl_list_empty(p):
 
 def p_class_decl(p):
     'class_decl : CLASS ID extends LBRACE class_body_decl_list RBRACE'
-    p[0] = DecafClass(p[2])
-    classes.append(p[0])
+    p[0] = p[2]
     pass
+
 def p_class_decl_error(p):
     'class_decl : CLASS ID extends LBRACE error RBRACE'
     # error in class declaration; skip to next class decl.
@@ -53,16 +57,22 @@ def p_class_decl_error(p):
 
 def p_extends_id(p):
     'extends : EXTENDS ID '
+    classesMap[p[-1]] = DecafClass(p[-1],p[2])
+    classes.append(classesMap[p[-1]])
     pass
 def p_extends_empty(p):
     ' extends : '
+    classesMap[p[-1]] = DecafClass(p[-1],'')
+    classes.append(classesMap[p[-1]])
     pass
 
 def p_class_body_decl_list_plus(p):
     'class_body_decl_list : class_body_decl_list class_body_decl'
+    p[0] = p[1]
     pass
 def p_class_body_decl_list_single(p):
     'class_body_decl_list : class_body_decl'
+    p[0] = p[1]
     pass
 
 def p_class_body_decl_field(p):
@@ -70,9 +80,11 @@ def p_class_body_decl_field(p):
     pass
 def p_class_body_decl_method(p):
     'class_body_decl : method_decl'
+    p[0] = p[1]
     pass
 def p_class_body_decl_constructor(p):
     'class_body_decl : constructor_decl'
+    p[0] = p[1]
     pass
 
 
@@ -96,13 +108,16 @@ def p_constructor_decl(p):
 
 def p_mod(p):
     'mod : visibility_mod storage_mod'
+    p[0] = p[1]
     pass
 
 def p_visibility_mod_pub(p):
     'visibility_mod : PUBLIC'
+    p[0] = p[1]
     pass
 def p_visibility_mod_priv(p):
     'visibility_mod : PRIVATE'
+    p[0] = p[1]
     pass
 def p_visibility_mod_empty(p):
     'visibility_mod : '
@@ -110,6 +125,7 @@ def p_visibility_mod_empty(p):
 
 def p_storage_mod_static(p):
     'storage_mod : STATIC'
+    p[0] = p[1]
     pass
 def p_storage_mod_empty(p):
     'storage_mod : '
@@ -117,37 +133,50 @@ def p_storage_mod_empty(p):
 
 def p_var_decl(p):
     'var_decl : type var_list SEMICOLON'
+    #print "var " + str(p[0]) + str(p[1])+ str(p[2])+", "+str(p[-1])
+    p[0] = p[1]
     pass
 
 def p_type_int(p):
     'type :  INT'
+    p[0] = p[1]
     pass
 def p_type_bool(p):
     'type :  BOOLEAN'
+    p[0] = p[1]
     pass
 def p_type_float(p):
     'type :  FLOAT'
+    p[0] = p[1]
     pass
 def p_type_id(p):
     'type :  ID'
+    p[0] = p[1]
     pass
 
 def p_var_list_plus(p):
     'var_list : var_list COMMA var'
+    p[0] = (p[1],p[2])
     pass
 def p_var_list_single(p):
     'var_list : var'
+    p[0] = p[1]
     pass
 
 def p_var_id(p):
     'var : ID'
+    p[0] = p[1]
+    global counter
+    counter = counter + 1
     pass
+
 def p_var_array(p):
     'var : var LBRACKET RBRACKET'
     pass
 
 def p_param_list_opt(p):
     'param_list_opt : param_list'
+    p[0] = p[1]
     pass
 def p_param_list_empty(p):
     'param_list_opt : '
