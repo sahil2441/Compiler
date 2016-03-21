@@ -124,12 +124,11 @@ def p_field_decl(p):
     'field_decl : mod var_decl'
     visibility =  p[1][0]
     modifier = p[1][1]
-    type = p[2][0]
     scope = fetchScope()
     for var in p[2][1]:
+        type = p[2][0]
         global counter
         counter = counter + 1
-        scope = fetchScope()
         fieldMap[counter] = Field(var, counter, scope.name,type=type)
         if (isinstance(scope, DecafClass)):
             if (modifier == 'static'):
@@ -235,6 +234,7 @@ def p_var_id(p):
 
 def p_var_array(p):
     'var : var LBRACKET RBRACKET'
+    p[0] = 'array('+p[1]+')'
     print 's29'
     pass
 

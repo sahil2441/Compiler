@@ -1,5 +1,6 @@
 class A {
-   public static int x,y;
+   int x,y[][][];
+   public float z,a;
    public A()
     {
       x = 10;
