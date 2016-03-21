@@ -1,5 +1,10 @@
 class A {
-int a;
+   public static int x,y;
+   public A()
+    {
+      x = 10;
+     /*   int  a;*/
+    }
 }
 class B extends A{
 int b;

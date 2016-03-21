@@ -19,16 +19,16 @@ class Method(object):
         self.body = "";
 
 class Field(object):
-    def __init__(self, name, id):
+    def __init__(self, name, id, containingclass="", visibility="private", applicability="", type=""):
         self.name = name;
         self.id = id;
-        self.containingClass = "";
-        self.visibility = "";
-        self.applicability = "";
-        self.type = "";
+        self.containingClass = containingclass;
+        self.visibility = visibility;
+        self.applicability = applicability;
+        self.type = type;
 
     def toString(self):
-        return ", ".join("FIELD "+self.id, self.name, self.containingClass, self.visibility, self.applicability, self.type);
+        return ", ".join(["FIELD "+str(self.id), self.name, self.containingClass, self.visibility, self.applicability, self.type]);
 
 class Variable(object):
     def __init__(self, name, id):
@@ -49,7 +49,7 @@ class Statement(object):
 
 
 class DecafClass(object):
-    def __init__(self, name, superclass):
+    def __init__(self, name, superclass=""):
         self.name = name;
         self.superclass = superclass;
         self.constructorList = list();
@@ -65,11 +65,11 @@ class DecafClass(object):
         retstr += "Fields:\n";
         for field in self.fieldList:
             #retstr += field.toString();
-            retstr +="FIELD "+field.id + ','+ field.name+ ','+field.containingClass+ ','+ field.visibility + \
-                      field.applicability+ ','+ field.type;
+            retstr +=', '.join(["FIELD "+str(field.id), field.name, field.containingClass, field.visibility, field.applicability, field.type])
+            retstr +='\n'
         retstr += "Constructors:\n";
         for constructor in self.constructorList:
-            retstr += ", ".join("CONSTRUCTOR: " + constructor.uid, constructor.visibility);
+            retstr += ", ".join(["CONSTRUCTOR: " + constructor.uid, constructor.visibility]);
             retstr += "\n";
             retstr += "Constructor Parameters: \n";#TODO
             retstr += "Variable Table:\n";#TODO
@@ -78,7 +78,7 @@ class DecafClass(object):
                 retstr += block.toString()+"\n";#TODO
         retstr += "Methods:\n"
         for method in self.methods:
-            retstr += ", ".join("METHOD: "+method.uid,method.name, method.containingClass, method.visibility, method.applicability, method.returnType)
+            retstr += ", ".join(["METHOD: "+method.uid,method.name, method.containingClass, method.visibility, method.applicability, method.returnType])
             retstr += "\nMethod Parameters: "+len(method.parameters)
             retstr += "\n"
             retstr += "Variable Table:\n"
