@@ -1,10 +1,11 @@
 class Constructor(object):
-    def __init__(self):
-        self.id = "";
-        self.visibility = "";
+    def __init__(self, id, visibility="private"):
+        self.id = id;
+        self.visibility = visibility;
         self.parameters = list();
         self.variables = dict();
         self.body = "";
+        self.blocks=list();
 
 class Method(object):
     def __init(self, name, id):
@@ -31,11 +32,10 @@ class Field(object):
         return ", ".join(["FIELD "+str(self.id), self.name, self.containingClass, self.visibility, self.applicability, self.type]);
 
 class Variable(object):
-    def __init__(self, name, id):
+    def __init__(self, name, id=0, type=""):
         self.name = name;
         self.id = id;
-        self.kind = "";
-        self.type = "";
+        self.type = type;
 
 class Type(object):
     def __init__(self, basetype):
@@ -69,16 +69,22 @@ class DecafClass(object):
             retstr +='\n'
         retstr += "Constructors:\n";
         for constructor in self.constructorList:
-            retstr += ", ".join(["CONSTRUCTOR: " + constructor.uid, constructor.visibility]);
+            retstr += ", ".join(["CONSTRUCTOR: " + str(constructor.id), constructor.visibility]);
             retstr += "\n";
-            retstr += "Constructor Parameters: \n";#TODO
+            retstr += "Constructor Parameters:";
+            paramstr = ""
+            for param in constructor.parameters:
+                paramstr += str(param.id)+ ","
+            if (len(paramstr) > 0):
+                paramstr = paramstr[0:-1]
+                retstr += paramstr+"\n"
             retstr += "Variable Table:\n";#TODO
             retstr += "Constructor Body:\n";#TODO
             for block in constructor.blocks:
                 retstr += block.toString()+"\n";#TODO
         retstr += "Methods:\n"
         for method in self.methods:
-            retstr += ", ".join(["METHOD: "+method.uid,method.name, method.containingClass, method.visibility, method.applicability, method.returnType])
+            retstr += ", ".join(["METHOD: "+str(method.id), method.name, method.containingClass, method.visibility, method.applicability, method.returnType])
             retstr += "\nMethod Parameters: "+len(method.parameters)
             retstr += "\n"
             retstr += "Variable Table:\n"

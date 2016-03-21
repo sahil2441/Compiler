@@ -31,6 +31,8 @@ currentClass = "";
 fields = list()
 fieldMap = dict()
 counter = 0
+constructorMap = dict()
+constructorCounter = 0
 
 scopeList = []
 def push_scope(f):
@@ -122,6 +124,7 @@ def p_class_body_decl_constructor(p):
 
 def p_field_decl(p):
     'field_decl : mod var_decl'
+    print p[1],p[2]
     visibility =  p[1][0]
     modifier = p[1][1]
     scope = fetchScope()
@@ -153,6 +156,24 @@ def p_method_decl_nonvoid(p):
 
 def p_constructor_decl(p):
     'constructor_decl : mod ID LPAREN param_list_opt RPAREN block'
+    # p[1] tuple of Visibility, applicability
+    scope = fetchScope();
+    global constructorCounter
+    constructorCounter += 1
+    visibility="private"
+    if (p[1][0]):
+        print "CONSTRUCTOR IF"+str(p[1])," scope.name "+scope.name
+        visibility = p[1][0]
+    constructorMap[constructorCounter] = Constructor(constructorCounter,visibility)
+    print "param list " + str(p[4])
+    variableCounter = 1;
+    if (p[4]):
+        for paramTuple in p[4]:
+            variable = Variable(paramTuple[1],variableCounter)
+            variableCounter += 1
+            constructorMap[constructorCounter].parameters.append(variable)
+    classesMap[scope.name].constructorList.append(constructorMap[constructorCounter])
+
     print 's14'
     pass
 
@@ -245,20 +266,24 @@ def p_param_list_opt(p):
     pass
 def p_param_list_empty(p):
     'param_list_opt : '
+    p[0] = None
     print 's31'
     pass
 
 def p_param_list(p):
     'param_list : param_list COMMA param'
+    p[0] = (p[1],p[3])
     print 's32'
     pass
 def p_param_list_single(p):
     'param_list : param'
+    p[0] = p[1]
     print 's33'
     pass
 
 def p_param(p):
     'param : type ID'
+    p[0] = (p[1],p[2])
     print 's34'
     pass
 
