@@ -33,6 +33,8 @@ fieldMap = dict()
 counter = 0
 constructorMap = dict()
 constructorCounter = 0
+methodMap = dict()
+methodCounter = 0
 
 scopeList = []
 def push_scope(f):
@@ -147,16 +149,39 @@ def p_field_decl(p):
 
 def p_method_decl_void(p):
     'method_decl : mod VOID ID LPAREN param_list_opt RPAREN block'
+    # p[1] tuple of Visibility, applicability
+    scope = fetchScope();
+    global methodCounter
+    methodCounter += 1
+    visibility="private"
+    applicability = "instance"
+    if (p[1][0]):
+        visibility = p[1][0]
+    if (p[1][1]):
+        applicability = "class"
+    methodMap[methodCounter] = Method(methodCounter, p[3], scope.name, visibility, applicability=applicability, returnType=p[2])
+    classesMap[scope.name].methodList.append(methodMap[methodCounter])
     print 's12'
     pass
 def p_method_decl_nonvoid(p):
     'method_decl : mod type ID LPAREN param_list_opt RPAREN block'
+    # p[1] tuple of Visibility, applicability
+    scope = fetchScope();
+    global methodCounter
+    methodCounter += 1
+    visibility="private"
+    applicability = "instance"
+    if (p[1][0]):
+        visibility = p[1][0]
+    if (p[1][1]):
+        applicability = "class"
+    methodMap[methodCounter] = Method(methodCounter, p[3], scope.name, visibility, applicability=applicability, returnType=p[2])
+    classesMap[scope.name].methodList.append(methodMap[methodCounter])
     print 's13'
     pass
 
 def p_constructor_decl(p):
     'constructor_decl : mod ID LPAREN param_list_opt RPAREN block'
-    # p[1] tuple of Visibility, applicability
     scope = fetchScope();
     global constructorCounter
     constructorCounter += 1
@@ -293,6 +318,7 @@ def p_block(p):
     'block : LBRACE stmt_list RBRACE'
     print 's35'
     pass
+
 def p_block_error(p):
     'block : LBRACE stmt_list error RBRACE'
     print 's36'

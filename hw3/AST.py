@@ -8,16 +8,18 @@ class Constructor(object):
         self.blocks=list();
 
 class Method(object):
-    def __init(self, name, id):
+    def __init__(self, id, name, containingClass = "", visibility="private", applicability="", returnType="void"):
         self.name = name;
         self.id = id;
-        self.containingClass = "";
-        self.visibility = "";
-        self.applicability = "";
+        self.containingClass = containingClass;
+        self.visibility = visibility;
+        self.applicability = applicability;
         self.parameters = list();
-        self.returnType = "";
+        self.returnType = returnType;
         self.variables = dict();
         self.body = "";
+    def toString(self):#TODO parameters, body
+        return ", ".join(["METHOD: "+str(self.id), self.name, self.containingClass, self.visibility, self.applicability, self.returnType]);
 
 class Field(object):
     def __init__(self, name, id, containingclass="", visibility="private", applicability="", type=""):
@@ -54,7 +56,7 @@ class DecafClass(object):
         self.superclass = superclass;
         self.constructorList = list();
         self.fieldList = list();
-        self.methods = list();
+        self.methodList = list();
 
 
 
@@ -83,9 +85,9 @@ class DecafClass(object):
             for block in constructor.blocks:
                 retstr += block.toString()+"\n";#TODO
         retstr += "Methods:\n"
-        for method in self.methods:
+        for method in self.methodList:
             retstr += ", ".join(["METHOD: "+str(method.id), method.name, method.containingClass, method.visibility, method.applicability, method.returnType])
-            retstr += "\nMethod Parameters: "+len(method.parameters)
+            retstr += "\nMethod Parameters: "+str(len(method.parameters))
             retstr += "\n"
             retstr += "Variable Table:\n"
             for variable in method.variables:
