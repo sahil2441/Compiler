@@ -1,14 +1,11 @@
 class A {
-   int x,y[][][];
-   public float z,a;
-   public A(int x, int y){
-   }
-
-   void newMethod2(int x){
-        int a;
-        int b;
-        int c;
-
-        return c;
+   int x;
+   public int g() {
+   int x,y;
+      return 0;
+      return 5;
+ /*     i = this.f();
+      i++;
+      return i;*/
    }
 }

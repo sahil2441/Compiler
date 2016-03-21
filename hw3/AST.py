@@ -16,7 +16,7 @@ class Method(object):
         self.applicability = applicability;
         self.parameters = list();
         self.returnType = returnType;
-        self.variables = dict();
+        self.variables = list();
         # Added for body
         self.body = body;
     def toString(self):#TODO parameters, body
@@ -35,10 +35,14 @@ class Field(object):
         return ", ".join(["FIELD "+str(self.id), self.name, self.containingClass, self.visibility, self.applicability, self.type]);
 
 class Variable(object):
-    def __init__(self, name, id=0, type=""):
+    def __init__(self, name, id=0, kind="local", type=""):
         self.name = name;
         self.id = id;
         self.type = type;
+        self.kind = kind;
+
+    def __str__(self):
+        return ", ".join(["VARIABLE " + str(self.id), self.name, self.kind, self.type])
 
 class Type(object):
     def __init__(self, basetype):
@@ -80,7 +84,7 @@ class DecafClass(object):
                 paramstr += str(param.id)+ ","
             if (len(paramstr) > 0):
                 paramstr = paramstr[0:-1]
-                retstr += paramstr+"\n"
+            retstr += paramstr+"\n"
             retstr += "Variable Table:\n";#TODO
             retstr += "Constructor Body:\n";#TODO
             for block in constructor.blocks:
@@ -92,15 +96,16 @@ class DecafClass(object):
             retstr += "\n"
             retstr += "Variable Table:\n"
             for variable in method.variables:
-                retstr += ", ".join("VARIABLE: ", variable.id, variable.name, variable.containingClass, variable.kind, variable.type)
+                retstr += str(variable)
                 retstr +="\n"
             retstr += "Method Body:\n"
-            retstr+= 'Block('
+            retstr+= 'Block(['
+            blockstr = ""
             for block in method.body:
-                retstr+= '['
-                retstr += str(block)+ "\n";#TODO
-                retstr+= ']'
-            retstr+= ')\n'
+                blockstr += str(block)+ "\n, ";
+            blockstr = blockstr[0:-1]
+            retstr += blockstr
+            retstr+= '])\n'
 
         return retstr
 

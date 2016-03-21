@@ -111,6 +111,7 @@ def p_class_body_decl_list_single(p):
 
 def p_class_body_decl_field(p):
     'class_body_decl : field_decl'
+    p[0] = p[1]
     print 's8'
     pass
 def p_class_body_decl_method(p):
@@ -134,6 +135,8 @@ def p_field_decl(p):
     modifier = p[1][1]
     scope = fetchScope()
     type=p[2][0]
+    if (classesMap.has_key(type)):
+        type = 'user('+type+')'
     variables = p[2][1].split(",")
     for variable in variables:
         localtype = type
@@ -174,13 +177,16 @@ def p_method_decl_void(p):
 
     # Added for body
     # reset global variables
+    global localVariableCounter
     localVariableCounter=0
+    global localVariableMap
     localVariableMap=dict()
-    body=list()
-    body.append(p[7])
+    body =  p[7]
+    print 'body void : ' + str(body)
     methodMap[methodCounter] = Method(methodCounter, p[3], scope.name, visibility, applicability=applicability, returnType=p[2],
                                       body=body)
     classesMap[scope.name].methodList.append(methodMap[methodCounter])
+    push_scope(methodMap[methodCounter])
     print 's12'
     pass
 
@@ -196,7 +202,14 @@ def p_method_decl_nonvoid(p):
         visibility = p[1][0]
     if (p[1][1]):
         applicability = "class"
-    methodMap[methodCounter] = Method(methodCounter, p[3], scope.name, visibility, applicability=applicability, returnType=p[2])
+    body = p[7]
+    contents = body.split("$$")
+    variables = contents[0].split("$")
+    print variables
+    bodycontent = contents[1:]
+    print ('body : ' + str(body))
+    methodMap[methodCounter] = Method(methodCounter, p[3], scope.name, visibility, applicability=applicability, returnType=p[2], body=bodycontent)
+    methodMap[methodCounter].variables = variables
     classesMap[scope.name].methodList.append(methodMap[methodCounter])
     print 's13'
     pass
@@ -219,7 +232,6 @@ def p_constructor_decl(p):
             variableCounter += 1
             constructorMap[constructorCounter].parameters.append(variable)
     classesMap[scope.name].constructorList.append(constructorMap[constructorCounter])
-
     print 's14'
     pass
 
@@ -337,7 +349,7 @@ def p_param(p):
 
 def p_block(p):
     'block : LBRACE stmt_list RBRACE'
-    p[0]=p[2]
+    p[0] = p[2]
     print 's35'
     pass
 
@@ -354,9 +366,9 @@ def p_stmt_list_empty(p):
 def p_stmt_list(p):
     'stmt_list : stmt_list stmt'
     if p[1] is not None:
-        p[0] = (p[1], p[2])
+        p[0] = str(p[1])+"$$"+ str(p[2])
     else:
-        p[0]=p[2]
+        p[0] = p[2]
     print 's38'
     pass
 
@@ -381,6 +393,7 @@ def p_stmt_return(p):
     pass
 def p_stmt_stmt_expr(p):
     'stmt : stmt_expr SEMICOLON'
+    p[0] = 'Expr( ' + str(p[1]) + ')'
     print 's43'
     pass
 def p_stmt_break(p):
@@ -397,15 +410,20 @@ def p_stmt_block(p):
     pass
 def p_stmt_var_decl(p):
     'stmt : var_decl'
-    localVar=p[1][1]
-    if localVariableMap.__contains__(localVar):
-        p[0]= 'Expr(Assign(Variable(' +str(localVariableMap[localVar]) +'))'
-    else:
-        global localVariableCounter
-        localVariableCounter+=1
-        localVariableMap[localVar]=localVariableCounter
-        p[0]= 'Expr(Assign(Variable(' +str(localVariableMap[localVar])+'))'
-
+    type = p[1][0]
+    varlist = p[1][1].split(',')
+    vList = ""
+    for var in varlist:
+        global localVariableMap
+        if (not localVariableMap.has_key(var)):
+            global localVariableCounter
+            localVariableCounter += 1
+            localVariableMap[var]=localVariableCounter
+        varcounter = localVariableMap[var]
+        vList += str(Variable(var, varcounter, 'local',type)) + "$"
+    if(len(vList) > 0):
+        vList = vList[0:-1]
+    p[0] = str(vList)
     print 's47'
     pass
 def p_stmt_error(p):
@@ -417,39 +435,49 @@ def p_stmt_error(p):
 # Expressions
 def p_literal_int_const(p):
     'literal : INT_CONST'
+    p[0] = 'Constant(Integer-constant('+str(p[1])+')'
     print 's49'
     pass
 def p_literal_float_const(p):
     'literal : FLOAT_CONST'
+    p[0] = 'Constant(Float-constant('+str(p[1])+')'
     print 's50'
     pass
 def p_literal_string_const(p):
     'literal : STRING_CONST'
+    p[0] = 'Constant(String-constant('+str(p[1])+')'
     print 's51'
     pass
 def p_literal_null(p):
     'literal : NULL'
+    p[0] = p[1]
+    p[0] = 'Constant('+str(p[1])+')'
     print 's52'
     pass
 def p_literal_true(p):
     'literal : TRUE'
+    p[0] = 'Constant(Boolean-constant('+str(p[1])+')'
     print 's53'
     pass
 def p_literal_false(p):
     'literal : FALSE'
+    p[0] = 'Constant(Boolean-constant('+str(p[1])+')'
     print 's54'
     pass
 
 def p_primary_literal(p):
     'primary : literal'
+    p[0] = p[1]
     print 's55'
     pass
 def p_primary_this(p):
     'primary : THIS'
+    p[0] = p[1]
     print 's56'
     pass
 def p_primary_super(p):
     'primary : SUPER'
+    p[0] = p[1]
     print 's57'
     pass
 def p_primary_paren(p):
@@ -462,15 +490,18 @@ def p_primary_newobj(p):
     pass
 def p_primary_lhs(p):
     'primary : lhs'
+    p[0] = p[1]
     print 's60'
     pass
 def p_primary_method_invocation(p):
     'primary : method_invocation'
+    p[0] = p[1]
     print 's61'
     pass
 
 def p_args_opt_nonempty(p):
     'args_opt : arg_plus'
+    p[0] = p[1]
     print 's62'
     pass
 def p_args_opt_empty(p):
@@ -480,25 +511,30 @@ def p_args_opt_empty(p):
 
 def p_args_plus(p):
     'arg_plus : arg_plus COMMA expr'
+    p[0] = p[1],p[2]
     print 's64'
     pass
 def p_args_single(p):
     'arg_plus : expr'
+    p[0] = p[1]
     print 's65'
     pass
 
 def p_lhs(p):
     '''lhs : field_access
            | array_access'''
+    p[0] = p[1]
     print 's66'
     pass
 
 def p_field_access_dot(p):
     'field_access : primary DOT ID'
+    p[0] = 'Field-access(' + p[1] + ', ' + p[3] + ')'
     print 's67'
     pass
 def p_field_access_id(p):
     'field_access : ID'
+    p[0] = p[1]
     print 's68'
     pass
 
@@ -509,6 +545,7 @@ def p_array_access(p):
 
 def p_method_invocation(p):
     'method_invocation : field_access LPAREN args_opt RPAREN'
+    p[0] = ' Method-call('+p[1], str(p[3])+')'
     print 's70'
     pass
 
@@ -516,6 +553,7 @@ def p_expr_basic(p):
     '''expr : primary
             | assign
             | new_array'''
+    p[0] = p[1]
     print 's71'
     pass
 def p_expr_binop(p):
@@ -532,6 +570,30 @@ def p_expr_binop(p):
             | expr AND expr
             | expr OR expr
     '''
+    if p[2] == '+':
+        p[0] = 'Binary(add,'+p[1]+','+str(p[3])+')'
+    elif p[2] == '-':
+        p[0] = 'Binary(subtract,'+p[1]+','+str(p[3])+')'
+    elif p[2] == '*':
+        p[0] = 'Binary(multiply,'+p[1]+','+str(p[3])+')'
+    elif p[2] == '/':
+        p[0] = 'Binary(divide,'+p[1]+','+str(p[3])+')'
+    elif p[2] == '==':
+        p[0] = 'Binary(equals,'+p[1]+','+str(p[3])+')'
+    elif p[2] == '!=':
+        p[0] = 'Binary(not equals,'+p[1]+','+str(p[3])+')'
+    elif p[2] == '<':
+        p[0] = 'Binary(less than,'+p[1]+','+str(p[3])+')'
+    elif p[2] == '<=':
+        p[0] = 'Binary(less than and equal to,'+p[1]+','+str(p[3])+')'
+    elif p[2] == '>':
+        p[0] = 'Binary(greater than,'+p[1]+','+str(p[3])+')'
+    elif p[2] == '>=':
+        p[0] = 'Binary(greater than and equal to,'+p[1]+','+str(p[3])+')'
+    elif p[2] == '&&':
+        p[0] = 'Binary(and,'+p[1]+','+str(p[3])+')'
+    elif p[2] == '||':
+        p[0] = 'Binary(or,'+p[1]+','+str(p[3])+')'
     print 's72'
     pass
 def p_expr_unop(p):
@@ -543,6 +605,7 @@ def p_expr_unop(p):
 
 def p_assign_equals(p):
     'assign : lhs ASSIGN expr'
+    p[0] = 'Assign(' + p[1] + ',' + str(p[3]) + ')'
     print 's74'
     pass
 def p_assign_post_inc(p):
