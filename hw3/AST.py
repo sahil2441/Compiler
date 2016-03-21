@@ -8,7 +8,7 @@ class Constructor(object):
         self.blocks=list();
 
 class Method(object):
-    def __init__(self, id, name, containingClass = "", visibility="private", applicability="", returnType="void"):
+    def __init__(self, id, name, containingClass = "", visibility="private", applicability="", returnType="void", body=list()):
         self.name = name;
         self.id = id;
         self.containingClass = containingClass;
@@ -17,7 +17,8 @@ class Method(object):
         self.parameters = list();
         self.returnType = returnType;
         self.variables = dict();
-        self.body = "";
+        # Added for body
+        self.body = body;
     def toString(self):#TODO parameters, body
         return ", ".join(["METHOD: "+str(self.id), self.name, self.containingClass, self.visibility, self.applicability, self.returnType]);
 
@@ -94,11 +95,12 @@ class DecafClass(object):
                 retstr += ", ".join("VARIABLE: ", variable.id, variable.name, variable.containingClass, variable.kind, variable.type)
                 retstr +="\n"
             retstr += "Method Body:\n"
+            retstr+= 'Block('
             for block in method.body:
-                retstr += block.toString() + "\n";#TODO
-
-
-
+                retstr+= '['
+                retstr += str(block)+ "\n";#TODO
+                retstr+= ']'
+            retstr+= ')\n'
 
         return retstr
 

@@ -36,6 +36,9 @@ constructorCounter = 0
 methodMap = dict()
 methodCounter = 0
 
+localVariableCounter=0
+localVariableMap=dict()
+
 scopeList = []
 def push_scope(f):
     scopeList.append(f);
@@ -159,10 +162,19 @@ def p_method_decl_void(p):
         visibility = p[1][0]
     if (p[1][1]):
         applicability = "class"
-    methodMap[methodCounter] = Method(methodCounter, p[3], scope.name, visibility, applicability=applicability, returnType=p[2])
+
+    # Added for body
+    # reset global variables
+    localVariableCounter=0
+    localVariableMap=dict()
+    body=list()
+    body.append(p[7])
+    methodMap[methodCounter] = Method(methodCounter, p[3], scope.name, visibility, applicability=applicability, returnType=p[2],
+                                      body=body)
     classesMap[scope.name].methodList.append(methodMap[methodCounter])
     print 's12'
     pass
+
 def p_method_decl_nonvoid(p):
     'method_decl : mod type ID LPAREN param_list_opt RPAREN block'
     # p[1] tuple of Visibility, applicability
@@ -316,6 +328,7 @@ def p_param(p):
 
 def p_block(p):
     'block : LBRACE stmt_list RBRACE'
+    p[0]=p[2]
     print 's35'
     pass
 
@@ -331,6 +344,10 @@ def p_stmt_list_empty(p):
     pass
 def p_stmt_list(p):
     'stmt_list : stmt_list stmt'
+    if p[1] is not None:
+        p[0] = (p[1], p[2])
+    else:
+        p[0]=p[2]
     print 's38'
     pass
 
@@ -350,6 +367,7 @@ def p_stmt_for(p):
     pass
 def p_stmt_return(p):
     'stmt : RETURN expr_opt SEMICOLON'
+    p[0] = 'Return('+ str(p[2])+')'
     print 's42'
     pass
 def p_stmt_stmt_expr(p):
@@ -370,6 +388,15 @@ def p_stmt_block(p):
     pass
 def p_stmt_var_decl(p):
     'stmt : var_decl'
+    localVar=p[1][1]
+    if localVariableMap.__contains__(localVar):
+        p[0]= 'Expr(Assign(Variable(' +str(localVariableMap[localVar]) +'))'
+    else:
+        global localVariableCounter
+        localVariableCounter+=1
+        localVariableMap[localVar]=localVariableCounter
+        p[0]= 'Expr(Assign(Variable(' +str(localVariableMap[localVar])+'))'
+
     print 's47'
     pass
 def p_stmt_error(p):
