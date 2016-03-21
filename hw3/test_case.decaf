@@ -2,7 +2,7 @@ class A {
    int x,y[][][];
    public float z,a;
    public A(int x, int y){
-   }
+   }  sda
 
    void newMethod2(int x){
         int a;

@@ -133,11 +133,20 @@ def p_field_decl(p):
     visibility =  p[1][0]
     modifier = p[1][1]
     scope = fetchScope()
-    for var in p[2][1]:
-        type = p[2][0]
+    type=p[2][0]
+    variables = p[2][1].split(",")
+    for variable in variables:
+        localtype = type
+        varcomponents = variable.split("(")
+        var = varcomponents[-1]
+        if (len(varcomponents) > 0):
+            varcomponents = varcomponents[0:-1]
+            print 'varcomponents ' + str(varcomponents)
+            for comp in varcomponents:
+                localtype = comp+"(" + localtype + ")"
         global counter
         counter = counter + 1
-        fieldMap[counter] = Field(var, counter, scope.name,type=type)
+        fieldMap[counter] = Field(var, counter, scope.name,type=localtype)
         if (isinstance(scope, DecafClass)):
             if (modifier == 'static'):
                 fieldMap[counter].applicability='class'
@@ -275,12 +284,12 @@ def p_type_id(p):
 
 def p_var_list_plus(p):
     'var_list : var_list COMMA var'
-    p[0] = (p[1],p[3])
+    p[0] = p[1]+','+p[3]
     print 's26'
     pass
 def p_var_list_single(p):
     'var_list : var'
-    p[0] = (p[1])
+    p[0] = p[1]
     print 's27'
     pass
 
@@ -292,7 +301,7 @@ def p_var_id(p):
 
 def p_var_array(p):
     'var : var LBRACKET RBRACKET'
-    p[0] = 'array('+p[1]+')'
+    p[0] = 'array('+p[1]
     print 's29'
     pass
 

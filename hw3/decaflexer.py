@@ -30,11 +30,11 @@ reserved = {
    'this' : 'THIS'
 }
 
-tokens = ['DOT', 'COMMA', 'SEMICOLON', 
-          'LPAREN', 'RPAREN', 'LBRACE', 'RBRACE', 'LBRACKET', 'RBRACKET', 
-          'ASSIGN', 
-          'NOT', 'PLUS', 'MINUS', 
-          'MULTIPLY', 'DIVIDE', 'AND', 'OR', 'EQ', 'NEQ', 'LT', 'LEQ', 'GT', 'GEQ', 
+tokens = ['DOT', 'COMMA', 'SEMICOLON',
+          'LPAREN', 'RPAREN', 'LBRACE', 'RBRACE', 'LBRACKET', 'RBRACKET',
+          'ASSIGN',
+          'NOT', 'PLUS', 'MINUS',
+          'MULTIPLY', 'DIVIDE', 'AND', 'OR', 'EQ', 'NEQ', 'LT', 'LEQ', 'GT', 'GEQ',
           'INC', 'DEC',
           'ID', 'INT_CONST', 'FLOAT_CONST', 'STRING_CONST'] + list(reserved.values())
 
