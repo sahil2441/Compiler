@@ -1,16 +1,12 @@
-class A {
-   int x;
-   A () {
-        return a;
-        this.x = 0;
+class B extends A {
+   int y;
+   public A s;
+   B () {
+     this.y = 2;
+     this.s = new A();
    }
-   int f() {
-        return this.x + 1;
-   }
-   public int g() {
-      int i;
-      i = this.f();
-      i++;
-      return i;
+   public int f(int k) {
+      return super.f() + k;
+      return super.f() + k;
    }
 }

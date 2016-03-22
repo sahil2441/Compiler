@@ -505,9 +505,18 @@ def p_primary_newobj(p):
     pass
 def p_primary_lhs(p):
     'primary : lhs'
-    p[0] = p[1]
+    localVariable = p[1]
+    global localVariableCounter
+    if localVariableMap.__contains__(localVariable):
+        localVariableCounter = localVariableMap[localVariable]
+    else:
+        localVariableCounter += 1
+        localVariableMap[localVariable] = localVariableCounter
+    p[0] = 'Variable(' + str(localVariableCounter) +')'
+    # p[0] = p[1]
     print 's60'
     pass
+
 def p_primary_method_invocation(p):
     'primary : method_invocation'
     p[0] = p[1]
@@ -544,7 +553,8 @@ def p_lhs(p):
 
 def p_field_access_dot(p):
     'field_access : primary DOT ID'
-    p[0] = 'Field-access(' + p[1] + ', ' + p[3] + ')'
+    p[0] = p[1] + ', ' + p[3] + ')'
+    # p[0] = 'Field-access(' + p[1] + ', ' + p[3] + ')'
     print 's67'
     pass
 def p_field_access_id(p):
@@ -560,7 +570,13 @@ def p_array_access(p):
 
 def p_method_invocation(p):
     'method_invocation : field_access LPAREN args_opt RPAREN'
-    p[0] = ' Method-call('+p[1], str(p[3])+')'
+    arguments=p[3]
+    if p[3] is None:
+        arguments='[]'
+    result='Method-call('+p[1]
+    result = result[:-1]
+    result += ', ' + arguments+')'
+    p[0] = result
     print 's70'
     pass
 
@@ -586,7 +602,9 @@ def p_expr_binop(p):
             | expr OR expr
     '''
     if p[2] == '+':
-        p[0] = 'Binary(add,'+p[1]+','+str(p[3])+')'
+        print "p[1]: " + str(p[1])
+        print "p[3]: " + str(p[3])
+        p[0] = 'Binary(add,'+str(p[1])+','+str(p[3])+')'
     elif p[2] == '-':
         p[0] = 'Binary(subtract,'+p[1]+','+str(p[3])+')'
     elif p[2] == '*':
