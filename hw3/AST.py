@@ -1,10 +1,10 @@
 class Constructor(object):
-    def __init__(self, id, visibility="private"):
+    def __init__(self, id, visibility="private", variables=dict(), body=list()):
         self.id = id;
         self.visibility = visibility;
         self.parameters = list();
-        self.variables = dict();
-        self.body = "";
+        self.variables = variables;
+        self.body = body;
         self.blocks=list();
 
 class Method(object):
@@ -63,8 +63,6 @@ class DecafClass(object):
         self.fieldList = list();
         self.methodList = list();
 
-
-
     def toString(self):
         retstr = ""
         retstr += "Class Name: " + self.name + "\n";
@@ -85,10 +83,18 @@ class DecafClass(object):
             if (len(paramstr) > 0):
                 paramstr = paramstr[0:-1]
             retstr += paramstr+"\n"
-            retstr += "Variable Table:\n";#TODO
-            retstr += "Constructor Body:\n";#TODO
-            for block in constructor.blocks:
-                retstr += block.toString()+"\n";#TODO
+            retstr += "Variable Table:\n"
+            for variable in constructor.variables:
+                retstr += str(variable)
+                retstr +="\n"
+            retstr += "Constructor Body:\n";
+            retstr+= 'Block(['
+            blockstr = ""
+            for block in constructor.body:
+                blockstr += str(block)+",\n";
+            retstr += blockstr
+            retstr+= '])\n'
+
         retstr += "Methods:\n"
         for method in self.methodList:
             retstr += ", ".join(["METHOD: "+str(method.id), method.name, method.containingClass, method.visibility, method.applicability, method.returnType])

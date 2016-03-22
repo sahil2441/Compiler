@@ -1,9 +1,14 @@
 class A {
    int x;
+   A () {
+        return a;
+        this.x = 0;
+   }
+   int f() {
+        return this.x + 1;
+   }
    public int g() {
-   int x,y;
-      return 0;
-      return 5;
+      int i;
       i = this.f();
       i++;
       return i;

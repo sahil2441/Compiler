@@ -130,7 +130,7 @@ def p_class_body_decl_constructor(p):
 
 def p_field_decl(p):
     'field_decl : mod var_decl'
-    print p[1],p[2]
+    # print p[1],p[2]
     visibility =  p[1][0]
     modifier = p[1][1]
     scope = fetchScope()
@@ -144,7 +144,7 @@ def p_field_decl(p):
         var = varcomponents[-1]
         if (len(varcomponents) > 0):
             varcomponents = varcomponents[0:-1]
-            print 'varcomponents ' + str(varcomponents)
+            # print 'varcomponents ' + str(varcomponents)
             for comp in varcomponents:
                 localtype = comp+"(" + localtype + ")"
         global counter
@@ -224,11 +224,22 @@ def p_constructor_decl(p):
     global constructorCounter
     constructorCounter += 1
     visibility="private"
+
+    # Added for body
+    body = p[6]
+    contents = body.split("$$")
+    variables=''
+    if "VARIABLE" in contents[0]:
+        variables = contents[0].split("$")
+        bodycontent = contents[1:]
+    else:
+        bodycontent = contents
+
     if (p[1][0]):
         print "CONSTRUCTOR IF"+str(p[1])," scope.name "+scope.name
         visibility = p[1][0]
-    constructorMap[constructorCounter] = Constructor(constructorCounter,visibility)
-    print "param list " + str(p[4])
+    constructorMap[constructorCounter] = Constructor(constructorCounter,visibility, variables, bodycontent)
+    # print "param list " + str(p[4])
     variableCounter = 1;
     if (p[4]):
         for paramTuple in p[4]:
