@@ -204,10 +204,14 @@ def p_method_decl_nonvoid(p):
         applicability = "class"
     body = p[7]
     contents = body.split("$$")
-    variables = contents[0].split("$")
-    print variables
-    bodycontent = contents[1:]
-    print ('body : ' + str(body))
+    variables=''
+    if "VARIABLE" in contents[0]:
+        variables = contents[0].split("$")
+        bodycontent = contents[1:]
+    else:
+        bodycontent = contents
+    # print variables
+    # print ('body : ' + str(body))
     methodMap[methodCounter] = Method(methodCounter, p[3], scope.name, visibility, applicability=applicability, returnType=p[2], body=bodycontent)
     methodMap[methodCounter].variables = variables
     classesMap[scope.name].methodList.append(methodMap[methodCounter])

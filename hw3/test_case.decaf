@@ -4,8 +4,8 @@ class A {
    int x,y;
       return 0;
       return 5;
- /*     i = this.f();
+      i = this.f();
       i++;
-      return i;*/
+      return i;
    }
 }
