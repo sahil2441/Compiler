@@ -28,7 +28,6 @@ def init():
 classes = list()
 classesMap = dict()
 currentClass = "";
-fields = list()
 fieldMap = dict()
 counter = 0
 constructorMap = dict()
@@ -81,6 +80,9 @@ def p_newscope(p):
         newclass = DecafClass(p[-3], p[-2])
     else:
         newclass = DecafClass(p[-3])
+    if (classesMap.has_key(newclass.name)):
+        print "Error! Class "+str(newclass.name)+" is already defined!"
+        decaflexer.errorflag = True
     classesMap[newclass.name] = newclass;
     classes.append(newclass)
     push_scope(newclass)
@@ -152,6 +154,10 @@ def p_field_decl(p):
         counter = counter + 1
         fieldMap[counter] = Field(var, counter, scope.name,type=localtype)
         if (isinstance(scope, DecafClass)):
+            for field in  classesMap[scope.name].fieldList:
+                if field.name == var:
+                    print 'Multiple declaration of same field variable "' + var + '" found for class : ' + scope.name
+                    decaflexer.errorflag = True;
             if (modifier == 'static'):
                 fieldMap[counter].applicability='class'
             else:
@@ -159,7 +165,6 @@ def p_field_decl(p):
             if visibility:
                 fieldMap[counter].visibility = visibility;
             classesMap[scope.name].fieldList.append(fieldMap[counter])
-        fields.append(fieldMap[counter])
     print 's11'
     pass
 
@@ -875,8 +880,11 @@ def p_expr_empty(p):
 def p_error(p):
     if p is None:
         print ("Unexpected end-of-file")
+    elif hasattr(p, 'message'):
+        print str(p.message)
     else:
         print ("Unexpected token '{0}' near line {1}".format(p.value, p.lineno))
+    parser.errok()
     decaflexer.errorflag = True
 
 parser = yacc.yacc()
