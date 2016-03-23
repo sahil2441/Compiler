@@ -209,7 +209,7 @@ def p_methodscope(p):
     methodName = p[-2]
     methodMap[methodCounter] = Method(methodCounter, name=methodName, containingClass=scope.name, visibility=visibility, applicability=applicability, returnType=returnType)
     classesMap[scope.name].methodList.append(methodMap[methodCounter])
-    push_scope(methodMap[constructorCounter])
+    push_scope(methodMap[methodCounter])
     print 's12.1 and s13.1'
 
 def p_constructor_decl(p):
