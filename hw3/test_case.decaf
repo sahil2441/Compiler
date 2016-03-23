@@ -13,14 +13,3 @@ class A {
       return i;
    }
 }
-class B extends A {
-   int y;
-   public A s;
-   B () {
-     this.y = 2;
-     this.s = new A();
-   }
-   public int f(int k) {
-      return super.f() + k;
-   }
-}

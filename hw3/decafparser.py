@@ -164,6 +164,13 @@ def p_field_decl(p):
 
 def p_method_decl_void(p):
     'method_decl : mod VOID ID LPAREN param_list_opt RPAREN block'
+
+    # Reinitialize the local variable map and local variable counter at every new method declaration
+    global localVariableCounter
+    localVariableCounter=0
+    global localVariableMap
+    localVariableMap=dict()
+
     # p[1] tuple of Visibility, applicability
     scope = fetchScope();
     global methodCounter
@@ -174,24 +181,31 @@ def p_method_decl_void(p):
         visibility = p[1][0]
     if (p[1][1]):
         applicability = "class"
-
-    # Added for body
-    # reset global variables
-    global localVariableCounter
-    localVariableCounter=0
-    global localVariableMap
-    localVariableMap=dict()
-    body =  p[7]
-    print 'body void : ' + str(body)
-    methodMap[methodCounter] = Method(methodCounter, p[3], scope.name, visibility, applicability=applicability, returnType=p[2],
-                                      body=body)
+    body = p[7]
+    contents = body.split("$$")
+    variables=''
+    if "VARIABLE" in contents[0]:
+        variables = contents[0].split("$")
+        bodycontent = contents[1:]
+    else:
+        bodycontent = contents
+    # print variables
+    # print ('body : ' + str(body))
+    methodMap[methodCounter] = Method(methodCounter, p[3], scope.name, visibility, applicability=applicability, returnType=p[2], body=bodycontent)
+    methodMap[methodCounter].variables = variables
     classesMap[scope.name].methodList.append(methodMap[methodCounter])
-    push_scope(methodMap[methodCounter])
     print 's12'
     pass
 
 def p_method_decl_nonvoid(p):
     'method_decl : mod type ID LPAREN param_list_opt RPAREN block'
+
+    # Reinitialize the local variable map and local variable counter at every new method declaration
+    global localVariableCounter
+    localVariableCounter=0
+    global localVariableMap
+    localVariableMap=dict()
+
     # p[1] tuple of Visibility, applicability
     scope = fetchScope();
     global methodCounter
