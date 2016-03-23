@@ -381,7 +381,7 @@ def p_stmt_list_empty(p):
 def p_stmt_list(p):
     'stmt_list : stmt_list stmt'
     if p[1] is not None:
-        p[0] = str(p[1])+"$$"+ str(p[2])
+        p[0] = p[1]+"$$"+ str(p[2])
     else:
         p[0] = p[2]
     print 's38'
@@ -606,27 +606,27 @@ def p_expr_binop(p):
         print "p[3]: " + str(p[3])
         p[0] = 'Binary(add,'+str(p[1])+','+str(p[3])+')'
     elif p[2] == '-':
-        p[0] = 'Binary(subtract,'+p[1]+','+str(p[3])+')'
+        p[0] = 'Binary(subtract,'+str(p[1])+','+str(p[3])+')'
     elif p[2] == '*':
-        p[0] = 'Binary(multiply,'+p[1]+','+str(p[3])+')'
+        p[0] = 'Binary(multiply,'+str(p[1])+','+str(p[3])+')'
     elif p[2] == '/':
-        p[0] = 'Binary(divide,'+p[1]+','+str(p[3])+')'
+        p[0] = 'Binary(divide,'+str(p[1])+','+str(p[3])+')'
     elif p[2] == '==':
-        p[0] = 'Binary(equals,'+p[1]+','+str(p[3])+')'
+        p[0] = 'Binary(equals,'+str(p[1])+','+str(p[3])+')'
     elif p[2] == '!=':
-        p[0] = 'Binary(not equals,'+p[1]+','+str(p[3])+')'
+        p[0] = 'Binary(not equals,'+str(p[1])+','+str(p[3])+')'
     elif p[2] == '<':
-        p[0] = 'Binary(less than,'+p[1]+','+str(p[3])+')'
+        p[0] = 'Binary(less than,'+str(p[1])+','+str(p[3])+')'
     elif p[2] == '<=':
-        p[0] = 'Binary(less than and equal to,'+p[1]+','+str(p[3])+')'
+        p[0] = 'Binary(less than and equal to,'+str(p[1])+','+str(p[3])+')'
     elif p[2] == '>':
-        p[0] = 'Binary(greater than,'+p[1]+','+str(p[3])+')'
+        p[0] = 'Binary(greater than,'+str(p[1])+','+str(p[3])+')'
     elif p[2] == '>=':
-        p[0] = 'Binary(greater than and equal to,'+p[1]+','+str(p[3])+')'
+        p[0] = 'Binary(greater than and equal to,'+str(p[1])+','+str(p[3])+')'
     elif p[2] == '&&':
-        p[0] = 'Binary(and,'+p[1]+','+str(p[3])+')'
+        p[0] = 'Binary(and,'+str(p[1])+','+str(p[3])+')'
     elif p[2] == '||':
-        p[0] = 'Binary(or,'+p[1]+','+str(p[3])+')'
+        p[0] = 'Binary(or,'+str(p[1])+','+str(p[3])+')'
     print 's72'
     pass
 def p_expr_unop(p):
