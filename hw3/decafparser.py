@@ -396,8 +396,32 @@ def p_stmt_list(p):
 def p_stmt_if(p):
     '''stmt : IF LPAREN expr RPAREN stmt ELSE stmt
           | IF LPAREN expr RPAREN stmt'''
+    print 'p[5] = ' + str(p[5])
+    result = ''
+    result = 'If (Condition, ' + str(p[3]) + ')\n' + 'Then (Statement, '
+    for element in p[5]:
+        if element is None:
+            continue
+        result += element +','
+    if len(p[5]) >0:
+        result = result[0:-1]
+    result+=')'
+    try:
+        result += '\nElse (Statement, '
+        for element in p[7]:
+            if element is None:
+                continue
+            result += element +','
+        if len(p[7]) >0:
+            result = result[0:-1]
+        result+=')'
+    except:
+        pass
+
+    p[0] = result
     print 's39'
     pass
+
 def p_stmt_while(p):
     'stmt : WHILE LPAREN expr RPAREN stmt'
     print 's40'
@@ -426,6 +450,7 @@ def p_stmt_continue(p):
     pass
 def p_stmt_block(p):
     'stmt : block'
+    p[0] = p[1]
     print 's46'
     pass
 def p_stmt_var_decl(p):

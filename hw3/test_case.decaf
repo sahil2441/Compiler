@@ -1,8 +1,13 @@
 class A {
    public int g() {
         if(x ==10){
-            int y;
+            int x;
+            x=20;
             y=10;
+        }
+        else{
+            z=1;
+            a=2;
         }
    }
 }
