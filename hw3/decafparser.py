@@ -238,7 +238,14 @@ def p_constructor_decl(p):
     global constructorCounter
     constructorCounter += 1
     visibility="private"
-
+    parameters = list()
+    if (p[4]):
+        for paramTuple in p[4]:
+            global localVariableCounter
+            localVariableCounter += 1
+            localVariableMap[paramTuple[1]]=localVariableCounter
+            variable = Variable(paramTuple[1], localVariableCounter, "formal", paramTuple[0])
+            parameters.append(variable)
     # Added for body
     body = p[6]
     contents = body.split("$$")
@@ -254,12 +261,7 @@ def p_constructor_decl(p):
         visibility = p[1][0]
     constructorMap[constructorCounter] = Constructor(constructorCounter,visibility, variables, bodycontent)
     # print "param list " + str(p[4])
-    variableCounter = 1;
-    if (p[4]):
-        for paramTuple in p[4]:
-            variable = Variable(paramTuple[1],variableCounter)
-            variableCounter += 1
-            constructorMap[constructorCounter].parameters.append(variable)
+    constructorMap[constructorCounter].parameters = parameters
     classesMap[scope.name].constructorList.append(constructorMap[constructorCounter])
     print 's14'
     pass
@@ -519,7 +521,7 @@ def p_primary_newobj(p):
     args = '[]'
     if (not p[4] is None):
         args = str(p[4])
-    p[0] = 'New-object(' + str(p[2]) +args+ ')'
+    p[0] = 'New-object(' + str(p[2]) + ',' + args + ')'
     print 's59'
     pass
 def p_primary_lhs(p):
@@ -652,6 +654,7 @@ def p_expr_unop(p):
     '''expr : PLUS expr %prec UMINUS
             | MINUS expr %prec UMINUS
             | NOT expr'''
+
     print 's73'
     pass
 

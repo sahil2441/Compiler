@@ -84,6 +84,9 @@ class DecafClass(object):
                 paramstr = paramstr[0:-1]
             retstr += paramstr+"\n"
             retstr += "Variable Table:\n"
+            for variable in constructor.parameters:
+                retstr += str(variable)
+                retstr +="\n"
             for variable in constructor.variables:
                 retstr += str(variable)
                 retstr +="\n"
@@ -103,11 +106,12 @@ class DecafClass(object):
         for method in self.methodList:
             retstr += ", ".join(["METHOD: "+str(method.id), method.name, method.containingClass, method.visibility, method.applicability, method.returnType])
             retstr += "\nMethod Parameters: "
-            if len(method.parameters) > 0:
-                retstr += len(method.parameters)
-            else:
-                retstr += ""
-            retstr += "\n"
+            paramstr = ""
+            for param in method.parameters:
+                paramstr += str(param.id)+ ","
+            if (len(paramstr) > 0):
+                paramstr = paramstr[0:-1]
+            retstr += paramstr+"\n"
             retstr += "Variable Table:\n"
             for variable in method.variables:
                 retstr += str(variable)
