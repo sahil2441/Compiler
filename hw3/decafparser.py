@@ -46,7 +46,7 @@ def push_scope(f):
     scopeList.append(f);
 
 def pop_scope():
-    scopeList.pop();
+    scopeList.pop()
 
 def fetchScope():
     return scopeList[-1]
@@ -165,104 +165,66 @@ def p_field_decl(p):
 
 def p_method_decl_void(p):
     'method_decl : mod VOID ID LPAREN methodscope param_list_opt RPAREN block'
-
-    # Reinitialize the local variable map and local variable counter at every new method declaration
-    global localVariableCounter
-    localVariableCounter=0
-    global localVariableMap
-    localVariableMap=dict()
-
-    # p[1] tuple of Visibility, applicability
-    scope = fetchScope();
-    global methodCounter
-    methodCounter += 1
-    visibility="private"
-    applicability = "instance"
-    if (p[1][0]):
-        visibility = p[1][0]
-    if (p[1][1]):
-        applicability = "class"
-    body = p[7]
-    contents = body.split("$$")
-    variables=''
-    if "VARIABLE" in contents[0]:
-        variables = contents[0].split("$")
-        bodycontent = contents[1:]
-    else:
-        bodycontent = contents
-    # print variables
-    # print ('body : ' + str(body))
-
-    # Method parameters
-    # print 'Method Parameters: ' + str(p[5])
-    global methodParameterList
-    methodMap[methodCounter] = Method(methodCounter, p[3], scope.name, visibility, applicability=applicability,
-                                      returnType=p[2], body=bodycontent, parameters=methodParameterList)
-    methodMap[methodCounter].variables = variables
-    classesMap[scope.name].methodList.append(methodMap[methodCounter])
-
+    scope = fetchScope()
+    scope.body = list()
+    body = p[8]
+    if body:
+        for content in body:
+            if (not content is None):
+                scope.body.append(content)
+    print ('body void: ' + str(body))
+    pop_scope()
     # Reset the method parameter list
     methodParameterList = list()
     print 's12'
     pass
 
+
+def p_method_decl_nonvoid(p):
+    'method_decl : mod type ID LPAREN methodscope param_list_opt RPAREN block'
+    scope = fetchScope()
+    scope.body = list()
+    body = p[8]
+    if body:
+        for content in body:
+            if (not content is None):
+                scope.body.append(content)
+    print ('body non void: ' + str(body))
+    pop_scope()
+    print 's13'
+    pass
+
 def p_methodscope(p):
     'methodscope : '
-    print 's12.1'
-def p_method_decl_nonvoid(p):
-    'method_decl : mod type ID LPAREN param_list_opt RPAREN block'
-
-    # Reinitialize the local variable map and local variable counter at every new method declaration
-    global localVariableCounter
-    localVariableCounter=0
-    global localVariableMap
-    localVariableMap=dict()
-
-    # p[1] tuple of Visibility, applicability
     scope = fetchScope();
     global methodCounter
     methodCounter += 1
-    visibility="private"
+    visibility = "private"
     applicability = "instance"
-    if (p[1][0]):
-        visibility = p[1][0]
-    if (p[1][1]):
+    if (p[-4][0]):
+        visibility=str(p[-4][0])
+    if (p[-4][1]):
         applicability = "class"
-    body = p[7]
-    contents = body.split("$$")
-    variables=''
-    if "VARIABLE" in contents[0]:
-        variables = contents[0].split("$")
-        bodycontent = contents[1:]
-    else:
-        bodycontent = contents
-    # print variables
-    print ('body non void: ' + str(body))
-    # Method parameters
-    # print 'Method Parameters: ' + str(p[5])
-    global methodParameterList
-    methodMap[methodCounter] = Method(methodCounter, p[3], scope.name, visibility, applicability=applicability,
-                                      returnType=p[2], body=bodycontent, parameters=methodParameterList)
-    methodMap[methodCounter].variables = variables
+    returnType = p[-2]
+    methodName = p[-3]
+    methodMap[methodCounter] = Method(methodCounter, name=methodName, containingClass=scope.name, visibility=visibility, applicability=applicability, returnType=returnType)
     classesMap[scope.name].methodList.append(methodMap[methodCounter])
-
-    # Reset the method parameter list
-    methodParameterList = list()
-    print 's13'
-    pass
+    push_scope(methodMap[constructorCounter])
+    print 's12.1 and s13.1'
 
 def p_constructor_decl(p):
     'constructor_decl : mod ID LPAREN constructorscope param_list_opt RPAREN block'
     scope = fetchScope()
     variableCount = len(scope.variables) + len(scope.parameters)
     # Added for body
+    scope.body = list()
     body = p[7]
     print 'constructor body  :' + str(body)
     if body:
         for content in body:
             if (not content is None):
                 scope.body.append(content)
-    pop_scope();
+    pop_scope()
     print 's14'
     pass
 
@@ -378,6 +340,7 @@ def p_param_list_opt(p):
     scope.parameters = parameters;
     print 's30'
     pass
+
 def p_param_list_empty(p):
     'param_list_opt : '
     p[0] = None
@@ -399,15 +362,6 @@ def p_param_list_single(p):
 def p_param(p):
     'param : type ID'
     p[0] = (p[1],p[2])
-    #global methodParameterList
-    #global localVariableMap
-    #global localVariableCounter
-    #var = p[2]
-    #if not localVariableMap.__contains__(var):
-    #    localVariableCounter += 1
-    #    localVariableMap[var] = localVariableCounter
-    #varCounter = localVariableMap[var]
-    #methodParameterList.append(varCounter)
     print 's34'
     pass
 

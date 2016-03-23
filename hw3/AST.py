@@ -6,7 +6,6 @@ class Constructor(object):
         self.variables = variables;
         self.body = body;
         self.localvarmap = localvarmap;
-        self.blocks=list();
 
 class Method(object):
     def __init__(self, id, name, containingClass = "", visibility="private", applicability="", returnType="void", body=list(),
@@ -110,11 +109,14 @@ class DecafClass(object):
             retstr += "\nMethod Parameters: "
             paramstr = ""
             for param in method.parameters:
-                paramstr += str(param)+ ","
+                paramstr += str(param.id)+ ","
             if (len(paramstr) > 0):
                 paramstr = paramstr[0:-1]
             retstr += paramstr+"\n"
-            retstr += "Variable Table:\n"
+            retstr += "Variable Table:"
+            for param in method.parameters:
+                retstr += '\n' + str(param)
+            retstr += "\n"
             for variable in method.variables:
                 retstr += str(variable)
                 retstr +="\n"

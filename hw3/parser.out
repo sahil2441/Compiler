@@ -1,4 +1,4 @@
-Created by PLY version 3.8 (http://www.dabeaz.com/ply)
+Created by PLY version 3.6 (http://www.dabeaz.com/ply)
 
 Grammar
 
@@ -18,8 +18,8 @@ Rule 12    class_body_decl -> method_decl
 Rule 13    class_body_decl -> constructor_decl
 Rule 14    field_decl -> mod var_decl
 Rule 15    method_decl -> mod VOID ID LPAREN methodscope param_list_opt RPAREN block
-Rule 16    methodscope -> <empty>
-Rule 17    method_decl -> mod type ID LPAREN param_list_opt RPAREN block
+Rule 16    method_decl -> mod type ID LPAREN methodscope param_list_opt RPAREN block
+Rule 17    methodscope -> <empty>
 Rule 18    constructor_decl -> mod ID LPAREN constructorscope param_list_opt RPAREN block
 Rule 19    constructorscope -> <empty>
 Rule 20    mod -> visibility_mod storage_mod
@@ -137,7 +137,7 @@ FLOAT_CONST          : 56
 FOR                  : 47
 GEQ                  : 90
 GT                   : 89
-ID                   : 4 6 7 15 17 18 30 33 39 65 74 75
+ID                   : 4 6 7 15 16 18 30 33 39 65 74 75
 IF                   : 44 45
 INC                  : 97 98
 INT                  : 27
@@ -145,7 +145,7 @@ INT_CONST            : 55
 LBRACE               : 4 6 40 41
 LBRACKET             : 34 76 104 105
 LEQ                  : 88
-LPAREN               : 15 17 18 44 45 46 47 64 65 77
+LPAREN               : 15 16 18 44 45 46 47 64 65 77
 LT                   : 87
 MINUS                : 82 94
 MULTIPLY             : 83
@@ -160,7 +160,7 @@ PUBLIC               : 21
 RBRACE               : 4 6 40 41
 RBRACKET             : 34 76 104 105
 RETURN               : 48
-RPAREN               : 15 17 18 44 45 46 47 64 65 77
+RPAREN               : 15 16 18 44 45 46 47 64 65 77
 SEMICOLON            : 26 47 47 48 49 50 51 54
 STATIC               : 24
 STRING_CONST         : 57
@@ -177,7 +177,7 @@ arg_plus             : 68 70
 args_opt             : 65 77
 array_access         : 73
 assign               : 79 107
-block                : 15 17 18 52
+block                : 15 16 18 52
 class_body_decl      : 9 10
 class_body_decl_list : 4 9
 class_decl           : 2
@@ -196,13 +196,13 @@ lhs                  : 66 96 97 98 99 100
 literal              : 61
 method_decl          : 12
 method_invocation    : 67 108
-methodscope          : 15
-mod                  : 14 15 17 18
+methodscope          : 15 16
+mod                  : 14 15 16 18
 new_array            : 80
 newscope             : 4
 param                : 37 38
 param_list           : 35 37
-param_list_opt       : 15 17 18
+param_list_opt       : 15 16 18
 pgm                  : 0
 primary              : 74 76 78
 stmt                 : 43 44 44 45 46 47
@@ -210,7 +210,7 @@ stmt_expr            : 49 109
 stmt_expr_opt        : 47 47
 stmt_list            : 40 41 43
 storage_mod          : 20
-type                 : 17 26 39 101
+type                 : 16 26 39 101
 var                  : 31 32 34
 var_decl             : 14 53
 var_list             : 26 31
@@ -338,7 +338,7 @@ state 11
     (13) class_body_decl -> . constructor_decl
     (14) field_decl -> . mod var_decl
     (15) method_decl -> . mod VOID ID LPAREN methodscope param_list_opt RPAREN block
-    (17) method_decl -> . mod type ID LPAREN param_list_opt RPAREN block
+    (16) method_decl -> . mod type ID LPAREN methodscope param_list_opt RPAREN block
     (18) constructor_decl -> . mod ID LPAREN constructorscope param_list_opt RPAREN block
     (20) mod -> . visibility_mod storage_mod
     (21) visibility_mod -> . PUBLIC
@@ -405,7 +405,7 @@ state 15
     (13) class_body_decl -> . constructor_decl
     (14) field_decl -> . mod var_decl
     (15) method_decl -> . mod VOID ID LPAREN methodscope param_list_opt RPAREN block
-    (17) method_decl -> . mod type ID LPAREN param_list_opt RPAREN block
+    (16) method_decl -> . mod type ID LPAREN methodscope param_list_opt RPAREN block
     (18) constructor_decl -> . mod ID LPAREN constructorscope param_list_opt RPAREN block
     (20) mod -> . visibility_mod storage_mod
     (21) visibility_mod -> . PUBLIC
@@ -463,7 +463,7 @@ state 18
 
     (14) field_decl -> mod . var_decl
     (15) method_decl -> mod . VOID ID LPAREN methodscope param_list_opt RPAREN block
-    (17) method_decl -> mod . type ID LPAREN param_list_opt RPAREN block
+    (16) method_decl -> mod . type ID LPAREN methodscope param_list_opt RPAREN block
     (18) constructor_decl -> mod . ID LPAREN constructorscope param_list_opt RPAREN block
     (26) var_decl -> . type var_list SEMICOLON
     (27) type -> . INT
@@ -623,7 +623,7 @@ state 31
 
 state 32
 
-    (17) method_decl -> mod type . ID LPAREN param_list_opt RPAREN block
+    (16) method_decl -> mod type . ID LPAREN methodscope param_list_opt RPAREN block
     (26) var_decl -> type . var_list SEMICOLON
     (31) var_list -> . var_list COMMA var
     (32) var_list -> . var
@@ -672,7 +672,7 @@ state 36
 
 state 37
 
-    (17) method_decl -> mod type ID . LPAREN param_list_opt RPAREN block
+    (16) method_decl -> mod type ID . LPAREN methodscope param_list_opt RPAREN block
     (33) var -> ID .
 
     LPAREN          shift and go to state 43
@@ -697,13 +697,13 @@ state 38
 state 39
 
     (15) method_decl -> mod VOID ID LPAREN . methodscope param_list_opt RPAREN block
-    (16) methodscope -> .
+    (17) methodscope -> .
 
-    INT             reduce using rule 16 (methodscope -> .)
-    BOOLEAN         reduce using rule 16 (methodscope -> .)
-    FLOAT           reduce using rule 16 (methodscope -> .)
-    ID              reduce using rule 16 (methodscope -> .)
-    RPAREN          reduce using rule 16 (methodscope -> .)
+    INT             reduce using rule 17 (methodscope -> .)
+    BOOLEAN         reduce using rule 17 (methodscope -> .)
+    FLOAT           reduce using rule 17 (methodscope -> .)
+    ID              reduce using rule 17 (methodscope -> .)
+    RPAREN          reduce using rule 17 (methodscope -> .)
 
     methodscope                    shift and go to state 45
 
@@ -762,27 +762,16 @@ state 42
 
 state 43
 
-    (17) method_decl -> mod type ID LPAREN . param_list_opt RPAREN block
-    (35) param_list_opt -> . param_list
-    (36) param_list_opt -> .
-    (37) param_list -> . param_list COMMA param
-    (38) param_list -> . param
-    (39) param -> . type ID
-    (27) type -> . INT
-    (28) type -> . BOOLEAN
-    (29) type -> . FLOAT
-    (30) type -> . ID
+    (16) method_decl -> mod type ID LPAREN . methodscope param_list_opt RPAREN block
+    (17) methodscope -> .
 
-    RPAREN          reduce using rule 36 (param_list_opt -> .)
-    INT             shift and go to state 27
-    BOOLEAN         shift and go to state 31
-    FLOAT           shift and go to state 29
-    ID              shift and go to state 53
+    INT             reduce using rule 17 (methodscope -> .)
+    BOOLEAN         reduce using rule 17 (methodscope -> .)
+    FLOAT           reduce using rule 17 (methodscope -> .)
+    ID              reduce using rule 17 (methodscope -> .)
+    RPAREN          reduce using rule 17 (methodscope -> .)
 
-    param_list                     shift and go to state 49
-    param                          shift and go to state 51
-    param_list_opt                 shift and go to state 50
-    type                           shift and go to state 52
+    methodscope                    shift and go to state 49
 
 state 44
 
@@ -801,12 +790,12 @@ state 44
     INT             shift and go to state 27
     BOOLEAN         shift and go to state 31
     FLOAT           shift and go to state 29
-    ID              shift and go to state 53
+    ID              shift and go to state 54
 
-    param_list                     shift and go to state 49
-    param                          shift and go to state 51
-    param_list_opt                 shift and go to state 54
-    type                           shift and go to state 52
+    param_list                     shift and go to state 50
+    param                          shift and go to state 52
+    param_list_opt                 shift and go to state 51
+    type                           shift and go to state 53
 
 state 45
 
@@ -825,12 +814,12 @@ state 45
     INT             shift and go to state 27
     BOOLEAN         shift and go to state 31
     FLOAT           shift and go to state 29
-    ID              shift and go to state 53
+    ID              shift and go to state 54
 
-    param_list                     shift and go to state 49
-    param                          shift and go to state 51
+    param_list                     shift and go to state 50
+    param                          shift and go to state 52
     param_list_opt                 shift and go to state 55
-    type                           shift and go to state 52
+    type                           shift and go to state 53
 
 state 46
 
@@ -862,21 +851,45 @@ state 48
 
 state 49
 
+    (16) method_decl -> mod type ID LPAREN methodscope . param_list_opt RPAREN block
+    (35) param_list_opt -> . param_list
+    (36) param_list_opt -> .
+    (37) param_list -> . param_list COMMA param
+    (38) param_list -> . param
+    (39) param -> . type ID
+    (27) type -> . INT
+    (28) type -> . BOOLEAN
+    (29) type -> . FLOAT
+    (30) type -> . ID
+
+    RPAREN          reduce using rule 36 (param_list_opt -> .)
+    INT             shift and go to state 27
+    BOOLEAN         shift and go to state 31
+    FLOAT           shift and go to state 29
+    ID              shift and go to state 54
+
+    param_list                     shift and go to state 50
+    param_list_opt                 shift and go to state 56
+    param                          shift and go to state 52
+    type                           shift and go to state 53
+
+state 50
+
     (35) param_list_opt -> param_list .
     (37) param_list -> param_list . COMMA param
 
     RPAREN          reduce using rule 35 (param_list_opt -> param_list .)
-    COMMA           shift and go to state 56
-
-
-state 50
-
-    (17) method_decl -> mod type ID LPAREN param_list_opt . RPAREN block
-
-    RPAREN          shift and go to state 57
+    COMMA           shift and go to state 57
 
 
 state 51
+
+    (18) constructor_decl -> mod ID LPAREN constructorscope param_list_opt . RPAREN block
+
+    RPAREN          shift and go to state 58
+
+
+state 52
 
     (38) param_list -> param .
 
@@ -884,25 +897,18 @@ state 51
     RPAREN          reduce using rule 38 (param_list -> param .)
 
 
-state 52
+state 53
 
     (39) param -> type . ID
 
-    ID              shift and go to state 58
-
-
-state 53
-
-    (30) type -> ID .
-
-    ID              reduce using rule 30 (type -> ID .)
+    ID              shift and go to state 59
 
 
 state 54
 
-    (18) constructor_decl -> mod ID LPAREN constructorscope param_list_opt . RPAREN block
+    (30) type -> ID .
 
-    RPAREN          shift and go to state 59
+    ID              reduce using rule 30 (type -> ID .)
 
 
 state 55
@@ -914,6 +920,13 @@ state 55
 
 state 56
 
+    (16) method_decl -> mod type ID LPAREN methodscope param_list_opt . RPAREN block
+
+    RPAREN          shift and go to state 61
+
+
+state 57
+
     (37) param_list -> param_list COMMA . param
     (39) param -> . type ID
     (27) type -> . INT
@@ -924,22 +937,22 @@ state 56
     INT             shift and go to state 27
     BOOLEAN         shift and go to state 31
     FLOAT           shift and go to state 29
-    ID              shift and go to state 53
+    ID              shift and go to state 54
 
-    type                           shift and go to state 52
-    param                          shift and go to state 61
+    type                           shift and go to state 53
+    param                          shift and go to state 62
 
-state 57
+state 58
 
-    (17) method_decl -> mod type ID LPAREN param_list_opt RPAREN . block
+    (18) constructor_decl -> mod ID LPAREN constructorscope param_list_opt RPAREN . block
     (40) block -> . LBRACE stmt_list RBRACE
     (41) block -> . LBRACE stmt_list error RBRACE
 
-    LBRACE          shift and go to state 62
+    LBRACE          shift and go to state 63
 
-    block                          shift and go to state 63
+    block                          shift and go to state 64
 
-state 58
+state 59
 
     (39) param -> type ID .
 
@@ -947,27 +960,27 @@ state 58
     RPAREN          reduce using rule 39 (param -> type ID .)
 
 
-state 59
-
-    (18) constructor_decl -> mod ID LPAREN constructorscope param_list_opt RPAREN . block
-    (40) block -> . LBRACE stmt_list RBRACE
-    (41) block -> . LBRACE stmt_list error RBRACE
-
-    LBRACE          shift and go to state 62
-
-    block                          shift and go to state 64
-
 state 60
 
     (15) method_decl -> mod VOID ID LPAREN methodscope param_list_opt RPAREN . block
     (40) block -> . LBRACE stmt_list RBRACE
     (41) block -> . LBRACE stmt_list error RBRACE
 
-    LBRACE          shift and go to state 62
+    LBRACE          shift and go to state 63
 
     block                          shift and go to state 65
 
 state 61
+
+    (16) method_decl -> mod type ID LPAREN methodscope param_list_opt RPAREN . block
+    (40) block -> . LBRACE stmt_list RBRACE
+    (41) block -> . LBRACE stmt_list error RBRACE
+
+    LBRACE          shift and go to state 63
+
+    block                          shift and go to state 66
+
+state 62
 
     (37) param_list -> param_list COMMA param .
 
@@ -975,7 +988,7 @@ state 61
     RPAREN          reduce using rule 37 (param_list -> param_list COMMA param .)
 
 
-state 62
+state 63
 
     (40) block -> LBRACE . stmt_list RBRACE
     (41) block -> LBRACE . stmt_list error RBRACE
@@ -1008,22 +1021,7 @@ state 62
     TRUE            reduce using rule 42 (stmt_list -> .)
     FALSE           reduce using rule 42 (stmt_list -> .)
 
-    stmt_list                      shift and go to state 66
-
-state 63
-
-    (17) method_decl -> mod type ID LPAREN param_list_opt RPAREN block .
-
-    RBRACE          reduce using rule 17 (method_decl -> mod type ID LPAREN param_list_opt RPAREN block .)
-    PUBLIC          reduce using rule 17 (method_decl -> mod type ID LPAREN param_list_opt RPAREN block .)
-    PRIVATE         reduce using rule 17 (method_decl -> mod type ID LPAREN param_list_opt RPAREN block .)
-    VOID            reduce using rule 17 (method_decl -> mod type ID LPAREN param_list_opt RPAREN block .)
-    ID              reduce using rule 17 (method_decl -> mod type ID LPAREN param_list_opt RPAREN block .)
-    INT             reduce using rule 17 (method_decl -> mod type ID LPAREN param_list_opt RPAREN block .)
-    BOOLEAN         reduce using rule 17 (method_decl -> mod type ID LPAREN param_list_opt RPAREN block .)
-    FLOAT           reduce using rule 17 (method_decl -> mod type ID LPAREN param_list_opt RPAREN block .)
-    STATIC          reduce using rule 17 (method_decl -> mod type ID LPAREN param_list_opt RPAREN block .)
-
+    stmt_list                      shift and go to state 67
 
 state 64
 
@@ -1056,6 +1054,21 @@ state 65
 
 
 state 66
+
+    (16) method_decl -> mod type ID LPAREN methodscope param_list_opt RPAREN block .
+
+    RBRACE          reduce using rule 16 (method_decl -> mod type ID LPAREN methodscope param_list_opt RPAREN block .)
+    PUBLIC          reduce using rule 16 (method_decl -> mod type ID LPAREN methodscope param_list_opt RPAREN block .)
+    PRIVATE         reduce using rule 16 (method_decl -> mod type ID LPAREN methodscope param_list_opt RPAREN block .)
+    VOID            reduce using rule 16 (method_decl -> mod type ID LPAREN methodscope param_list_opt RPAREN block .)
+    ID              reduce using rule 16 (method_decl -> mod type ID LPAREN methodscope param_list_opt RPAREN block .)
+    INT             reduce using rule 16 (method_decl -> mod type ID LPAREN methodscope param_list_opt RPAREN block .)
+    BOOLEAN         reduce using rule 16 (method_decl -> mod type ID LPAREN methodscope param_list_opt RPAREN block .)
+    FLOAT           reduce using rule 16 (method_decl -> mod type ID LPAREN methodscope param_list_opt RPAREN block .)
+    STATIC          reduce using rule 16 (method_decl -> mod type ID LPAREN methodscope param_list_opt RPAREN block .)
+
+
+state 67
 
     (40) block -> LBRACE stmt_list . RBRACE
     (41) block -> LBRACE stmt_list . error RBRACE
@@ -1105,46 +1118,46 @@ state 66
     (59) literal -> . TRUE
     (60) literal -> . FALSE
 
-    RBRACE          shift and go to state 83
-    error           shift and go to state 95
-    IF              shift and go to state 88
-    WHILE           shift and go to state 69
-    FOR             shift and go to state 84
-    RETURN          shift and go to state 67
-    BREAK           shift and go to state 91
-    CONTINUE        shift and go to state 93
-    LBRACE          shift and go to state 62
-    INC             shift and go to state 99
-    DEC             shift and go to state 72
+    RBRACE          shift and go to state 84
+    error           shift and go to state 96
+    IF              shift and go to state 89
+    WHILE           shift and go to state 70
+    FOR             shift and go to state 85
+    RETURN          shift and go to state 68
+    BREAK           shift and go to state 92
+    CONTINUE        shift and go to state 94
+    LBRACE          shift and go to state 63
+    INC             shift and go to state 100
+    DEC             shift and go to state 73
     INT             shift and go to state 27
     BOOLEAN         shift and go to state 31
     FLOAT           shift and go to state 29
-    ID              shift and go to state 87
-    THIS            shift and go to state 92
-    SUPER           shift and go to state 96
-    LPAREN          shift and go to state 86
-    NEW             shift and go to state 71
-    INT_CONST       shift and go to state 75
-    FLOAT_CONST     shift and go to state 70
-    STRING_CONST    shift and go to state 74
-    NULL            shift and go to state 76
-    TRUE            shift and go to state 77
-    FALSE           shift and go to state 89
+    ID              shift and go to state 88
+    THIS            shift and go to state 93
+    SUPER           shift and go to state 97
+    LPAREN          shift and go to state 87
+    NEW             shift and go to state 72
+    INT_CONST       shift and go to state 76
+    FLOAT_CONST     shift and go to state 71
+    STRING_CONST    shift and go to state 75
+    NULL            shift and go to state 77
+    TRUE            shift and go to state 78
+    FALSE           shift and go to state 90
 
-    field_access                   shift and go to state 82
-    array_access                   shift and go to state 73
-    stmt_expr                      shift and go to state 78
-    stmt                           shift and go to state 85
-    primary                        shift and go to state 68
-    literal                        shift and go to state 79
-    lhs                            shift and go to state 94
-    var_decl                       shift and go to state 90
-    method_invocation              shift and go to state 80
-    type                           shift and go to state 81
-    assign                         shift and go to state 97
-    block                          shift and go to state 98
+    field_access                   shift and go to state 83
+    array_access                   shift and go to state 74
+    stmt_expr                      shift and go to state 79
+    stmt                           shift and go to state 86
+    primary                        shift and go to state 69
+    literal                        shift and go to state 80
+    lhs                            shift and go to state 95
+    var_decl                       shift and go to state 91
+    method_invocation              shift and go to state 81
+    type                           shift and go to state 82
+    assign                         shift and go to state 98
+    block                          shift and go to state 99
 
-state 67
+state 68
 
     (48) stmt -> RETURN . expr_opt SEMICOLON
     (111) expr_opt -> . expr
@@ -1194,51 +1207,51 @@ state 67
     (76) array_access -> . primary LBRACKET expr RBRACKET
 
     SEMICOLON       reduce using rule 112 (expr_opt -> .)
-    PLUS            shift and go to state 105
-    MINUS           shift and go to state 103
-    NOT             shift and go to state 112
-    THIS            shift and go to state 92
-    SUPER           shift and go to state 96
-    LPAREN          shift and go to state 86
-    NEW             shift and go to state 102
-    INC             shift and go to state 99
-    DEC             shift and go to state 72
-    INT_CONST       shift and go to state 75
-    FLOAT_CONST     shift and go to state 70
-    STRING_CONST    shift and go to state 74
-    NULL            shift and go to state 76
-    TRUE            shift and go to state 77
-    FALSE           shift and go to state 89
-    ID              shift and go to state 108
+    PLUS            shift and go to state 106
+    MINUS           shift and go to state 104
+    NOT             shift and go to state 113
+    THIS            shift and go to state 93
+    SUPER           shift and go to state 97
+    LPAREN          shift and go to state 87
+    NEW             shift and go to state 103
+    INC             shift and go to state 100
+    DEC             shift and go to state 73
+    INT_CONST       shift and go to state 76
+    FLOAT_CONST     shift and go to state 71
+    STRING_CONST    shift and go to state 75
+    NULL            shift and go to state 77
+    TRUE            shift and go to state 78
+    FALSE           shift and go to state 90
+    ID              shift and go to state 109
 
-    new_array                      shift and go to state 100
-    field_access                   shift and go to state 107
-    expr                           shift and go to state 109
-    primary                        shift and go to state 101
-    array_access                   shift and go to state 73
-    literal                        shift and go to state 79
-    expr_opt                       shift and go to state 104
-    lhs                            shift and go to state 111
-    method_invocation              shift and go to state 106
-    assign                         shift and go to state 110
+    new_array                      shift and go to state 101
+    field_access                   shift and go to state 108
+    expr                           shift and go to state 110
+    primary                        shift and go to state 102
+    array_access                   shift and go to state 74
+    literal                        shift and go to state 80
+    expr_opt                       shift and go to state 105
+    lhs                            shift and go to state 112
+    method_invocation              shift and go to state 107
+    assign                         shift and go to state 111
 
-state 68
+state 69
 
     (74) field_access -> primary . DOT ID
     (76) array_access -> primary . LBRACKET expr RBRACKET
 
-    DOT             shift and go to state 114
-    LBRACKET        shift and go to state 113
-
-
-state 69
-
-    (46) stmt -> WHILE . LPAREN expr RPAREN stmt
-
-    LPAREN          shift and go to state 115
+    DOT             shift and go to state 115
+    LBRACKET        shift and go to state 114
 
 
 state 70
+
+    (46) stmt -> WHILE . LPAREN expr RPAREN stmt
+
+    LPAREN          shift and go to state 116
+
+
+state 71
 
     (56) literal -> FLOAT_CONST .
 
@@ -1256,20 +1269,20 @@ state 70
     GEQ             reduce using rule 56 (literal -> FLOAT_CONST .)
     AND             reduce using rule 56 (literal -> FLOAT_CONST .)
     OR              reduce using rule 56 (literal -> FLOAT_CONST .)
+    COMMA           reduce using rule 56 (literal -> FLOAT_CONST .)
+    RPAREN          reduce using rule 56 (literal -> FLOAT_CONST .)
     SEMICOLON       reduce using rule 56 (literal -> FLOAT_CONST .)
     RBRACKET        reduce using rule 56 (literal -> FLOAT_CONST .)
-    RPAREN          reduce using rule 56 (literal -> FLOAT_CONST .)
-    COMMA           reduce using rule 56 (literal -> FLOAT_CONST .)
-
-
-state 71
-
-    (65) primary -> NEW . ID LPAREN args_opt RPAREN
-
-    ID              shift and go to state 116
 
 
 state 72
+
+    (65) primary -> NEW . ID LPAREN args_opt RPAREN
+
+    ID              shift and go to state 117
+
+
+state 73
 
     (100) assign -> DEC . lhs
     (72) lhs -> . field_access
@@ -1292,26 +1305,26 @@ state 72
     (60) literal -> . FALSE
     (77) method_invocation -> . field_access LPAREN args_opt RPAREN
 
-    ID              shift and go to state 108
-    THIS            shift and go to state 92
-    SUPER           shift and go to state 96
-    LPAREN          shift and go to state 86
-    NEW             shift and go to state 71
-    INT_CONST       shift and go to state 75
-    FLOAT_CONST     shift and go to state 70
-    STRING_CONST    shift and go to state 74
-    NULL            shift and go to state 76
-    TRUE            shift and go to state 77
-    FALSE           shift and go to state 89
+    ID              shift and go to state 109
+    THIS            shift and go to state 93
+    SUPER           shift and go to state 97
+    LPAREN          shift and go to state 87
+    NEW             shift and go to state 72
+    INT_CONST       shift and go to state 76
+    FLOAT_CONST     shift and go to state 71
+    STRING_CONST    shift and go to state 75
+    NULL            shift and go to state 77
+    TRUE            shift and go to state 78
+    FALSE           shift and go to state 90
 
-    field_access                   shift and go to state 107
-    primary                        shift and go to state 68
-    literal                        shift and go to state 79
-    lhs                            shift and go to state 117
-    method_invocation              shift and go to state 106
-    array_access                   shift and go to state 73
+    field_access                   shift and go to state 108
+    primary                        shift and go to state 69
+    literal                        shift and go to state 80
+    lhs                            shift and go to state 118
+    method_invocation              shift and go to state 107
+    array_access                   shift and go to state 74
 
-state 73
+state 74
 
     (73) lhs -> array_access .
 
@@ -1338,7 +1351,7 @@ state 73
     COMMA           reduce using rule 73 (lhs -> array_access .)
 
 
-state 74
+state 75
 
     (57) literal -> STRING_CONST .
 
@@ -1356,13 +1369,13 @@ state 74
     GEQ             reduce using rule 57 (literal -> STRING_CONST .)
     AND             reduce using rule 57 (literal -> STRING_CONST .)
     OR              reduce using rule 57 (literal -> STRING_CONST .)
+    COMMA           reduce using rule 57 (literal -> STRING_CONST .)
+    RPAREN          reduce using rule 57 (literal -> STRING_CONST .)
     SEMICOLON       reduce using rule 57 (literal -> STRING_CONST .)
     RBRACKET        reduce using rule 57 (literal -> STRING_CONST .)
-    RPAREN          reduce using rule 57 (literal -> STRING_CONST .)
-    COMMA           reduce using rule 57 (literal -> STRING_CONST .)
 
 
-state 75
+state 76
 
     (55) literal -> INT_CONST .
 
@@ -1380,13 +1393,13 @@ state 75
     GEQ             reduce using rule 55 (literal -> INT_CONST .)
     AND             reduce using rule 55 (literal -> INT_CONST .)
     OR              reduce using rule 55 (literal -> INT_CONST .)
+    COMMA           reduce using rule 55 (literal -> INT_CONST .)
+    RPAREN          reduce using rule 55 (literal -> INT_CONST .)
     SEMICOLON       reduce using rule 55 (literal -> INT_CONST .)
     RBRACKET        reduce using rule 55 (literal -> INT_CONST .)
-    RPAREN          reduce using rule 55 (literal -> INT_CONST .)
-    COMMA           reduce using rule 55 (literal -> INT_CONST .)
 
 
-state 76
+state 77
 
     (58) literal -> NULL .
 
@@ -1404,13 +1417,13 @@ state 76
     GEQ             reduce using rule 58 (literal -> NULL .)
     AND             reduce using rule 58 (literal -> NULL .)
     OR              reduce using rule 58 (literal -> NULL .)
+    COMMA           reduce using rule 58 (literal -> NULL .)
+    RPAREN          reduce using rule 58 (literal -> NULL .)
     SEMICOLON       reduce using rule 58 (literal -> NULL .)
     RBRACKET        reduce using rule 58 (literal -> NULL .)
-    RPAREN          reduce using rule 58 (literal -> NULL .)
-    COMMA           reduce using rule 58 (literal -> NULL .)
 
 
-state 77
+state 78
 
     (59) literal -> TRUE .
 
@@ -1428,25 +1441,26 @@ state 77
     GEQ             reduce using rule 59 (literal -> TRUE .)
     AND             reduce using rule 59 (literal -> TRUE .)
     OR              reduce using rule 59 (literal -> TRUE .)
+    COMMA           reduce using rule 59 (literal -> TRUE .)
+    RPAREN          reduce using rule 59 (literal -> TRUE .)
     SEMICOLON       reduce using rule 59 (literal -> TRUE .)
     RBRACKET        reduce using rule 59 (literal -> TRUE .)
-    RPAREN          reduce using rule 59 (literal -> TRUE .)
-    COMMA           reduce using rule 59 (literal -> TRUE .)
-
-
-state 78
-
-    (49) stmt -> stmt_expr . SEMICOLON
-
-    SEMICOLON       shift and go to state 118
 
 
 state 79
+
+    (49) stmt -> stmt_expr . SEMICOLON
+
+    SEMICOLON       shift and go to state 119
+
+
+state 80
 
     (61) primary -> literal .
 
     DOT             reduce using rule 61 (primary -> literal .)
     LBRACKET        reduce using rule 61 (primary -> literal .)
+    RPAREN          reduce using rule 61 (primary -> literal .)
     PLUS            reduce using rule 61 (primary -> literal .)
     MINUS           reduce using rule 61 (primary -> literal .)
     MULTIPLY        reduce using rule 61 (primary -> literal .)
@@ -1460,12 +1474,11 @@ state 79
     AND             reduce using rule 61 (primary -> literal .)
     OR              reduce using rule 61 (primary -> literal .)
     SEMICOLON       reduce using rule 61 (primary -> literal .)
-    RPAREN          reduce using rule 61 (primary -> literal .)
     RBRACKET        reduce using rule 61 (primary -> literal .)
     COMMA           reduce using rule 61 (primary -> literal .)
 
 
-state 80
+state 81
 
     (108) stmt_expr -> method_invocation .
     (67) primary -> method_invocation .
@@ -1476,7 +1489,7 @@ state 80
     LBRACKET        reduce using rule 67 (primary -> method_invocation .)
 
 
-state 81
+state 82
 
     (26) var_decl -> type . var_list SEMICOLON
     (31) var_list -> . var_list COMMA var
@@ -1489,12 +1502,12 @@ state 81
     var                            shift and go to state 35
     var_list                       shift and go to state 36
 
-state 82
+state 83
 
     (77) method_invocation -> field_access . LPAREN args_opt RPAREN
     (72) lhs -> field_access .
 
-    LPAREN          shift and go to state 119
+    LPAREN          shift and go to state 120
     ASSIGN          reduce using rule 72 (lhs -> field_access .)
     INC             reduce using rule 72 (lhs -> field_access .)
     DEC             reduce using rule 72 (lhs -> field_access .)
@@ -1502,7 +1515,7 @@ state 82
     LBRACKET        reduce using rule 72 (lhs -> field_access .)
 
 
-state 83
+state 84
 
     (40) block -> LBRACE stmt_list RBRACE .
 
@@ -1538,14 +1551,14 @@ state 83
     STATIC          reduce using rule 40 (block -> LBRACE stmt_list RBRACE .)
 
 
-state 84
+state 85
 
     (47) stmt -> FOR . LPAREN stmt_expr_opt SEMICOLON expr_opt SEMICOLON stmt_expr_opt RPAREN stmt
 
-    LPAREN          shift and go to state 120
+    LPAREN          shift and go to state 121
 
 
-state 85
+state 86
 
     (43) stmt_list -> stmt_list stmt .
 
@@ -1576,7 +1589,7 @@ state 85
     FALSE           reduce using rule 43 (stmt_list -> stmt_list stmt .)
 
 
-state 86
+state 87
 
     (64) primary -> LPAREN . expr RPAREN
     (78) expr -> . primary
@@ -1623,34 +1636,34 @@ state 86
     (75) field_access -> . ID
     (76) array_access -> . primary LBRACKET expr RBRACKET
 
-    PLUS            shift and go to state 105
-    MINUS           shift and go to state 103
-    NOT             shift and go to state 112
-    THIS            shift and go to state 92
-    SUPER           shift and go to state 96
-    LPAREN          shift and go to state 86
-    NEW             shift and go to state 102
-    INC             shift and go to state 99
-    DEC             shift and go to state 72
-    INT_CONST       shift and go to state 75
-    FLOAT_CONST     shift and go to state 70
-    STRING_CONST    shift and go to state 74
-    NULL            shift and go to state 76
-    TRUE            shift and go to state 77
-    FALSE           shift and go to state 89
-    ID              shift and go to state 108
+    PLUS            shift and go to state 106
+    MINUS           shift and go to state 104
+    NOT             shift and go to state 113
+    THIS            shift and go to state 93
+    SUPER           shift and go to state 97
+    LPAREN          shift and go to state 87
+    NEW             shift and go to state 103
+    INC             shift and go to state 100
+    DEC             shift and go to state 73
+    INT_CONST       shift and go to state 76
+    FLOAT_CONST     shift and go to state 71
+    STRING_CONST    shift and go to state 75
+    NULL            shift and go to state 77
+    TRUE            shift and go to state 78
+    FALSE           shift and go to state 90
+    ID              shift and go to state 109
 
-    new_array                      shift and go to state 100
-    field_access                   shift and go to state 107
-    expr                           shift and go to state 121
-    array_access                   shift and go to state 73
-    primary                        shift and go to state 101
-    literal                        shift and go to state 79
-    lhs                            shift and go to state 111
-    method_invocation              shift and go to state 106
-    assign                         shift and go to state 110
+    new_array                      shift and go to state 101
+    field_access                   shift and go to state 108
+    expr                           shift and go to state 122
+    array_access                   shift and go to state 74
+    primary                        shift and go to state 102
+    literal                        shift and go to state 80
+    lhs                            shift and go to state 112
+    method_invocation              shift and go to state 107
+    assign                         shift and go to state 111
 
-state 87
+state 88
 
     (30) type -> ID .
     (75) field_access -> ID .
@@ -1664,15 +1677,15 @@ state 87
     LBRACKET        reduce using rule 75 (field_access -> ID .)
 
 
-state 88
+state 89
 
     (44) stmt -> IF . LPAREN expr RPAREN stmt ELSE stmt
     (45) stmt -> IF . LPAREN expr RPAREN stmt
 
-    LPAREN          shift and go to state 122
+    LPAREN          shift and go to state 123
 
 
-state 89
+state 90
 
     (60) literal -> FALSE .
 
@@ -1690,13 +1703,13 @@ state 89
     GEQ             reduce using rule 60 (literal -> FALSE .)
     AND             reduce using rule 60 (literal -> FALSE .)
     OR              reduce using rule 60 (literal -> FALSE .)
+    COMMA           reduce using rule 60 (literal -> FALSE .)
+    RPAREN          reduce using rule 60 (literal -> FALSE .)
     SEMICOLON       reduce using rule 60 (literal -> FALSE .)
     RBRACKET        reduce using rule 60 (literal -> FALSE .)
-    RPAREN          reduce using rule 60 (literal -> FALSE .)
-    COMMA           reduce using rule 60 (literal -> FALSE .)
 
 
-state 90
+state 91
 
     (53) stmt -> var_decl .
 
@@ -1728,19 +1741,20 @@ state 90
     ELSE            reduce using rule 53 (stmt -> var_decl .)
 
 
-state 91
+state 92
 
     (50) stmt -> BREAK . SEMICOLON
 
-    SEMICOLON       shift and go to state 123
+    SEMICOLON       shift and go to state 124
 
 
-state 92
+state 93
 
     (62) primary -> THIS .
 
     DOT             reduce using rule 62 (primary -> THIS .)
     LBRACKET        reduce using rule 62 (primary -> THIS .)
+    RPAREN          reduce using rule 62 (primary -> THIS .)
     PLUS            reduce using rule 62 (primary -> THIS .)
     MINUS           reduce using rule 62 (primary -> THIS .)
     MULTIPLY        reduce using rule 62 (primary -> THIS .)
@@ -1754,47 +1768,47 @@ state 92
     AND             reduce using rule 62 (primary -> THIS .)
     OR              reduce using rule 62 (primary -> THIS .)
     SEMICOLON       reduce using rule 62 (primary -> THIS .)
-    RPAREN          reduce using rule 62 (primary -> THIS .)
     RBRACKET        reduce using rule 62 (primary -> THIS .)
     COMMA           reduce using rule 62 (primary -> THIS .)
 
 
-state 93
+state 94
 
     (51) stmt -> CONTINUE . SEMICOLON
 
-    SEMICOLON       shift and go to state 124
+    SEMICOLON       shift and go to state 125
 
 
-state 94
+state 95
 
     (96) assign -> lhs . ASSIGN expr
     (97) assign -> lhs . INC
     (99) assign -> lhs . DEC
     (66) primary -> lhs .
 
-    ASSIGN          shift and go to state 126
-    INC             shift and go to state 127
-    DEC             shift and go to state 125
+    ASSIGN          shift and go to state 127
+    INC             shift and go to state 128
+    DEC             shift and go to state 126
     DOT             reduce using rule 66 (primary -> lhs .)
     LBRACKET        reduce using rule 66 (primary -> lhs .)
 
 
-state 95
+state 96
 
     (41) block -> LBRACE stmt_list error . RBRACE
     (54) stmt -> error . SEMICOLON
 
-    RBRACE          shift and go to state 128
-    SEMICOLON       shift and go to state 129
+    RBRACE          shift and go to state 129
+    SEMICOLON       shift and go to state 130
 
 
-state 96
+state 97
 
     (63) primary -> SUPER .
 
     DOT             reduce using rule 63 (primary -> SUPER .)
     LBRACKET        reduce using rule 63 (primary -> SUPER .)
+    RPAREN          reduce using rule 63 (primary -> SUPER .)
     PLUS            reduce using rule 63 (primary -> SUPER .)
     MINUS           reduce using rule 63 (primary -> SUPER .)
     MULTIPLY        reduce using rule 63 (primary -> SUPER .)
@@ -1808,12 +1822,11 @@ state 96
     AND             reduce using rule 63 (primary -> SUPER .)
     OR              reduce using rule 63 (primary -> SUPER .)
     SEMICOLON       reduce using rule 63 (primary -> SUPER .)
-    RPAREN          reduce using rule 63 (primary -> SUPER .)
     RBRACKET        reduce using rule 63 (primary -> SUPER .)
     COMMA           reduce using rule 63 (primary -> SUPER .)
 
 
-state 97
+state 98
 
     (107) stmt_expr -> assign .
 
@@ -1821,7 +1834,7 @@ state 97
     RPAREN          reduce using rule 107 (stmt_expr -> assign .)
 
 
-state 98
+state 99
 
     (52) stmt -> block .
 
@@ -1853,7 +1866,7 @@ state 98
     ELSE            reduce using rule 52 (stmt -> block .)
 
 
-state 99
+state 100
 
     (98) assign -> INC . lhs
     (72) lhs -> . field_access
@@ -1876,26 +1889,26 @@ state 99
     (60) literal -> . FALSE
     (77) method_invocation -> . field_access LPAREN args_opt RPAREN
 
-    ID              shift and go to state 108
-    THIS            shift and go to state 92
-    SUPER           shift and go to state 96
-    LPAREN          shift and go to state 86
-    NEW             shift and go to state 71
-    INT_CONST       shift and go to state 75
-    FLOAT_CONST     shift and go to state 70
-    STRING_CONST    shift and go to state 74
-    NULL            shift and go to state 76
-    TRUE            shift and go to state 77
-    FALSE           shift and go to state 89
+    ID              shift and go to state 109
+    THIS            shift and go to state 93
+    SUPER           shift and go to state 97
+    LPAREN          shift and go to state 87
+    NEW             shift and go to state 72
+    INT_CONST       shift and go to state 76
+    FLOAT_CONST     shift and go to state 71
+    STRING_CONST    shift and go to state 75
+    NULL            shift and go to state 77
+    TRUE            shift and go to state 78
+    FALSE           shift and go to state 90
 
-    field_access                   shift and go to state 107
-    primary                        shift and go to state 68
-    literal                        shift and go to state 79
-    lhs                            shift and go to state 130
-    method_invocation              shift and go to state 106
-    array_access                   shift and go to state 73
+    field_access                   shift and go to state 108
+    primary                        shift and go to state 69
+    literal                        shift and go to state 80
+    lhs                            shift and go to state 131
+    method_invocation              shift and go to state 107
+    array_access                   shift and go to state 74
 
-state 100
+state 101
 
     (80) expr -> new_array .
 
@@ -1917,7 +1930,7 @@ state 100
     COMMA           reduce using rule 80 (expr -> new_array .)
 
 
-state 101
+state 102
 
     (78) expr -> primary .
     (74) field_access -> primary . DOT ID
@@ -1939,11 +1952,11 @@ state 101
     RPAREN          reduce using rule 78 (expr -> primary .)
     RBRACKET        reduce using rule 78 (expr -> primary .)
     COMMA           reduce using rule 78 (expr -> primary .)
-    DOT             shift and go to state 114
-    LBRACKET        shift and go to state 113
+    DOT             shift and go to state 115
+    LBRACKET        shift and go to state 114
 
 
-state 102
+state 103
 
     (65) primary -> NEW . ID LPAREN args_opt RPAREN
     (101) new_array -> NEW . type dim_expr_plus dim_star
@@ -1952,14 +1965,14 @@ state 102
     (29) type -> . FLOAT
     (30) type -> . ID
 
-    ID              shift and go to state 132
+    ID              shift and go to state 133
     INT             shift and go to state 27
     BOOLEAN         shift and go to state 31
     FLOAT           shift and go to state 29
 
-    type                           shift and go to state 131
+    type                           shift and go to state 132
 
-state 103
+state 104
 
     (94) expr -> MINUS . expr
     (78) expr -> . primary
@@ -2006,41 +2019,41 @@ state 103
     (75) field_access -> . ID
     (76) array_access -> . primary LBRACKET expr RBRACKET
 
-    PLUS            shift and go to state 105
-    MINUS           shift and go to state 103
-    NOT             shift and go to state 112
-    THIS            shift and go to state 92
-    SUPER           shift and go to state 96
-    LPAREN          shift and go to state 86
-    NEW             shift and go to state 102
-    INC             shift and go to state 99
-    DEC             shift and go to state 72
-    INT_CONST       shift and go to state 75
-    FLOAT_CONST     shift and go to state 70
-    STRING_CONST    shift and go to state 74
-    NULL            shift and go to state 76
-    TRUE            shift and go to state 77
-    FALSE           shift and go to state 89
-    ID              shift and go to state 108
+    PLUS            shift and go to state 106
+    MINUS           shift and go to state 104
+    NOT             shift and go to state 113
+    THIS            shift and go to state 93
+    SUPER           shift and go to state 97
+    LPAREN          shift and go to state 87
+    NEW             shift and go to state 103
+    INC             shift and go to state 100
+    DEC             shift and go to state 73
+    INT_CONST       shift and go to state 76
+    FLOAT_CONST     shift and go to state 71
+    STRING_CONST    shift and go to state 75
+    NULL            shift and go to state 77
+    TRUE            shift and go to state 78
+    FALSE           shift and go to state 90
+    ID              shift and go to state 109
 
-    new_array                      shift and go to state 100
-    field_access                   shift and go to state 107
-    expr                           shift and go to state 133
-    array_access                   shift and go to state 73
-    primary                        shift and go to state 101
-    literal                        shift and go to state 79
-    lhs                            shift and go to state 111
-    method_invocation              shift and go to state 106
-    assign                         shift and go to state 110
+    new_array                      shift and go to state 101
+    field_access                   shift and go to state 108
+    expr                           shift and go to state 134
+    array_access                   shift and go to state 74
+    primary                        shift and go to state 102
+    literal                        shift and go to state 80
+    lhs                            shift and go to state 112
+    method_invocation              shift and go to state 107
+    assign                         shift and go to state 111
 
-state 104
+state 105
 
     (48) stmt -> RETURN expr_opt . SEMICOLON
 
-    SEMICOLON       shift and go to state 134
+    SEMICOLON       shift and go to state 135
 
 
-state 105
+state 106
 
     (93) expr -> PLUS . expr
     (78) expr -> . primary
@@ -2087,39 +2100,40 @@ state 105
     (75) field_access -> . ID
     (76) array_access -> . primary LBRACKET expr RBRACKET
 
-    PLUS            shift and go to state 105
-    MINUS           shift and go to state 103
-    NOT             shift and go to state 112
-    THIS            shift and go to state 92
-    SUPER           shift and go to state 96
-    LPAREN          shift and go to state 86
-    NEW             shift and go to state 102
-    INC             shift and go to state 99
-    DEC             shift and go to state 72
-    INT_CONST       shift and go to state 75
-    FLOAT_CONST     shift and go to state 70
-    STRING_CONST    shift and go to state 74
-    NULL            shift and go to state 76
-    TRUE            shift and go to state 77
-    FALSE           shift and go to state 89
-    ID              shift and go to state 108
+    PLUS            shift and go to state 106
+    MINUS           shift and go to state 104
+    NOT             shift and go to state 113
+    THIS            shift and go to state 93
+    SUPER           shift and go to state 97
+    LPAREN          shift and go to state 87
+    NEW             shift and go to state 103
+    INC             shift and go to state 100
+    DEC             shift and go to state 73
+    INT_CONST       shift and go to state 76
+    FLOAT_CONST     shift and go to state 71
+    STRING_CONST    shift and go to state 75
+    NULL            shift and go to state 77
+    TRUE            shift and go to state 78
+    FALSE           shift and go to state 90
+    ID              shift and go to state 109
 
-    new_array                      shift and go to state 100
-    field_access                   shift and go to state 107
-    expr                           shift and go to state 135
-    array_access                   shift and go to state 73
-    primary                        shift and go to state 101
-    literal                        shift and go to state 79
-    lhs                            shift and go to state 111
-    method_invocation              shift and go to state 106
-    assign                         shift and go to state 110
+    new_array                      shift and go to state 101
+    field_access                   shift and go to state 108
+    expr                           shift and go to state 136
+    array_access                   shift and go to state 74
+    primary                        shift and go to state 102
+    literal                        shift and go to state 80
+    lhs                            shift and go to state 112
+    method_invocation              shift and go to state 107
+    assign                         shift and go to state 111
 
-state 106
+state 107
 
     (67) primary -> method_invocation .
 
     DOT             reduce using rule 67 (primary -> method_invocation .)
     LBRACKET        reduce using rule 67 (primary -> method_invocation .)
+    RPAREN          reduce using rule 67 (primary -> method_invocation .)
     PLUS            reduce using rule 67 (primary -> method_invocation .)
     MINUS           reduce using rule 67 (primary -> method_invocation .)
     MULTIPLY        reduce using rule 67 (primary -> method_invocation .)
@@ -2133,12 +2147,11 @@ state 106
     AND             reduce using rule 67 (primary -> method_invocation .)
     OR              reduce using rule 67 (primary -> method_invocation .)
     SEMICOLON       reduce using rule 67 (primary -> method_invocation .)
-    RPAREN          reduce using rule 67 (primary -> method_invocation .)
     RBRACKET        reduce using rule 67 (primary -> method_invocation .)
     COMMA           reduce using rule 67 (primary -> method_invocation .)
 
 
-state 107
+state 108
 
     (72) lhs -> field_access .
     (77) method_invocation -> field_access . LPAREN args_opt RPAREN
@@ -2164,10 +2177,10 @@ state 107
     RPAREN          reduce using rule 72 (lhs -> field_access .)
     RBRACKET        reduce using rule 72 (lhs -> field_access .)
     COMMA           reduce using rule 72 (lhs -> field_access .)
-    LPAREN          shift and go to state 119
+    LPAREN          shift and go to state 120
 
 
-state 108
+state 109
 
     (75) field_access -> ID .
 
@@ -2195,7 +2208,7 @@ state 108
     COMMA           reduce using rule 75 (field_access -> ID .)
 
 
-state 109
+state 110
 
     (111) expr_opt -> expr .
     (81) expr -> expr . PLUS expr
@@ -2212,21 +2225,21 @@ state 109
     (92) expr -> expr . OR expr
 
     SEMICOLON       reduce using rule 111 (expr_opt -> expr .)
-    PLUS            shift and go to state 143
-    MINUS           shift and go to state 146
-    MULTIPLY        shift and go to state 144
-    DIVIDE          shift and go to state 139
-    EQ              shift and go to state 145
-    NEQ             shift and go to state 147
-    LT              shift and go to state 142
-    LEQ             shift and go to state 141
-    GT              shift and go to state 138
-    GEQ             shift and go to state 137
-    AND             shift and go to state 136
-    OR              shift and go to state 140
+    PLUS            shift and go to state 144
+    MINUS           shift and go to state 147
+    MULTIPLY        shift and go to state 145
+    DIVIDE          shift and go to state 140
+    EQ              shift and go to state 146
+    NEQ             shift and go to state 148
+    LT              shift and go to state 143
+    LEQ             shift and go to state 142
+    GT              shift and go to state 139
+    GEQ             shift and go to state 138
+    AND             shift and go to state 137
+    OR              shift and go to state 141
 
 
-state 110
+state 111
 
     (79) expr -> assign .
 
@@ -2248,7 +2261,7 @@ state 110
     COMMA           reduce using rule 79 (expr -> assign .)
 
 
-state 111
+state 112
 
     (66) primary -> lhs .
     (96) assign -> lhs . ASSIGN expr
@@ -2257,6 +2270,7 @@ state 111
 
     DOT             reduce using rule 66 (primary -> lhs .)
     LBRACKET        reduce using rule 66 (primary -> lhs .)
+    RPAREN          reduce using rule 66 (primary -> lhs .)
     PLUS            reduce using rule 66 (primary -> lhs .)
     MINUS           reduce using rule 66 (primary -> lhs .)
     MULTIPLY        reduce using rule 66 (primary -> lhs .)
@@ -2270,15 +2284,14 @@ state 111
     AND             reduce using rule 66 (primary -> lhs .)
     OR              reduce using rule 66 (primary -> lhs .)
     SEMICOLON       reduce using rule 66 (primary -> lhs .)
-    RPAREN          reduce using rule 66 (primary -> lhs .)
     RBRACKET        reduce using rule 66 (primary -> lhs .)
     COMMA           reduce using rule 66 (primary -> lhs .)
-    ASSIGN          shift and go to state 126
-    INC             shift and go to state 127
-    DEC             shift and go to state 125
+    ASSIGN          shift and go to state 127
+    INC             shift and go to state 128
+    DEC             shift and go to state 126
 
 
-state 112
+state 113
 
     (95) expr -> NOT . expr
     (78) expr -> . primary
@@ -2325,34 +2338,34 @@ state 112
     (75) field_access -> . ID
     (76) array_access -> . primary LBRACKET expr RBRACKET
 
-    PLUS            shift and go to state 105
-    MINUS           shift and go to state 103
-    NOT             shift and go to state 112
-    THIS            shift and go to state 92
-    SUPER           shift and go to state 96
-    LPAREN          shift and go to state 86
-    NEW             shift and go to state 102
-    INC             shift and go to state 99
-    DEC             shift and go to state 72
-    INT_CONST       shift and go to state 75
-    FLOAT_CONST     shift and go to state 70
-    STRING_CONST    shift and go to state 74
-    NULL            shift and go to state 76
-    TRUE            shift and go to state 77
-    FALSE           shift and go to state 89
-    ID              shift and go to state 108
+    PLUS            shift and go to state 106
+    MINUS           shift and go to state 104
+    NOT             shift and go to state 113
+    THIS            shift and go to state 93
+    SUPER           shift and go to state 97
+    LPAREN          shift and go to state 87
+    NEW             shift and go to state 103
+    INC             shift and go to state 100
+    DEC             shift and go to state 73
+    INT_CONST       shift and go to state 76
+    FLOAT_CONST     shift and go to state 71
+    STRING_CONST    shift and go to state 75
+    NULL            shift and go to state 77
+    TRUE            shift and go to state 78
+    FALSE           shift and go to state 90
+    ID              shift and go to state 109
 
-    new_array                      shift and go to state 100
-    field_access                   shift and go to state 107
-    expr                           shift and go to state 148
-    array_access                   shift and go to state 73
-    primary                        shift and go to state 101
-    literal                        shift and go to state 79
-    lhs                            shift and go to state 111
-    method_invocation              shift and go to state 106
-    assign                         shift and go to state 110
+    new_array                      shift and go to state 101
+    field_access                   shift and go to state 108
+    expr                           shift and go to state 149
+    array_access                   shift and go to state 74
+    primary                        shift and go to state 102
+    literal                        shift and go to state 80
+    lhs                            shift and go to state 112
+    method_invocation              shift and go to state 107
+    assign                         shift and go to state 111
 
-state 113
+state 114
 
     (76) array_access -> primary LBRACKET . expr RBRACKET
     (78) expr -> . primary
@@ -2399,41 +2412,41 @@ state 113
     (75) field_access -> . ID
     (76) array_access -> . primary LBRACKET expr RBRACKET
 
-    PLUS            shift and go to state 105
-    MINUS           shift and go to state 103
-    NOT             shift and go to state 112
-    THIS            shift and go to state 92
-    SUPER           shift and go to state 96
-    LPAREN          shift and go to state 86
-    NEW             shift and go to state 102
-    INC             shift and go to state 99
-    DEC             shift and go to state 72
-    INT_CONST       shift and go to state 75
-    FLOAT_CONST     shift and go to state 70
-    STRING_CONST    shift and go to state 74
-    NULL            shift and go to state 76
-    TRUE            shift and go to state 77
-    FALSE           shift and go to state 89
-    ID              shift and go to state 108
+    PLUS            shift and go to state 106
+    MINUS           shift and go to state 104
+    NOT             shift and go to state 113
+    THIS            shift and go to state 93
+    SUPER           shift and go to state 97
+    LPAREN          shift and go to state 87
+    NEW             shift and go to state 103
+    INC             shift and go to state 100
+    DEC             shift and go to state 73
+    INT_CONST       shift and go to state 76
+    FLOAT_CONST     shift and go to state 71
+    STRING_CONST    shift and go to state 75
+    NULL            shift and go to state 77
+    TRUE            shift and go to state 78
+    FALSE           shift and go to state 90
+    ID              shift and go to state 109
 
-    new_array                      shift and go to state 100
-    field_access                   shift and go to state 107
-    expr                           shift and go to state 149
-    array_access                   shift and go to state 73
-    primary                        shift and go to state 101
-    literal                        shift and go to state 79
-    lhs                            shift and go to state 111
-    method_invocation              shift and go to state 106
-    assign                         shift and go to state 110
+    new_array                      shift and go to state 101
+    field_access                   shift and go to state 108
+    expr                           shift and go to state 150
+    array_access                   shift and go to state 74
+    primary                        shift and go to state 102
+    literal                        shift and go to state 80
+    lhs                            shift and go to state 112
+    method_invocation              shift and go to state 107
+    assign                         shift and go to state 111
 
-state 114
+state 115
 
     (74) field_access -> primary DOT . ID
 
-    ID              shift and go to state 150
+    ID              shift and go to state 151
 
 
-state 115
+state 116
 
     (46) stmt -> WHILE LPAREN . expr RPAREN stmt
     (78) expr -> . primary
@@ -2480,45 +2493,47 @@ state 115
     (75) field_access -> . ID
     (76) array_access -> . primary LBRACKET expr RBRACKET
 
-    PLUS            shift and go to state 105
-    MINUS           shift and go to state 103
-    NOT             shift and go to state 112
-    THIS            shift and go to state 92
-    SUPER           shift and go to state 96
-    LPAREN          shift and go to state 86
-    NEW             shift and go to state 102
-    INC             shift and go to state 99
-    DEC             shift and go to state 72
-    INT_CONST       shift and go to state 75
-    FLOAT_CONST     shift and go to state 70
-    STRING_CONST    shift and go to state 74
-    NULL            shift and go to state 76
-    TRUE            shift and go to state 77
-    FALSE           shift and go to state 89
-    ID              shift and go to state 108
+    PLUS            shift and go to state 106
+    MINUS           shift and go to state 104
+    NOT             shift and go to state 113
+    THIS            shift and go to state 93
+    SUPER           shift and go to state 97
+    LPAREN          shift and go to state 87
+    NEW             shift and go to state 103
+    INC             shift and go to state 100
+    DEC             shift and go to state 73
+    INT_CONST       shift and go to state 76
+    FLOAT_CONST     shift and go to state 71
+    STRING_CONST    shift and go to state 75
+    NULL            shift and go to state 77
+    TRUE            shift and go to state 78
+    FALSE           shift and go to state 90
+    ID              shift and go to state 109
 
-    new_array                      shift and go to state 100
-    field_access                   shift and go to state 107
-    expr                           shift and go to state 151
-    primary                        shift and go to state 101
-    literal                        shift and go to state 79
-    array_access                   shift and go to state 73
-    lhs                            shift and go to state 111
-    method_invocation              shift and go to state 106
-    assign                         shift and go to state 110
+    new_array                      shift and go to state 101
+    field_access                   shift and go to state 108
+    expr                           shift and go to state 152
+    primary                        shift and go to state 102
+    literal                        shift and go to state 80
+    array_access                   shift and go to state 74
+    lhs                            shift and go to state 112
+    method_invocation              shift and go to state 107
+    assign                         shift and go to state 111
 
-state 116
+state 117
 
     (65) primary -> NEW ID . LPAREN args_opt RPAREN
 
-    LPAREN          shift and go to state 152
+    LPAREN          shift and go to state 153
 
 
-state 117
+state 118
 
     (100) assign -> DEC lhs .
     (66) primary -> lhs .
 
+    SEMICOLON       reduce using rule 100 (assign -> DEC lhs .)
+    RPAREN          reduce using rule 100 (assign -> DEC lhs .)
     PLUS            reduce using rule 100 (assign -> DEC lhs .)
     MINUS           reduce using rule 100 (assign -> DEC lhs .)
     MULTIPLY        reduce using rule 100 (assign -> DEC lhs .)
@@ -2531,15 +2546,13 @@ state 117
     GEQ             reduce using rule 100 (assign -> DEC lhs .)
     AND             reduce using rule 100 (assign -> DEC lhs .)
     OR              reduce using rule 100 (assign -> DEC lhs .)
-    COMMA           reduce using rule 100 (assign -> DEC lhs .)
-    RPAREN          reduce using rule 100 (assign -> DEC lhs .)
-    SEMICOLON       reduce using rule 100 (assign -> DEC lhs .)
     RBRACKET        reduce using rule 100 (assign -> DEC lhs .)
+    COMMA           reduce using rule 100 (assign -> DEC lhs .)
     DOT             reduce using rule 66 (primary -> lhs .)
     LBRACKET        reduce using rule 66 (primary -> lhs .)
 
 
-state 118
+state 119
 
     (49) stmt -> stmt_expr SEMICOLON .
 
@@ -2571,7 +2584,7 @@ state 118
     ELSE            reduce using rule 49 (stmt -> stmt_expr SEMICOLON .)
 
 
-state 119
+state 120
 
     (77) method_invocation -> field_access LPAREN . args_opt RPAREN
     (68) args_opt -> . arg_plus
@@ -2623,36 +2636,36 @@ state 119
     (76) array_access -> . primary LBRACKET expr RBRACKET
 
     RPAREN          reduce using rule 69 (args_opt -> .)
-    PLUS            shift and go to state 105
-    MINUS           shift and go to state 103
-    NOT             shift and go to state 112
-    THIS            shift and go to state 92
-    SUPER           shift and go to state 96
-    LPAREN          shift and go to state 86
-    NEW             shift and go to state 102
-    INC             shift and go to state 99
-    DEC             shift and go to state 72
-    INT_CONST       shift and go to state 75
-    FLOAT_CONST     shift and go to state 70
-    STRING_CONST    shift and go to state 74
-    NULL            shift and go to state 76
-    TRUE            shift and go to state 77
-    FALSE           shift and go to state 89
-    ID              shift and go to state 108
+    PLUS            shift and go to state 106
+    MINUS           shift and go to state 104
+    NOT             shift and go to state 113
+    THIS            shift and go to state 93
+    SUPER           shift and go to state 97
+    LPAREN          shift and go to state 87
+    NEW             shift and go to state 103
+    INC             shift and go to state 100
+    DEC             shift and go to state 73
+    INT_CONST       shift and go to state 76
+    FLOAT_CONST     shift and go to state 71
+    STRING_CONST    shift and go to state 75
+    NULL            shift and go to state 77
+    TRUE            shift and go to state 78
+    FALSE           shift and go to state 90
+    ID              shift and go to state 109
 
-    field_access                   shift and go to state 107
-    new_array                      shift and go to state 100
-    expr                           shift and go to state 153
-    primary                        shift and go to state 101
-    array_access                   shift and go to state 73
-    args_opt                       shift and go to state 154
-    literal                        shift and go to state 79
-    lhs                            shift and go to state 111
-    method_invocation              shift and go to state 106
-    arg_plus                       shift and go to state 155
-    assign                         shift and go to state 110
+    field_access                   shift and go to state 108
+    new_array                      shift and go to state 101
+    expr                           shift and go to state 154
+    primary                        shift and go to state 102
+    array_access                   shift and go to state 74
+    args_opt                       shift and go to state 155
+    literal                        shift and go to state 80
+    lhs                            shift and go to state 112
+    method_invocation              shift and go to state 107
+    arg_plus                       shift and go to state 156
+    assign                         shift and go to state 111
 
-state 120
+state 121
 
     (47) stmt -> FOR LPAREN . stmt_expr_opt SEMICOLON expr_opt SEMICOLON stmt_expr_opt RPAREN stmt
     (109) stmt_expr_opt -> . stmt_expr
@@ -2685,31 +2698,31 @@ state 120
     (60) literal -> . FALSE
 
     SEMICOLON       reduce using rule 110 (stmt_expr_opt -> .)
-    INC             shift and go to state 99
-    DEC             shift and go to state 72
-    ID              shift and go to state 108
-    THIS            shift and go to state 92
-    SUPER           shift and go to state 96
-    LPAREN          shift and go to state 86
-    NEW             shift and go to state 71
-    INT_CONST       shift and go to state 75
-    FLOAT_CONST     shift and go to state 70
-    STRING_CONST    shift and go to state 74
-    NULL            shift and go to state 76
-    TRUE            shift and go to state 77
-    FALSE           shift and go to state 89
+    INC             shift and go to state 100
+    DEC             shift and go to state 73
+    ID              shift and go to state 109
+    THIS            shift and go to state 93
+    SUPER           shift and go to state 97
+    LPAREN          shift and go to state 87
+    NEW             shift and go to state 72
+    INT_CONST       shift and go to state 76
+    FLOAT_CONST     shift and go to state 71
+    STRING_CONST    shift and go to state 75
+    NULL            shift and go to state 77
+    TRUE            shift and go to state 78
+    FALSE           shift and go to state 90
 
-    field_access                   shift and go to state 82
-    primary                        shift and go to state 68
-    stmt_expr_opt                  shift and go to state 157
-    stmt_expr                      shift and go to state 156
-    literal                        shift and go to state 79
-    lhs                            shift and go to state 94
-    method_invocation              shift and go to state 80
-    array_access                   shift and go to state 73
-    assign                         shift and go to state 97
+    field_access                   shift and go to state 83
+    primary                        shift and go to state 69
+    stmt_expr_opt                  shift and go to state 158
+    stmt_expr                      shift and go to state 157
+    literal                        shift and go to state 80
+    lhs                            shift and go to state 95
+    method_invocation              shift and go to state 81
+    array_access                   shift and go to state 74
+    assign                         shift and go to state 98
 
-state 121
+state 122
 
     (64) primary -> LPAREN expr . RPAREN
     (81) expr -> expr . PLUS expr
@@ -2725,22 +2738,22 @@ state 121
     (91) expr -> expr . AND expr
     (92) expr -> expr . OR expr
 
-    RPAREN          shift and go to state 158
-    PLUS            shift and go to state 143
-    MINUS           shift and go to state 146
-    MULTIPLY        shift and go to state 144
-    DIVIDE          shift and go to state 139
-    EQ              shift and go to state 145
-    NEQ             shift and go to state 147
-    LT              shift and go to state 142
-    LEQ             shift and go to state 141
-    GT              shift and go to state 138
-    GEQ             shift and go to state 137
-    AND             shift and go to state 136
-    OR              shift and go to state 140
+    RPAREN          shift and go to state 159
+    PLUS            shift and go to state 144
+    MINUS           shift and go to state 147
+    MULTIPLY        shift and go to state 145
+    DIVIDE          shift and go to state 140
+    EQ              shift and go to state 146
+    NEQ             shift and go to state 148
+    LT              shift and go to state 143
+    LEQ             shift and go to state 142
+    GT              shift and go to state 139
+    GEQ             shift and go to state 138
+    AND             shift and go to state 137
+    OR              shift and go to state 141
 
 
-state 122
+state 123
 
     (44) stmt -> IF LPAREN . expr RPAREN stmt ELSE stmt
     (45) stmt -> IF LPAREN . expr RPAREN stmt
@@ -2788,34 +2801,34 @@ state 122
     (75) field_access -> . ID
     (76) array_access -> . primary LBRACKET expr RBRACKET
 
-    PLUS            shift and go to state 105
-    MINUS           shift and go to state 103
-    NOT             shift and go to state 112
-    THIS            shift and go to state 92
-    SUPER           shift and go to state 96
-    LPAREN          shift and go to state 86
-    NEW             shift and go to state 102
-    INC             shift and go to state 99
-    DEC             shift and go to state 72
-    INT_CONST       shift and go to state 75
-    FLOAT_CONST     shift and go to state 70
-    STRING_CONST    shift and go to state 74
-    NULL            shift and go to state 76
-    TRUE            shift and go to state 77
-    FALSE           shift and go to state 89
-    ID              shift and go to state 108
+    PLUS            shift and go to state 106
+    MINUS           shift and go to state 104
+    NOT             shift and go to state 113
+    THIS            shift and go to state 93
+    SUPER           shift and go to state 97
+    LPAREN          shift and go to state 87
+    NEW             shift and go to state 103
+    INC             shift and go to state 100
+    DEC             shift and go to state 73
+    INT_CONST       shift and go to state 76
+    FLOAT_CONST     shift and go to state 71
+    STRING_CONST    shift and go to state 75
+    NULL            shift and go to state 77
+    TRUE            shift and go to state 78
+    FALSE           shift and go to state 90
+    ID              shift and go to state 109
 
-    new_array                      shift and go to state 100
-    field_access                   shift and go to state 107
-    expr                           shift and go to state 159
-    primary                        shift and go to state 101
-    literal                        shift and go to state 79
-    array_access                   shift and go to state 73
-    lhs                            shift and go to state 111
-    method_invocation              shift and go to state 106
-    assign                         shift and go to state 110
+    new_array                      shift and go to state 101
+    field_access                   shift and go to state 108
+    expr                           shift and go to state 160
+    primary                        shift and go to state 102
+    literal                        shift and go to state 80
+    array_access                   shift and go to state 74
+    lhs                            shift and go to state 112
+    method_invocation              shift and go to state 107
+    assign                         shift and go to state 111
 
-state 123
+state 124
 
     (50) stmt -> BREAK SEMICOLON .
 
@@ -2847,7 +2860,7 @@ state 123
     ELSE            reduce using rule 50 (stmt -> BREAK SEMICOLON .)
 
 
-state 124
+state 125
 
     (51) stmt -> CONTINUE SEMICOLON .
 
@@ -2879,10 +2892,12 @@ state 124
     ELSE            reduce using rule 51 (stmt -> CONTINUE SEMICOLON .)
 
 
-state 125
+state 126
 
     (99) assign -> lhs DEC .
 
+    SEMICOLON       reduce using rule 99 (assign -> lhs DEC .)
+    RPAREN          reduce using rule 99 (assign -> lhs DEC .)
     PLUS            reduce using rule 99 (assign -> lhs DEC .)
     MINUS           reduce using rule 99 (assign -> lhs DEC .)
     MULTIPLY        reduce using rule 99 (assign -> lhs DEC .)
@@ -2895,13 +2910,11 @@ state 125
     GEQ             reduce using rule 99 (assign -> lhs DEC .)
     AND             reduce using rule 99 (assign -> lhs DEC .)
     OR              reduce using rule 99 (assign -> lhs DEC .)
-    COMMA           reduce using rule 99 (assign -> lhs DEC .)
-    RPAREN          reduce using rule 99 (assign -> lhs DEC .)
-    SEMICOLON       reduce using rule 99 (assign -> lhs DEC .)
     RBRACKET        reduce using rule 99 (assign -> lhs DEC .)
+    COMMA           reduce using rule 99 (assign -> lhs DEC .)
 
 
-state 126
+state 127
 
     (96) assign -> lhs ASSIGN . expr
     (78) expr -> . primary
@@ -2948,37 +2961,39 @@ state 126
     (75) field_access -> . ID
     (76) array_access -> . primary LBRACKET expr RBRACKET
 
-    PLUS            shift and go to state 105
-    MINUS           shift and go to state 103
-    NOT             shift and go to state 112
-    THIS            shift and go to state 92
-    SUPER           shift and go to state 96
-    LPAREN          shift and go to state 86
-    NEW             shift and go to state 102
-    INC             shift and go to state 99
-    DEC             shift and go to state 72
-    INT_CONST       shift and go to state 75
-    FLOAT_CONST     shift and go to state 70
-    STRING_CONST    shift and go to state 74
-    NULL            shift and go to state 76
-    TRUE            shift and go to state 77
-    FALSE           shift and go to state 89
-    ID              shift and go to state 108
+    PLUS            shift and go to state 106
+    MINUS           shift and go to state 104
+    NOT             shift and go to state 113
+    THIS            shift and go to state 93
+    SUPER           shift and go to state 97
+    LPAREN          shift and go to state 87
+    NEW             shift and go to state 103
+    INC             shift and go to state 100
+    DEC             shift and go to state 73
+    INT_CONST       shift and go to state 76
+    FLOAT_CONST     shift and go to state 71
+    STRING_CONST    shift and go to state 75
+    NULL            shift and go to state 77
+    TRUE            shift and go to state 78
+    FALSE           shift and go to state 90
+    ID              shift and go to state 109
 
-    new_array                      shift and go to state 100
-    field_access                   shift and go to state 107
-    expr                           shift and go to state 160
-    primary                        shift and go to state 101
-    array_access                   shift and go to state 73
-    literal                        shift and go to state 79
-    lhs                            shift and go to state 111
-    method_invocation              shift and go to state 106
-    assign                         shift and go to state 110
+    new_array                      shift and go to state 101
+    field_access                   shift and go to state 108
+    expr                           shift and go to state 161
+    primary                        shift and go to state 102
+    array_access                   shift and go to state 74
+    literal                        shift and go to state 80
+    lhs                            shift and go to state 112
+    method_invocation              shift and go to state 107
+    assign                         shift and go to state 111
 
-state 127
+state 128
 
     (97) assign -> lhs INC .
 
+    SEMICOLON       reduce using rule 97 (assign -> lhs INC .)
+    RPAREN          reduce using rule 97 (assign -> lhs INC .)
     PLUS            reduce using rule 97 (assign -> lhs INC .)
     MINUS           reduce using rule 97 (assign -> lhs INC .)
     MULTIPLY        reduce using rule 97 (assign -> lhs INC .)
@@ -2991,13 +3006,11 @@ state 127
     GEQ             reduce using rule 97 (assign -> lhs INC .)
     AND             reduce using rule 97 (assign -> lhs INC .)
     OR              reduce using rule 97 (assign -> lhs INC .)
-    COMMA           reduce using rule 97 (assign -> lhs INC .)
-    RPAREN          reduce using rule 97 (assign -> lhs INC .)
-    SEMICOLON       reduce using rule 97 (assign -> lhs INC .)
     RBRACKET        reduce using rule 97 (assign -> lhs INC .)
+    COMMA           reduce using rule 97 (assign -> lhs INC .)
 
 
-state 128
+state 129
 
     (41) block -> LBRACE stmt_list error RBRACE .
 
@@ -3033,7 +3046,7 @@ state 128
     STATIC          reduce using rule 41 (block -> LBRACE stmt_list error RBRACE .)
 
 
-state 129
+state 130
 
     (54) stmt -> error SEMICOLON .
 
@@ -3065,11 +3078,13 @@ state 129
     ELSE            reduce using rule 54 (stmt -> error SEMICOLON .)
 
 
-state 130
+state 131
 
     (98) assign -> INC lhs .
     (66) primary -> lhs .
 
+    SEMICOLON       reduce using rule 98 (assign -> INC lhs .)
+    RPAREN          reduce using rule 98 (assign -> INC lhs .)
     PLUS            reduce using rule 98 (assign -> INC lhs .)
     MINUS           reduce using rule 98 (assign -> INC lhs .)
     MULTIPLY        reduce using rule 98 (assign -> INC lhs .)
@@ -3082,36 +3097,34 @@ state 130
     GEQ             reduce using rule 98 (assign -> INC lhs .)
     AND             reduce using rule 98 (assign -> INC lhs .)
     OR              reduce using rule 98 (assign -> INC lhs .)
-    COMMA           reduce using rule 98 (assign -> INC lhs .)
-    RPAREN          reduce using rule 98 (assign -> INC lhs .)
-    SEMICOLON       reduce using rule 98 (assign -> INC lhs .)
     RBRACKET        reduce using rule 98 (assign -> INC lhs .)
+    COMMA           reduce using rule 98 (assign -> INC lhs .)
     DOT             reduce using rule 66 (primary -> lhs .)
     LBRACKET        reduce using rule 66 (primary -> lhs .)
 
 
-state 131
+state 132
 
     (101) new_array -> NEW type . dim_expr_plus dim_star
     (102) dim_expr_plus -> . dim_expr_plus dim_expr
     (103) dim_expr_plus -> . dim_expr
     (104) dim_expr -> . LBRACKET expr RBRACKET
 
-    LBRACKET        shift and go to state 163
+    LBRACKET        shift and go to state 164
 
-    dim_expr                       shift and go to state 162
-    dim_expr_plus                  shift and go to state 161
+    dim_expr                       shift and go to state 163
+    dim_expr_plus                  shift and go to state 162
 
-state 132
+state 133
 
     (65) primary -> NEW ID . LPAREN args_opt RPAREN
     (30) type -> ID .
 
-    LPAREN          shift and go to state 152
+    LPAREN          shift and go to state 153
     LBRACKET        reduce using rule 30 (type -> ID .)
 
 
-state 133
+state 134
 
     (94) expr -> MINUS expr .
     (81) expr -> expr . PLUS expr
@@ -3144,21 +3157,21 @@ state 133
     RBRACKET        reduce using rule 94 (expr -> MINUS expr .)
     COMMA           reduce using rule 94 (expr -> MINUS expr .)
 
-  ! PLUS            [ shift and go to state 143 ]
-  ! MINUS           [ shift and go to state 146 ]
-  ! MULTIPLY        [ shift and go to state 144 ]
-  ! DIVIDE          [ shift and go to state 139 ]
-  ! EQ              [ shift and go to state 145 ]
-  ! NEQ             [ shift and go to state 147 ]
-  ! LT              [ shift and go to state 142 ]
-  ! LEQ             [ shift and go to state 141 ]
-  ! GT              [ shift and go to state 138 ]
-  ! GEQ             [ shift and go to state 137 ]
-  ! AND             [ shift and go to state 136 ]
-  ! OR              [ shift and go to state 140 ]
+  ! PLUS            [ shift and go to state 144 ]
+  ! MINUS           [ shift and go to state 147 ]
+  ! MULTIPLY        [ shift and go to state 145 ]
+  ! DIVIDE          [ shift and go to state 140 ]
+  ! EQ              [ shift and go to state 146 ]
+  ! NEQ             [ shift and go to state 148 ]
+  ! LT              [ shift and go to state 143 ]
+  ! LEQ             [ shift and go to state 142 ]
+  ! GT              [ shift and go to state 139 ]
+  ! GEQ             [ shift and go to state 138 ]
+  ! AND             [ shift and go to state 137 ]
+  ! OR              [ shift and go to state 141 ]
 
 
-state 134
+state 135
 
     (48) stmt -> RETURN expr_opt SEMICOLON .
 
@@ -3190,7 +3203,7 @@ state 134
     ELSE            reduce using rule 48 (stmt -> RETURN expr_opt SEMICOLON .)
 
 
-state 135
+state 136
 
     (93) expr -> PLUS expr .
     (81) expr -> expr . PLUS expr
@@ -3223,21 +3236,21 @@ state 135
     RBRACKET        reduce using rule 93 (expr -> PLUS expr .)
     COMMA           reduce using rule 93 (expr -> PLUS expr .)
 
-  ! PLUS            [ shift and go to state 143 ]
-  ! MINUS           [ shift and go to state 146 ]
-  ! MULTIPLY        [ shift and go to state 144 ]
-  ! DIVIDE          [ shift and go to state 139 ]
-  ! EQ              [ shift and go to state 145 ]
-  ! NEQ             [ shift and go to state 147 ]
-  ! LT              [ shift and go to state 142 ]
-  ! LEQ             [ shift and go to state 141 ]
-  ! GT              [ shift and go to state 138 ]
-  ! GEQ             [ shift and go to state 137 ]
-  ! AND             [ shift and go to state 136 ]
-  ! OR              [ shift and go to state 140 ]
+  ! PLUS            [ shift and go to state 144 ]
+  ! MINUS           [ shift and go to state 147 ]
+  ! MULTIPLY        [ shift and go to state 145 ]
+  ! DIVIDE          [ shift and go to state 140 ]
+  ! EQ              [ shift and go to state 146 ]
+  ! NEQ             [ shift and go to state 148 ]
+  ! LT              [ shift and go to state 143 ]
+  ! LEQ             [ shift and go to state 142 ]
+  ! GT              [ shift and go to state 139 ]
+  ! GEQ             [ shift and go to state 138 ]
+  ! AND             [ shift and go to state 137 ]
+  ! OR              [ shift and go to state 141 ]
 
 
-state 136
+state 137
 
     (91) expr -> expr AND . expr
     (78) expr -> . primary
@@ -3284,34 +3297,34 @@ state 136
     (75) field_access -> . ID
     (76) array_access -> . primary LBRACKET expr RBRACKET
 
-    PLUS            shift and go to state 105
-    MINUS           shift and go to state 103
-    NOT             shift and go to state 112
-    THIS            shift and go to state 92
-    SUPER           shift and go to state 96
-    LPAREN          shift and go to state 86
-    NEW             shift and go to state 102
-    INC             shift and go to state 99
-    DEC             shift and go to state 72
-    INT_CONST       shift and go to state 75
-    FLOAT_CONST     shift and go to state 70
-    STRING_CONST    shift and go to state 74
-    NULL            shift and go to state 76
-    TRUE            shift and go to state 77
-    FALSE           shift and go to state 89
-    ID              shift and go to state 108
+    PLUS            shift and go to state 106
+    MINUS           shift and go to state 104
+    NOT             shift and go to state 113
+    THIS            shift and go to state 93
+    SUPER           shift and go to state 97
+    LPAREN          shift and go to state 87
+    NEW             shift and go to state 103
+    INC             shift and go to state 100
+    DEC             shift and go to state 73
+    INT_CONST       shift and go to state 76
+    FLOAT_CONST     shift and go to state 71
+    STRING_CONST    shift and go to state 75
+    NULL            shift and go to state 77
+    TRUE            shift and go to state 78
+    FALSE           shift and go to state 90
+    ID              shift and go to state 109
 
-    new_array                      shift and go to state 100
-    field_access                   shift and go to state 107
-    expr                           shift and go to state 164
-    array_access                   shift and go to state 73
-    primary                        shift and go to state 101
-    literal                        shift and go to state 79
-    lhs                            shift and go to state 111
-    method_invocation              shift and go to state 106
-    assign                         shift and go to state 110
+    new_array                      shift and go to state 101
+    field_access                   shift and go to state 108
+    expr                           shift and go to state 165
+    array_access                   shift and go to state 74
+    primary                        shift and go to state 102
+    literal                        shift and go to state 80
+    lhs                            shift and go to state 112
+    method_invocation              shift and go to state 107
+    assign                         shift and go to state 111
 
-state 137
+state 138
 
     (90) expr -> expr GEQ . expr
     (78) expr -> . primary
@@ -3358,34 +3371,34 @@ state 137
     (75) field_access -> . ID
     (76) array_access -> . primary LBRACKET expr RBRACKET
 
-    PLUS            shift and go to state 105
-    MINUS           shift and go to state 103
-    NOT             shift and go to state 112
-    THIS            shift and go to state 92
-    SUPER           shift and go to state 96
-    LPAREN          shift and go to state 86
-    NEW             shift and go to state 102
-    INC             shift and go to state 99
-    DEC             shift and go to state 72
-    INT_CONST       shift and go to state 75
-    FLOAT_CONST     shift and go to state 70
-    STRING_CONST    shift and go to state 74
-    NULL            shift and go to state 76
-    TRUE            shift and go to state 77
-    FALSE           shift and go to state 89
-    ID              shift and go to state 108
+    PLUS            shift and go to state 106
+    MINUS           shift and go to state 104
+    NOT             shift and go to state 113
+    THIS            shift and go to state 93
+    SUPER           shift and go to state 97
+    LPAREN          shift and go to state 87
+    NEW             shift and go to state 103
+    INC             shift and go to state 100
+    DEC             shift and go to state 73
+    INT_CONST       shift and go to state 76
+    FLOAT_CONST     shift and go to state 71
+    STRING_CONST    shift and go to state 75
+    NULL            shift and go to state 77
+    TRUE            shift and go to state 78
+    FALSE           shift and go to state 90
+    ID              shift and go to state 109
 
-    new_array                      shift and go to state 100
-    field_access                   shift and go to state 107
-    expr                           shift and go to state 165
-    array_access                   shift and go to state 73
-    primary                        shift and go to state 101
-    literal                        shift and go to state 79
-    lhs                            shift and go to state 111
-    method_invocation              shift and go to state 106
-    assign                         shift and go to state 110
+    new_array                      shift and go to state 101
+    field_access                   shift and go to state 108
+    expr                           shift and go to state 166
+    array_access                   shift and go to state 74
+    primary                        shift and go to state 102
+    literal                        shift and go to state 80
+    lhs                            shift and go to state 112
+    method_invocation              shift and go to state 107
+    assign                         shift and go to state 111
 
-state 138
+state 139
 
     (89) expr -> expr GT . expr
     (78) expr -> . primary
@@ -3432,34 +3445,34 @@ state 138
     (75) field_access -> . ID
     (76) array_access -> . primary LBRACKET expr RBRACKET
 
-    PLUS            shift and go to state 105
-    MINUS           shift and go to state 103
-    NOT             shift and go to state 112
-    THIS            shift and go to state 92
-    SUPER           shift and go to state 96
-    LPAREN          shift and go to state 86
-    NEW             shift and go to state 102
-    INC             shift and go to state 99
-    DEC             shift and go to state 72
-    INT_CONST       shift and go to state 75
-    FLOAT_CONST     shift and go to state 70
-    STRING_CONST    shift and go to state 74
-    NULL            shift and go to state 76
-    TRUE            shift and go to state 77
-    FALSE           shift and go to state 89
-    ID              shift and go to state 108
+    PLUS            shift and go to state 106
+    MINUS           shift and go to state 104
+    NOT             shift and go to state 113
+    THIS            shift and go to state 93
+    SUPER           shift and go to state 97
+    LPAREN          shift and go to state 87
+    NEW             shift and go to state 103
+    INC             shift and go to state 100
+    DEC             shift and go to state 73
+    INT_CONST       shift and go to state 76
+    FLOAT_CONST     shift and go to state 71
+    STRING_CONST    shift and go to state 75
+    NULL            shift and go to state 77
+    TRUE            shift and go to state 78
+    FALSE           shift and go to state 90
+    ID              shift and go to state 109
 
-    new_array                      shift and go to state 100
-    field_access                   shift and go to state 107
-    expr                           shift and go to state 166
-    array_access                   shift and go to state 73
-    primary                        shift and go to state 101
-    literal                        shift and go to state 79
-    lhs                            shift and go to state 111
-    method_invocation              shift and go to state 106
-    assign                         shift and go to state 110
+    new_array                      shift and go to state 101
+    field_access                   shift and go to state 108
+    expr                           shift and go to state 167
+    array_access                   shift and go to state 74
+    primary                        shift and go to state 102
+    literal                        shift and go to state 80
+    lhs                            shift and go to state 112
+    method_invocation              shift and go to state 107
+    assign                         shift and go to state 111
 
-state 139
+state 140
 
     (84) expr -> expr DIVIDE . expr
     (78) expr -> . primary
@@ -3506,34 +3519,34 @@ state 139
     (75) field_access -> . ID
     (76) array_access -> . primary LBRACKET expr RBRACKET
 
-    PLUS            shift and go to state 105
-    MINUS           shift and go to state 103
-    NOT             shift and go to state 112
-    THIS            shift and go to state 92
-    SUPER           shift and go to state 96
-    LPAREN          shift and go to state 86
-    NEW             shift and go to state 102
-    INC             shift and go to state 99
-    DEC             shift and go to state 72
-    INT_CONST       shift and go to state 75
-    FLOAT_CONST     shift and go to state 70
-    STRING_CONST    shift and go to state 74
-    NULL            shift and go to state 76
-    TRUE            shift and go to state 77
-    FALSE           shift and go to state 89
-    ID              shift and go to state 108
+    PLUS            shift and go to state 106
+    MINUS           shift and go to state 104
+    NOT             shift and go to state 113
+    THIS            shift and go to state 93
+    SUPER           shift and go to state 97
+    LPAREN          shift and go to state 87
+    NEW             shift and go to state 103
+    INC             shift and go to state 100
+    DEC             shift and go to state 73
+    INT_CONST       shift and go to state 76
+    FLOAT_CONST     shift and go to state 71
+    STRING_CONST    shift and go to state 75
+    NULL            shift and go to state 77
+    TRUE            shift and go to state 78
+    FALSE           shift and go to state 90
+    ID              shift and go to state 109
 
-    new_array                      shift and go to state 100
-    field_access                   shift and go to state 107
-    expr                           shift and go to state 167
-    array_access                   shift and go to state 73
-    primary                        shift and go to state 101
-    literal                        shift and go to state 79
-    lhs                            shift and go to state 111
-    method_invocation              shift and go to state 106
-    assign                         shift and go to state 110
+    new_array                      shift and go to state 101
+    field_access                   shift and go to state 108
+    expr                           shift and go to state 168
+    array_access                   shift and go to state 74
+    primary                        shift and go to state 102
+    literal                        shift and go to state 80
+    lhs                            shift and go to state 112
+    method_invocation              shift and go to state 107
+    assign                         shift and go to state 111
 
-state 140
+state 141
 
     (92) expr -> expr OR . expr
     (78) expr -> . primary
@@ -3580,34 +3593,34 @@ state 140
     (75) field_access -> . ID
     (76) array_access -> . primary LBRACKET expr RBRACKET
 
-    PLUS            shift and go to state 105
-    MINUS           shift and go to state 103
-    NOT             shift and go to state 112
-    THIS            shift and go to state 92
-    SUPER           shift and go to state 96
-    LPAREN          shift and go to state 86
-    NEW             shift and go to state 102
-    INC             shift and go to state 99
-    DEC             shift and go to state 72
-    INT_CONST       shift and go to state 75
-    FLOAT_CONST     shift and go to state 70
-    STRING_CONST    shift and go to state 74
-    NULL            shift and go to state 76
-    TRUE            shift and go to state 77
-    FALSE           shift and go to state 89
-    ID              shift and go to state 108
+    PLUS            shift and go to state 106
+    MINUS           shift and go to state 104
+    NOT             shift and go to state 113
+    THIS            shift and go to state 93
+    SUPER           shift and go to state 97
+    LPAREN          shift and go to state 87
+    NEW             shift and go to state 103
+    INC             shift and go to state 100
+    DEC             shift and go to state 73
+    INT_CONST       shift and go to state 76
+    FLOAT_CONST     shift and go to state 71
+    STRING_CONST    shift and go to state 75
+    NULL            shift and go to state 77
+    TRUE            shift and go to state 78
+    FALSE           shift and go to state 90
+    ID              shift and go to state 109
 
-    new_array                      shift and go to state 100
-    field_access                   shift and go to state 107
-    expr                           shift and go to state 168
-    array_access                   shift and go to state 73
-    primary                        shift and go to state 101
-    literal                        shift and go to state 79
-    lhs                            shift and go to state 111
-    method_invocation              shift and go to state 106
-    assign                         shift and go to state 110
+    new_array                      shift and go to state 101
+    field_access                   shift and go to state 108
+    expr                           shift and go to state 169
+    array_access                   shift and go to state 74
+    primary                        shift and go to state 102
+    literal                        shift and go to state 80
+    lhs                            shift and go to state 112
+    method_invocation              shift and go to state 107
+    assign                         shift and go to state 111
 
-state 141
+state 142
 
     (88) expr -> expr LEQ . expr
     (78) expr -> . primary
@@ -3654,34 +3667,34 @@ state 141
     (75) field_access -> . ID
     (76) array_access -> . primary LBRACKET expr RBRACKET
 
-    PLUS            shift and go to state 105
-    MINUS           shift and go to state 103
-    NOT             shift and go to state 112
-    THIS            shift and go to state 92
-    SUPER           shift and go to state 96
-    LPAREN          shift and go to state 86
-    NEW             shift and go to state 102
-    INC             shift and go to state 99
-    DEC             shift and go to state 72
-    INT_CONST       shift and go to state 75
-    FLOAT_CONST     shift and go to state 70
-    STRING_CONST    shift and go to state 74
-    NULL            shift and go to state 76
-    TRUE            shift and go to state 77
-    FALSE           shift and go to state 89
-    ID              shift and go to state 108
+    PLUS            shift and go to state 106
+    MINUS           shift and go to state 104
+    NOT             shift and go to state 113
+    THIS            shift and go to state 93
+    SUPER           shift and go to state 97
+    LPAREN          shift and go to state 87
+    NEW             shift and go to state 103
+    INC             shift and go to state 100
+    DEC             shift and go to state 73
+    INT_CONST       shift and go to state 76
+    FLOAT_CONST     shift and go to state 71
+    STRING_CONST    shift and go to state 75
+    NULL            shift and go to state 77
+    TRUE            shift and go to state 78
+    FALSE           shift and go to state 90
+    ID              shift and go to state 109
 
-    new_array                      shift and go to state 100
-    field_access                   shift and go to state 107
-    expr                           shift and go to state 169
-    array_access                   shift and go to state 73
-    primary                        shift and go to state 101
-    literal                        shift and go to state 79
-    lhs                            shift and go to state 111
-    method_invocation              shift and go to state 106
-    assign                         shift and go to state 110
+    new_array                      shift and go to state 101
+    field_access                   shift and go to state 108
+    expr                           shift and go to state 170
+    array_access                   shift and go to state 74
+    primary                        shift and go to state 102
+    literal                        shift and go to state 80
+    lhs                            shift and go to state 112
+    method_invocation              shift and go to state 107
+    assign                         shift and go to state 111
 
-state 142
+state 143
 
     (87) expr -> expr LT . expr
     (78) expr -> . primary
@@ -3728,34 +3741,34 @@ state 142
     (75) field_access -> . ID
     (76) array_access -> . primary LBRACKET expr RBRACKET
 
-    PLUS            shift and go to state 105
-    MINUS           shift and go to state 103
-    NOT             shift and go to state 112
-    THIS            shift and go to state 92
-    SUPER           shift and go to state 96
-    LPAREN          shift and go to state 86
-    NEW             shift and go to state 102
-    INC             shift and go to state 99
-    DEC             shift and go to state 72
-    INT_CONST       shift and go to state 75
-    FLOAT_CONST     shift and go to state 70
-    STRING_CONST    shift and go to state 74
-    NULL            shift and go to state 76
-    TRUE            shift and go to state 77
-    FALSE           shift and go to state 89
-    ID              shift and go to state 108
+    PLUS            shift and go to state 106
+    MINUS           shift and go to state 104
+    NOT             shift and go to state 113
+    THIS            shift and go to state 93
+    SUPER           shift and go to state 97
+    LPAREN          shift and go to state 87
+    NEW             shift and go to state 103
+    INC             shift and go to state 100
+    DEC             shift and go to state 73
+    INT_CONST       shift and go to state 76
+    FLOAT_CONST     shift and go to state 71
+    STRING_CONST    shift and go to state 75
+    NULL            shift and go to state 77
+    TRUE            shift and go to state 78
+    FALSE           shift and go to state 90
+    ID              shift and go to state 109
 
-    new_array                      shift and go to state 100
-    field_access                   shift and go to state 107
-    expr                           shift and go to state 170
-    array_access                   shift and go to state 73
-    primary                        shift and go to state 101
-    literal                        shift and go to state 79
-    lhs                            shift and go to state 111
-    method_invocation              shift and go to state 106
-    assign                         shift and go to state 110
+    new_array                      shift and go to state 101
+    field_access                   shift and go to state 108
+    expr                           shift and go to state 171
+    array_access                   shift and go to state 74
+    primary                        shift and go to state 102
+    literal                        shift and go to state 80
+    lhs                            shift and go to state 112
+    method_invocation              shift and go to state 107
+    assign                         shift and go to state 111
 
-state 143
+state 144
 
     (81) expr -> expr PLUS . expr
     (78) expr -> . primary
@@ -3802,34 +3815,34 @@ state 143
     (75) field_access -> . ID
     (76) array_access -> . primary LBRACKET expr RBRACKET
 
-    PLUS            shift and go to state 105
-    MINUS           shift and go to state 103
-    NOT             shift and go to state 112
-    THIS            shift and go to state 92
-    SUPER           shift and go to state 96
-    LPAREN          shift and go to state 86
-    NEW             shift and go to state 102
-    INC             shift and go to state 99
-    DEC             shift and go to state 72
-    INT_CONST       shift and go to state 75
-    FLOAT_CONST     shift and go to state 70
-    STRING_CONST    shift and go to state 74
-    NULL            shift and go to state 76
-    TRUE            shift and go to state 77
-    FALSE           shift and go to state 89
-    ID              shift and go to state 108
+    PLUS            shift and go to state 106
+    MINUS           shift and go to state 104
+    NOT             shift and go to state 113
+    THIS            shift and go to state 93
+    SUPER           shift and go to state 97
+    LPAREN          shift and go to state 87
+    NEW             shift and go to state 103
+    INC             shift and go to state 100
+    DEC             shift and go to state 73
+    INT_CONST       shift and go to state 76
+    FLOAT_CONST     shift and go to state 71
+    STRING_CONST    shift and go to state 75
+    NULL            shift and go to state 77
+    TRUE            shift and go to state 78
+    FALSE           shift and go to state 90
+    ID              shift and go to state 109
 
-    new_array                      shift and go to state 100
-    field_access                   shift and go to state 107
-    expr                           shift and go to state 171
-    array_access                   shift and go to state 73
-    primary                        shift and go to state 101
-    literal                        shift and go to state 79
-    lhs                            shift and go to state 111
-    method_invocation              shift and go to state 106
-    assign                         shift and go to state 110
+    new_array                      shift and go to state 101
+    field_access                   shift and go to state 108
+    expr                           shift and go to state 172
+    array_access                   shift and go to state 74
+    primary                        shift and go to state 102
+    literal                        shift and go to state 80
+    lhs                            shift and go to state 112
+    method_invocation              shift and go to state 107
+    assign                         shift and go to state 111
 
-state 144
+state 145
 
     (83) expr -> expr MULTIPLY . expr
     (78) expr -> . primary
@@ -3876,34 +3889,34 @@ state 144
     (75) field_access -> . ID
     (76) array_access -> . primary LBRACKET expr RBRACKET
 
-    PLUS            shift and go to state 105
-    MINUS           shift and go to state 103
-    NOT             shift and go to state 112
-    THIS            shift and go to state 92
-    SUPER           shift and go to state 96
-    LPAREN          shift and go to state 86
-    NEW             shift and go to state 102
-    INC             shift and go to state 99
-    DEC             shift and go to state 72
-    INT_CONST       shift and go to state 75
-    FLOAT_CONST     shift and go to state 70
-    STRING_CONST    shift and go to state 74
-    NULL            shift and go to state 76
-    TRUE            shift and go to state 77
-    FALSE           shift and go to state 89
-    ID              shift and go to state 108
+    PLUS            shift and go to state 106
+    MINUS           shift and go to state 104
+    NOT             shift and go to state 113
+    THIS            shift and go to state 93
+    SUPER           shift and go to state 97
+    LPAREN          shift and go to state 87
+    NEW             shift and go to state 103
+    INC             shift and go to state 100
+    DEC             shift and go to state 73
+    INT_CONST       shift and go to state 76
+    FLOAT_CONST     shift and go to state 71
+    STRING_CONST    shift and go to state 75
+    NULL            shift and go to state 77
+    TRUE            shift and go to state 78
+    FALSE           shift and go to state 90
+    ID              shift and go to state 109
 
-    new_array                      shift and go to state 100
-    field_access                   shift and go to state 107
-    expr                           shift and go to state 172
-    array_access                   shift and go to state 73
-    primary                        shift and go to state 101
-    literal                        shift and go to state 79
-    lhs                            shift and go to state 111
-    method_invocation              shift and go to state 106
-    assign                         shift and go to state 110
+    new_array                      shift and go to state 101
+    field_access                   shift and go to state 108
+    expr                           shift and go to state 173
+    array_access                   shift and go to state 74
+    primary                        shift and go to state 102
+    literal                        shift and go to state 80
+    lhs                            shift and go to state 112
+    method_invocation              shift and go to state 107
+    assign                         shift and go to state 111
 
-state 145
+state 146
 
     (85) expr -> expr EQ . expr
     (78) expr -> . primary
@@ -3950,34 +3963,34 @@ state 145
     (75) field_access -> . ID
     (76) array_access -> . primary LBRACKET expr RBRACKET
 
-    PLUS            shift and go to state 105
-    MINUS           shift and go to state 103
-    NOT             shift and go to state 112
-    THIS            shift and go to state 92
-    SUPER           shift and go to state 96
-    LPAREN          shift and go to state 86
-    NEW             shift and go to state 102
-    INC             shift and go to state 99
-    DEC             shift and go to state 72
-    INT_CONST       shift and go to state 75
-    FLOAT_CONST     shift and go to state 70
-    STRING_CONST    shift and go to state 74
-    NULL            shift and go to state 76
-    TRUE            shift and go to state 77
-    FALSE           shift and go to state 89
-    ID              shift and go to state 108
+    PLUS            shift and go to state 106
+    MINUS           shift and go to state 104
+    NOT             shift and go to state 113
+    THIS            shift and go to state 93
+    SUPER           shift and go to state 97
+    LPAREN          shift and go to state 87
+    NEW             shift and go to state 103
+    INC             shift and go to state 100
+    DEC             shift and go to state 73
+    INT_CONST       shift and go to state 76
+    FLOAT_CONST     shift and go to state 71
+    STRING_CONST    shift and go to state 75
+    NULL            shift and go to state 77
+    TRUE            shift and go to state 78
+    FALSE           shift and go to state 90
+    ID              shift and go to state 109
 
-    new_array                      shift and go to state 100
-    field_access                   shift and go to state 107
-    expr                           shift and go to state 173
-    array_access                   shift and go to state 73
-    primary                        shift and go to state 101
-    literal                        shift and go to state 79
-    lhs                            shift and go to state 111
-    method_invocation              shift and go to state 106
-    assign                         shift and go to state 110
+    new_array                      shift and go to state 101
+    field_access                   shift and go to state 108
+    expr                           shift and go to state 174
+    array_access                   shift and go to state 74
+    primary                        shift and go to state 102
+    literal                        shift and go to state 80
+    lhs                            shift and go to state 112
+    method_invocation              shift and go to state 107
+    assign                         shift and go to state 111
 
-state 146
+state 147
 
     (82) expr -> expr MINUS . expr
     (78) expr -> . primary
@@ -4024,34 +4037,34 @@ state 146
     (75) field_access -> . ID
     (76) array_access -> . primary LBRACKET expr RBRACKET
 
-    PLUS            shift and go to state 105
-    MINUS           shift and go to state 103
-    NOT             shift and go to state 112
-    THIS            shift and go to state 92
-    SUPER           shift and go to state 96
-    LPAREN          shift and go to state 86
-    NEW             shift and go to state 102
-    INC             shift and go to state 99
-    DEC             shift and go to state 72
-    INT_CONST       shift and go to state 75
-    FLOAT_CONST     shift and go to state 70
-    STRING_CONST    shift and go to state 74
-    NULL            shift and go to state 76
-    TRUE            shift and go to state 77
-    FALSE           shift and go to state 89
-    ID              shift and go to state 108
+    PLUS            shift and go to state 106
+    MINUS           shift and go to state 104
+    NOT             shift and go to state 113
+    THIS            shift and go to state 93
+    SUPER           shift and go to state 97
+    LPAREN          shift and go to state 87
+    NEW             shift and go to state 103
+    INC             shift and go to state 100
+    DEC             shift and go to state 73
+    INT_CONST       shift and go to state 76
+    FLOAT_CONST     shift and go to state 71
+    STRING_CONST    shift and go to state 75
+    NULL            shift and go to state 77
+    TRUE            shift and go to state 78
+    FALSE           shift and go to state 90
+    ID              shift and go to state 109
 
-    new_array                      shift and go to state 100
-    field_access                   shift and go to state 107
-    expr                           shift and go to state 174
-    array_access                   shift and go to state 73
-    primary                        shift and go to state 101
-    literal                        shift and go to state 79
-    lhs                            shift and go to state 111
-    method_invocation              shift and go to state 106
-    assign                         shift and go to state 110
+    new_array                      shift and go to state 101
+    field_access                   shift and go to state 108
+    expr                           shift and go to state 175
+    array_access                   shift and go to state 74
+    primary                        shift and go to state 102
+    literal                        shift and go to state 80
+    lhs                            shift and go to state 112
+    method_invocation              shift and go to state 107
+    assign                         shift and go to state 111
 
-state 147
+state 148
 
     (86) expr -> expr NEQ . expr
     (78) expr -> . primary
@@ -4098,34 +4111,34 @@ state 147
     (75) field_access -> . ID
     (76) array_access -> . primary LBRACKET expr RBRACKET
 
-    PLUS            shift and go to state 105
-    MINUS           shift and go to state 103
-    NOT             shift and go to state 112
-    THIS            shift and go to state 92
-    SUPER           shift and go to state 96
-    LPAREN          shift and go to state 86
-    NEW             shift and go to state 102
-    INC             shift and go to state 99
-    DEC             shift and go to state 72
-    INT_CONST       shift and go to state 75
-    FLOAT_CONST     shift and go to state 70
-    STRING_CONST    shift and go to state 74
-    NULL            shift and go to state 76
-    TRUE            shift and go to state 77
-    FALSE           shift and go to state 89
-    ID              shift and go to state 108
+    PLUS            shift and go to state 106
+    MINUS           shift and go to state 104
+    NOT             shift and go to state 113
+    THIS            shift and go to state 93
+    SUPER           shift and go to state 97
+    LPAREN          shift and go to state 87
+    NEW             shift and go to state 103
+    INC             shift and go to state 100
+    DEC             shift and go to state 73
+    INT_CONST       shift and go to state 76
+    FLOAT_CONST     shift and go to state 71
+    STRING_CONST    shift and go to state 75
+    NULL            shift and go to state 77
+    TRUE            shift and go to state 78
+    FALSE           shift and go to state 90
+    ID              shift and go to state 109
 
-    new_array                      shift and go to state 100
-    field_access                   shift and go to state 107
-    expr                           shift and go to state 175
-    array_access                   shift and go to state 73
-    primary                        shift and go to state 101
-    literal                        shift and go to state 79
-    lhs                            shift and go to state 111
-    method_invocation              shift and go to state 106
-    assign                         shift and go to state 110
+    new_array                      shift and go to state 101
+    field_access                   shift and go to state 108
+    expr                           shift and go to state 176
+    array_access                   shift and go to state 74
+    primary                        shift and go to state 102
+    literal                        shift and go to state 80
+    lhs                            shift and go to state 112
+    method_invocation              shift and go to state 107
+    assign                         shift and go to state 111
 
-state 148
+state 149
 
     (95) expr -> NOT expr .
     (81) expr -> expr . PLUS expr
@@ -4158,21 +4171,21 @@ state 148
     RBRACKET        reduce using rule 95 (expr -> NOT expr .)
     COMMA           reduce using rule 95 (expr -> NOT expr .)
 
-  ! PLUS            [ shift and go to state 143 ]
-  ! MINUS           [ shift and go to state 146 ]
-  ! MULTIPLY        [ shift and go to state 144 ]
-  ! DIVIDE          [ shift and go to state 139 ]
-  ! EQ              [ shift and go to state 145 ]
-  ! NEQ             [ shift and go to state 147 ]
-  ! LT              [ shift and go to state 142 ]
-  ! LEQ             [ shift and go to state 141 ]
-  ! GT              [ shift and go to state 138 ]
-  ! GEQ             [ shift and go to state 137 ]
-  ! AND             [ shift and go to state 136 ]
-  ! OR              [ shift and go to state 140 ]
+  ! PLUS            [ shift and go to state 144 ]
+  ! MINUS           [ shift and go to state 147 ]
+  ! MULTIPLY        [ shift and go to state 145 ]
+  ! DIVIDE          [ shift and go to state 140 ]
+  ! EQ              [ shift and go to state 146 ]
+  ! NEQ             [ shift and go to state 148 ]
+  ! LT              [ shift and go to state 143 ]
+  ! LEQ             [ shift and go to state 142 ]
+  ! GT              [ shift and go to state 139 ]
+  ! GEQ             [ shift and go to state 138 ]
+  ! AND             [ shift and go to state 137 ]
+  ! OR              [ shift and go to state 141 ]
 
 
-state 149
+state 150
 
     (76) array_access -> primary LBRACKET expr . RBRACKET
     (81) expr -> expr . PLUS expr
@@ -4188,22 +4201,22 @@ state 149
     (91) expr -> expr . AND expr
     (92) expr -> expr . OR expr
 
-    RBRACKET        shift and go to state 176
-    PLUS            shift and go to state 143
-    MINUS           shift and go to state 146
-    MULTIPLY        shift and go to state 144
-    DIVIDE          shift and go to state 139
-    EQ              shift and go to state 145
-    NEQ             shift and go to state 147
-    LT              shift and go to state 142
-    LEQ             shift and go to state 141
-    GT              shift and go to state 138
-    GEQ             shift and go to state 137
-    AND             shift and go to state 136
-    OR              shift and go to state 140
+    RBRACKET        shift and go to state 177
+    PLUS            shift and go to state 144
+    MINUS           shift and go to state 147
+    MULTIPLY        shift and go to state 145
+    DIVIDE          shift and go to state 140
+    EQ              shift and go to state 146
+    NEQ             shift and go to state 148
+    LT              shift and go to state 143
+    LEQ             shift and go to state 142
+    GT              shift and go to state 139
+    GEQ             shift and go to state 138
+    AND             shift and go to state 137
+    OR              shift and go to state 141
 
 
-state 150
+state 151
 
     (74) field_access -> primary DOT ID .
 
@@ -4231,7 +4244,7 @@ state 150
     COMMA           reduce using rule 74 (field_access -> primary DOT ID .)
 
 
-state 151
+state 152
 
     (46) stmt -> WHILE LPAREN expr . RPAREN stmt
     (81) expr -> expr . PLUS expr
@@ -4247,22 +4260,22 @@ state 151
     (91) expr -> expr . AND expr
     (92) expr -> expr . OR expr
 
-    RPAREN          shift and go to state 177
-    PLUS            shift and go to state 143
-    MINUS           shift and go to state 146
-    MULTIPLY        shift and go to state 144
-    DIVIDE          shift and go to state 139
-    EQ              shift and go to state 145
-    NEQ             shift and go to state 147
-    LT              shift and go to state 142
-    LEQ             shift and go to state 141
-    GT              shift and go to state 138
-    GEQ             shift and go to state 137
-    AND             shift and go to state 136
-    OR              shift and go to state 140
+    RPAREN          shift and go to state 178
+    PLUS            shift and go to state 144
+    MINUS           shift and go to state 147
+    MULTIPLY        shift and go to state 145
+    DIVIDE          shift and go to state 140
+    EQ              shift and go to state 146
+    NEQ             shift and go to state 148
+    LT              shift and go to state 143
+    LEQ             shift and go to state 142
+    GT              shift and go to state 139
+    GEQ             shift and go to state 138
+    AND             shift and go to state 137
+    OR              shift and go to state 141
 
 
-state 152
+state 153
 
     (65) primary -> NEW ID LPAREN . args_opt RPAREN
     (68) args_opt -> . arg_plus
@@ -4314,36 +4327,36 @@ state 152
     (76) array_access -> . primary LBRACKET expr RBRACKET
 
     RPAREN          reduce using rule 69 (args_opt -> .)
-    PLUS            shift and go to state 105
-    MINUS           shift and go to state 103
-    NOT             shift and go to state 112
-    THIS            shift and go to state 92
-    SUPER           shift and go to state 96
-    LPAREN          shift and go to state 86
-    NEW             shift and go to state 102
-    INC             shift and go to state 99
-    DEC             shift and go to state 72
-    INT_CONST       shift and go to state 75
-    FLOAT_CONST     shift and go to state 70
-    STRING_CONST    shift and go to state 74
-    NULL            shift and go to state 76
-    TRUE            shift and go to state 77
-    FALSE           shift and go to state 89
-    ID              shift and go to state 108
+    PLUS            shift and go to state 106
+    MINUS           shift and go to state 104
+    NOT             shift and go to state 113
+    THIS            shift and go to state 93
+    SUPER           shift and go to state 97
+    LPAREN          shift and go to state 87
+    NEW             shift and go to state 103
+    INC             shift and go to state 100
+    DEC             shift and go to state 73
+    INT_CONST       shift and go to state 76
+    FLOAT_CONST     shift and go to state 71
+    STRING_CONST    shift and go to state 75
+    NULL            shift and go to state 77
+    TRUE            shift and go to state 78
+    FALSE           shift and go to state 90
+    ID              shift and go to state 109
 
-    new_array                      shift and go to state 100
-    field_access                   shift and go to state 107
-    expr                           shift and go to state 153
-    args_opt                       shift and go to state 178
-    array_access                   shift and go to state 73
-    primary                        shift and go to state 101
-    literal                        shift and go to state 79
-    lhs                            shift and go to state 111
-    method_invocation              shift and go to state 106
-    arg_plus                       shift and go to state 155
-    assign                         shift and go to state 110
+    new_array                      shift and go to state 101
+    field_access                   shift and go to state 108
+    expr                           shift and go to state 154
+    args_opt                       shift and go to state 179
+    array_access                   shift and go to state 74
+    primary                        shift and go to state 102
+    literal                        shift and go to state 80
+    lhs                            shift and go to state 112
+    method_invocation              shift and go to state 107
+    arg_plus                       shift and go to state 156
+    assign                         shift and go to state 111
 
-state 153
+state 154
 
     (71) arg_plus -> expr .
     (81) expr -> expr . PLUS expr
@@ -4361,37 +4374,37 @@ state 153
 
     COMMA           reduce using rule 71 (arg_plus -> expr .)
     RPAREN          reduce using rule 71 (arg_plus -> expr .)
-    PLUS            shift and go to state 143
-    MINUS           shift and go to state 146
-    MULTIPLY        shift and go to state 144
-    DIVIDE          shift and go to state 139
-    EQ              shift and go to state 145
-    NEQ             shift and go to state 147
-    LT              shift and go to state 142
-    LEQ             shift and go to state 141
-    GT              shift and go to state 138
-    GEQ             shift and go to state 137
-    AND             shift and go to state 136
-    OR              shift and go to state 140
-
-
-state 154
-
-    (77) method_invocation -> field_access LPAREN args_opt . RPAREN
-
-    RPAREN          shift and go to state 179
+    PLUS            shift and go to state 144
+    MINUS           shift and go to state 147
+    MULTIPLY        shift and go to state 145
+    DIVIDE          shift and go to state 140
+    EQ              shift and go to state 146
+    NEQ             shift and go to state 148
+    LT              shift and go to state 143
+    LEQ             shift and go to state 142
+    GT              shift and go to state 139
+    GEQ             shift and go to state 138
+    AND             shift and go to state 137
+    OR              shift and go to state 141
 
 
 state 155
+
+    (77) method_invocation -> field_access LPAREN args_opt . RPAREN
+
+    RPAREN          shift and go to state 180
+
+
+state 156
 
     (68) args_opt -> arg_plus .
     (70) arg_plus -> arg_plus . COMMA expr
 
     RPAREN          reduce using rule 68 (args_opt -> arg_plus .)
-    COMMA           shift and go to state 180
+    COMMA           shift and go to state 181
 
 
-state 156
+state 157
 
     (109) stmt_expr_opt -> stmt_expr .
 
@@ -4399,19 +4412,20 @@ state 156
     RPAREN          reduce using rule 109 (stmt_expr_opt -> stmt_expr .)
 
 
-state 157
+state 158
 
     (47) stmt -> FOR LPAREN stmt_expr_opt . SEMICOLON expr_opt SEMICOLON stmt_expr_opt RPAREN stmt
 
-    SEMICOLON       shift and go to state 181
+    SEMICOLON       shift and go to state 182
 
 
-state 158
+state 159
 
     (64) primary -> LPAREN expr RPAREN .
 
     DOT             reduce using rule 64 (primary -> LPAREN expr RPAREN .)
     LBRACKET        reduce using rule 64 (primary -> LPAREN expr RPAREN .)
+    RPAREN          reduce using rule 64 (primary -> LPAREN expr RPAREN .)
     PLUS            reduce using rule 64 (primary -> LPAREN expr RPAREN .)
     MINUS           reduce using rule 64 (primary -> LPAREN expr RPAREN .)
     MULTIPLY        reduce using rule 64 (primary -> LPAREN expr RPAREN .)
@@ -4425,12 +4439,11 @@ state 158
     AND             reduce using rule 64 (primary -> LPAREN expr RPAREN .)
     OR              reduce using rule 64 (primary -> LPAREN expr RPAREN .)
     SEMICOLON       reduce using rule 64 (primary -> LPAREN expr RPAREN .)
-    RPAREN          reduce using rule 64 (primary -> LPAREN expr RPAREN .)
     RBRACKET        reduce using rule 64 (primary -> LPAREN expr RPAREN .)
     COMMA           reduce using rule 64 (primary -> LPAREN expr RPAREN .)
 
 
-state 159
+state 160
 
     (44) stmt -> IF LPAREN expr . RPAREN stmt ELSE stmt
     (45) stmt -> IF LPAREN expr . RPAREN stmt
@@ -4447,22 +4460,22 @@ state 159
     (91) expr -> expr . AND expr
     (92) expr -> expr . OR expr
 
-    RPAREN          shift and go to state 182
-    PLUS            shift and go to state 143
-    MINUS           shift and go to state 146
-    MULTIPLY        shift and go to state 144
-    DIVIDE          shift and go to state 139
-    EQ              shift and go to state 145
-    NEQ             shift and go to state 147
-    LT              shift and go to state 142
-    LEQ             shift and go to state 141
-    GT              shift and go to state 138
-    GEQ             shift and go to state 137
-    AND             shift and go to state 136
-    OR              shift and go to state 140
+    RPAREN          shift and go to state 183
+    PLUS            shift and go to state 144
+    MINUS           shift and go to state 147
+    MULTIPLY        shift and go to state 145
+    DIVIDE          shift and go to state 140
+    EQ              shift and go to state 146
+    NEQ             shift and go to state 148
+    LT              shift and go to state 143
+    LEQ             shift and go to state 142
+    GT              shift and go to state 139
+    GEQ             shift and go to state 138
+    AND             shift and go to state 137
+    OR              shift and go to state 141
 
 
-state 160
+state 161
 
     (96) assign -> lhs ASSIGN expr .
     (81) expr -> expr . PLUS expr
@@ -4478,22 +4491,22 @@ state 160
     (91) expr -> expr . AND expr
     (92) expr -> expr . OR expr
 
-    COMMA           reduce using rule 96 (assign -> lhs ASSIGN expr .)
-    RPAREN          reduce using rule 96 (assign -> lhs ASSIGN expr .)
     SEMICOLON       reduce using rule 96 (assign -> lhs ASSIGN expr .)
+    RPAREN          reduce using rule 96 (assign -> lhs ASSIGN expr .)
     RBRACKET        reduce using rule 96 (assign -> lhs ASSIGN expr .)
-    PLUS            shift and go to state 143
-    MINUS           shift and go to state 146
-    MULTIPLY        shift and go to state 144
-    DIVIDE          shift and go to state 139
-    EQ              shift and go to state 145
-    NEQ             shift and go to state 147
-    LT              shift and go to state 142
-    LEQ             shift and go to state 141
-    GT              shift and go to state 138
-    GEQ             shift and go to state 137
-    AND             shift and go to state 136
-    OR              shift and go to state 140
+    COMMA           reduce using rule 96 (assign -> lhs ASSIGN expr .)
+    PLUS            shift and go to state 144
+    MINUS           shift and go to state 147
+    MULTIPLY        shift and go to state 145
+    DIVIDE          shift and go to state 140
+    EQ              shift and go to state 146
+    NEQ             shift and go to state 148
+    LT              shift and go to state 143
+    LEQ             shift and go to state 142
+    GT              shift and go to state 139
+    GEQ             shift and go to state 138
+    AND             shift and go to state 137
+    OR              shift and go to state 141
 
   ! PLUS            [ reduce using rule 96 (assign -> lhs ASSIGN expr .) ]
   ! MINUS           [ reduce using rule 96 (assign -> lhs ASSIGN expr .) ]
@@ -4509,7 +4522,7 @@ state 160
   ! OR              [ reduce using rule 96 (assign -> lhs ASSIGN expr .) ]
 
 
-state 161
+state 162
 
     (101) new_array -> NEW type dim_expr_plus . dim_star
     (102) dim_expr_plus -> dim_expr_plus . dim_expr
@@ -4517,7 +4530,7 @@ state 161
     (106) dim_star -> .
     (104) dim_expr -> . LBRACKET expr RBRACKET
 
-    LBRACKET        shift and go to state 185
+    LBRACKET        shift and go to state 186
     PLUS            reduce using rule 106 (dim_star -> .)
     MINUS           reduce using rule 106 (dim_star -> .)
     MULTIPLY        reduce using rule 106 (dim_star -> .)
@@ -4535,10 +4548,10 @@ state 161
     RBRACKET        reduce using rule 106 (dim_star -> .)
     COMMA           reduce using rule 106 (dim_star -> .)
 
-    dim_expr                       shift and go to state 184
-    dim_star                       shift and go to state 183
+    dim_expr                       shift and go to state 185
+    dim_star                       shift and go to state 184
 
-state 162
+state 163
 
     (103) dim_expr_plus -> dim_expr .
 
@@ -4561,7 +4574,7 @@ state 162
     COMMA           reduce using rule 103 (dim_expr_plus -> dim_expr .)
 
 
-state 163
+state 164
 
     (104) dim_expr -> LBRACKET . expr RBRACKET
     (78) expr -> . primary
@@ -4608,34 +4621,34 @@ state 163
     (75) field_access -> . ID
     (76) array_access -> . primary LBRACKET expr RBRACKET
 
-    PLUS            shift and go to state 105
-    MINUS           shift and go to state 103
-    NOT             shift and go to state 112
-    THIS            shift and go to state 92
-    SUPER           shift and go to state 96
-    LPAREN          shift and go to state 86
-    NEW             shift and go to state 102
-    INC             shift and go to state 99
-    DEC             shift and go to state 72
-    INT_CONST       shift and go to state 75
-    FLOAT_CONST     shift and go to state 70
-    STRING_CONST    shift and go to state 74
-    NULL            shift and go to state 76
-    TRUE            shift and go to state 77
-    FALSE           shift and go to state 89
-    ID              shift and go to state 108
+    PLUS            shift and go to state 106
+    MINUS           shift and go to state 104
+    NOT             shift and go to state 113
+    THIS            shift and go to state 93
+    SUPER           shift and go to state 97
+    LPAREN          shift and go to state 87
+    NEW             shift and go to state 103
+    INC             shift and go to state 100
+    DEC             shift and go to state 73
+    INT_CONST       shift and go to state 76
+    FLOAT_CONST     shift and go to state 71
+    STRING_CONST    shift and go to state 75
+    NULL            shift and go to state 77
+    TRUE            shift and go to state 78
+    FALSE           shift and go to state 90
+    ID              shift and go to state 109
 
-    new_array                      shift and go to state 100
-    field_access                   shift and go to state 107
-    expr                           shift and go to state 186
-    array_access                   shift and go to state 73
-    primary                        shift and go to state 101
-    literal                        shift and go to state 79
-    lhs                            shift and go to state 111
-    method_invocation              shift and go to state 106
-    assign                         shift and go to state 110
+    new_array                      shift and go to state 101
+    field_access                   shift and go to state 108
+    expr                           shift and go to state 187
+    array_access                   shift and go to state 74
+    primary                        shift and go to state 102
+    literal                        shift and go to state 80
+    lhs                            shift and go to state 112
+    method_invocation              shift and go to state 107
+    assign                         shift and go to state 111
 
-state 164
+state 165
 
     (91) expr -> expr AND expr .
     (81) expr -> expr . PLUS expr
@@ -4657,16 +4670,16 @@ state 164
     RPAREN          reduce using rule 91 (expr -> expr AND expr .)
     RBRACKET        reduce using rule 91 (expr -> expr AND expr .)
     COMMA           reduce using rule 91 (expr -> expr AND expr .)
-    PLUS            shift and go to state 143
-    MINUS           shift and go to state 146
-    MULTIPLY        shift and go to state 144
-    DIVIDE          shift and go to state 139
-    EQ              shift and go to state 145
-    NEQ             shift and go to state 147
-    LT              shift and go to state 142
-    LEQ             shift and go to state 141
-    GT              shift and go to state 138
-    GEQ             shift and go to state 137
+    PLUS            shift and go to state 144
+    MINUS           shift and go to state 147
+    MULTIPLY        shift and go to state 145
+    DIVIDE          shift and go to state 140
+    EQ              shift and go to state 146
+    NEQ             shift and go to state 148
+    LT              shift and go to state 143
+    LEQ             shift and go to state 142
+    GT              shift and go to state 139
+    GEQ             shift and go to state 138
 
   ! PLUS            [ reduce using rule 91 (expr -> expr AND expr .) ]
   ! MINUS           [ reduce using rule 91 (expr -> expr AND expr .) ]
@@ -4678,11 +4691,11 @@ state 164
   ! LEQ             [ reduce using rule 91 (expr -> expr AND expr .) ]
   ! GT              [ reduce using rule 91 (expr -> expr AND expr .) ]
   ! GEQ             [ reduce using rule 91 (expr -> expr AND expr .) ]
-  ! AND             [ shift and go to state 136 ]
-  ! OR              [ shift and go to state 140 ]
+  ! AND             [ shift and go to state 137 ]
+  ! OR              [ shift and go to state 141 ]
 
 
-state 165
+state 166
 
     (90) expr -> expr GEQ expr .
     (81) expr -> expr . PLUS expr
@@ -4710,26 +4723,26 @@ state 165
     RPAREN          reduce using rule 90 (expr -> expr GEQ expr .)
     RBRACKET        reduce using rule 90 (expr -> expr GEQ expr .)
     COMMA           reduce using rule 90 (expr -> expr GEQ expr .)
-    PLUS            shift and go to state 143
-    MINUS           shift and go to state 146
-    MULTIPLY        shift and go to state 144
-    DIVIDE          shift and go to state 139
+    PLUS            shift and go to state 144
+    MINUS           shift and go to state 147
+    MULTIPLY        shift and go to state 145
+    DIVIDE          shift and go to state 140
 
   ! PLUS            [ reduce using rule 90 (expr -> expr GEQ expr .) ]
   ! MINUS           [ reduce using rule 90 (expr -> expr GEQ expr .) ]
   ! MULTIPLY        [ reduce using rule 90 (expr -> expr GEQ expr .) ]
   ! DIVIDE          [ reduce using rule 90 (expr -> expr GEQ expr .) ]
-  ! EQ              [ shift and go to state 145 ]
-  ! NEQ             [ shift and go to state 147 ]
-  ! LT              [ shift and go to state 142 ]
-  ! LEQ             [ shift and go to state 141 ]
-  ! GT              [ shift and go to state 138 ]
-  ! GEQ             [ shift and go to state 137 ]
-  ! AND             [ shift and go to state 136 ]
-  ! OR              [ shift and go to state 140 ]
+  ! EQ              [ shift and go to state 146 ]
+  ! NEQ             [ shift and go to state 148 ]
+  ! LT              [ shift and go to state 143 ]
+  ! LEQ             [ shift and go to state 142 ]
+  ! GT              [ shift and go to state 139 ]
+  ! GEQ             [ shift and go to state 138 ]
+  ! AND             [ shift and go to state 137 ]
+  ! OR              [ shift and go to state 141 ]
 
 
-state 166
+state 167
 
     (89) expr -> expr GT expr .
     (81) expr -> expr . PLUS expr
@@ -4757,26 +4770,26 @@ state 166
     RPAREN          reduce using rule 89 (expr -> expr GT expr .)
     RBRACKET        reduce using rule 89 (expr -> expr GT expr .)
     COMMA           reduce using rule 89 (expr -> expr GT expr .)
-    PLUS            shift and go to state 143
-    MINUS           shift and go to state 146
-    MULTIPLY        shift and go to state 144
-    DIVIDE          shift and go to state 139
+    PLUS            shift and go to state 144
+    MINUS           shift and go to state 147
+    MULTIPLY        shift and go to state 145
+    DIVIDE          shift and go to state 140
 
   ! PLUS            [ reduce using rule 89 (expr -> expr GT expr .) ]
   ! MINUS           [ reduce using rule 89 (expr -> expr GT expr .) ]
   ! MULTIPLY        [ reduce using rule 89 (expr -> expr GT expr .) ]
   ! DIVIDE          [ reduce using rule 89 (expr -> expr GT expr .) ]
-  ! EQ              [ shift and go to state 145 ]
-  ! NEQ             [ shift and go to state 147 ]
-  ! LT              [ shift and go to state 142 ]
-  ! LEQ             [ shift and go to state 141 ]
-  ! GT              [ shift and go to state 138 ]
-  ! GEQ             [ shift and go to state 137 ]
-  ! AND             [ shift and go to state 136 ]
-  ! OR              [ shift and go to state 140 ]
+  ! EQ              [ shift and go to state 146 ]
+  ! NEQ             [ shift and go to state 148 ]
+  ! LT              [ shift and go to state 143 ]
+  ! LEQ             [ shift and go to state 142 ]
+  ! GT              [ shift and go to state 139 ]
+  ! GEQ             [ shift and go to state 138 ]
+  ! AND             [ shift and go to state 137 ]
+  ! OR              [ shift and go to state 141 ]
 
 
-state 167
+state 168
 
     (84) expr -> expr DIVIDE expr .
     (81) expr -> expr . PLUS expr
@@ -4809,21 +4822,21 @@ state 167
     RBRACKET        reduce using rule 84 (expr -> expr DIVIDE expr .)
     COMMA           reduce using rule 84 (expr -> expr DIVIDE expr .)
 
-  ! PLUS            [ shift and go to state 143 ]
-  ! MINUS           [ shift and go to state 146 ]
-  ! MULTIPLY        [ shift and go to state 144 ]
-  ! DIVIDE          [ shift and go to state 139 ]
-  ! EQ              [ shift and go to state 145 ]
-  ! NEQ             [ shift and go to state 147 ]
-  ! LT              [ shift and go to state 142 ]
-  ! LEQ             [ shift and go to state 141 ]
-  ! GT              [ shift and go to state 138 ]
-  ! GEQ             [ shift and go to state 137 ]
-  ! AND             [ shift and go to state 136 ]
-  ! OR              [ shift and go to state 140 ]
+  ! PLUS            [ shift and go to state 144 ]
+  ! MINUS           [ shift and go to state 147 ]
+  ! MULTIPLY        [ shift and go to state 145 ]
+  ! DIVIDE          [ shift and go to state 140 ]
+  ! EQ              [ shift and go to state 146 ]
+  ! NEQ             [ shift and go to state 148 ]
+  ! LT              [ shift and go to state 143 ]
+  ! LEQ             [ shift and go to state 142 ]
+  ! GT              [ shift and go to state 139 ]
+  ! GEQ             [ shift and go to state 138 ]
+  ! AND             [ shift and go to state 137 ]
+  ! OR              [ shift and go to state 141 ]
 
 
-state 168
+state 169
 
     (92) expr -> expr OR expr .
     (81) expr -> expr . PLUS expr
@@ -4844,17 +4857,17 @@ state 168
     RPAREN          reduce using rule 92 (expr -> expr OR expr .)
     RBRACKET        reduce using rule 92 (expr -> expr OR expr .)
     COMMA           reduce using rule 92 (expr -> expr OR expr .)
-    PLUS            shift and go to state 143
-    MINUS           shift and go to state 146
-    MULTIPLY        shift and go to state 144
-    DIVIDE          shift and go to state 139
-    EQ              shift and go to state 145
-    NEQ             shift and go to state 147
-    LT              shift and go to state 142
-    LEQ             shift and go to state 141
-    GT              shift and go to state 138
-    GEQ             shift and go to state 137
-    AND             shift and go to state 136
+    PLUS            shift and go to state 144
+    MINUS           shift and go to state 147
+    MULTIPLY        shift and go to state 145
+    DIVIDE          shift and go to state 140
+    EQ              shift and go to state 146
+    NEQ             shift and go to state 148
+    LT              shift and go to state 143
+    LEQ             shift and go to state 142
+    GT              shift and go to state 139
+    GEQ             shift and go to state 138
+    AND             shift and go to state 137
 
   ! PLUS            [ reduce using rule 92 (expr -> expr OR expr .) ]
   ! MINUS           [ reduce using rule 92 (expr -> expr OR expr .) ]
@@ -4867,10 +4880,10 @@ state 168
   ! GT              [ reduce using rule 92 (expr -> expr OR expr .) ]
   ! GEQ             [ reduce using rule 92 (expr -> expr OR expr .) ]
   ! AND             [ reduce using rule 92 (expr -> expr OR expr .) ]
-  ! OR              [ shift and go to state 140 ]
+  ! OR              [ shift and go to state 141 ]
 
 
-state 169
+state 170
 
     (88) expr -> expr LEQ expr .
     (81) expr -> expr . PLUS expr
@@ -4898,26 +4911,26 @@ state 169
     RPAREN          reduce using rule 88 (expr -> expr LEQ expr .)
     RBRACKET        reduce using rule 88 (expr -> expr LEQ expr .)
     COMMA           reduce using rule 88 (expr -> expr LEQ expr .)
-    PLUS            shift and go to state 143
-    MINUS           shift and go to state 146
-    MULTIPLY        shift and go to state 144
-    DIVIDE          shift and go to state 139
+    PLUS            shift and go to state 144
+    MINUS           shift and go to state 147
+    MULTIPLY        shift and go to state 145
+    DIVIDE          shift and go to state 140
 
   ! PLUS            [ reduce using rule 88 (expr -> expr LEQ expr .) ]
   ! MINUS           [ reduce using rule 88 (expr -> expr LEQ expr .) ]
   ! MULTIPLY        [ reduce using rule 88 (expr -> expr LEQ expr .) ]
   ! DIVIDE          [ reduce using rule 88 (expr -> expr LEQ expr .) ]
-  ! EQ              [ shift and go to state 145 ]
-  ! NEQ             [ shift and go to state 147 ]
-  ! LT              [ shift and go to state 142 ]
-  ! LEQ             [ shift and go to state 141 ]
-  ! GT              [ shift and go to state 138 ]
-  ! GEQ             [ shift and go to state 137 ]
-  ! AND             [ shift and go to state 136 ]
-  ! OR              [ shift and go to state 140 ]
+  ! EQ              [ shift and go to state 146 ]
+  ! NEQ             [ shift and go to state 148 ]
+  ! LT              [ shift and go to state 143 ]
+  ! LEQ             [ shift and go to state 142 ]
+  ! GT              [ shift and go to state 139 ]
+  ! GEQ             [ shift and go to state 138 ]
+  ! AND             [ shift and go to state 137 ]
+  ! OR              [ shift and go to state 141 ]
 
 
-state 170
+state 171
 
     (87) expr -> expr LT expr .
     (81) expr -> expr . PLUS expr
@@ -4945,26 +4958,26 @@ state 170
     RPAREN          reduce using rule 87 (expr -> expr LT expr .)
     RBRACKET        reduce using rule 87 (expr -> expr LT expr .)
     COMMA           reduce using rule 87 (expr -> expr LT expr .)
-    PLUS            shift and go to state 143
-    MINUS           shift and go to state 146
-    MULTIPLY        shift and go to state 144
-    DIVIDE          shift and go to state 139
+    PLUS            shift and go to state 144
+    MINUS           shift and go to state 147
+    MULTIPLY        shift and go to state 145
+    DIVIDE          shift and go to state 140
 
   ! PLUS            [ reduce using rule 87 (expr -> expr LT expr .) ]
   ! MINUS           [ reduce using rule 87 (expr -> expr LT expr .) ]
   ! MULTIPLY        [ reduce using rule 87 (expr -> expr LT expr .) ]
   ! DIVIDE          [ reduce using rule 87 (expr -> expr LT expr .) ]
-  ! EQ              [ shift and go to state 145 ]
-  ! NEQ             [ shift and go to state 147 ]
-  ! LT              [ shift and go to state 142 ]
-  ! LEQ             [ shift and go to state 141 ]
-  ! GT              [ shift and go to state 138 ]
-  ! GEQ             [ shift and go to state 137 ]
-  ! AND             [ shift and go to state 136 ]
-  ! OR              [ shift and go to state 140 ]
+  ! EQ              [ shift and go to state 146 ]
+  ! NEQ             [ shift and go to state 148 ]
+  ! LT              [ shift and go to state 143 ]
+  ! LEQ             [ shift and go to state 142 ]
+  ! GT              [ shift and go to state 139 ]
+  ! GEQ             [ shift and go to state 138 ]
+  ! AND             [ shift and go to state 137 ]
+  ! OR              [ shift and go to state 141 ]
 
 
-state 171
+state 172
 
     (81) expr -> expr PLUS expr .
     (81) expr -> expr . PLUS expr
@@ -4994,24 +5007,24 @@ state 171
     RPAREN          reduce using rule 81 (expr -> expr PLUS expr .)
     RBRACKET        reduce using rule 81 (expr -> expr PLUS expr .)
     COMMA           reduce using rule 81 (expr -> expr PLUS expr .)
-    MULTIPLY        shift and go to state 144
-    DIVIDE          shift and go to state 139
+    MULTIPLY        shift and go to state 145
+    DIVIDE          shift and go to state 140
 
   ! MULTIPLY        [ reduce using rule 81 (expr -> expr PLUS expr .) ]
   ! DIVIDE          [ reduce using rule 81 (expr -> expr PLUS expr .) ]
-  ! PLUS            [ shift and go to state 143 ]
-  ! MINUS           [ shift and go to state 146 ]
-  ! EQ              [ shift and go to state 145 ]
-  ! NEQ             [ shift and go to state 147 ]
-  ! LT              [ shift and go to state 142 ]
-  ! LEQ             [ shift and go to state 141 ]
-  ! GT              [ shift and go to state 138 ]
-  ! GEQ             [ shift and go to state 137 ]
-  ! AND             [ shift and go to state 136 ]
-  ! OR              [ shift and go to state 140 ]
+  ! PLUS            [ shift and go to state 144 ]
+  ! MINUS           [ shift and go to state 147 ]
+  ! EQ              [ shift and go to state 146 ]
+  ! NEQ             [ shift and go to state 148 ]
+  ! LT              [ shift and go to state 143 ]
+  ! LEQ             [ shift and go to state 142 ]
+  ! GT              [ shift and go to state 139 ]
+  ! GEQ             [ shift and go to state 138 ]
+  ! AND             [ shift and go to state 137 ]
+  ! OR              [ shift and go to state 141 ]
 
 
-state 172
+state 173
 
     (83) expr -> expr MULTIPLY expr .
     (81) expr -> expr . PLUS expr
@@ -5044,21 +5057,21 @@ state 172
     RBRACKET        reduce using rule 83 (expr -> expr MULTIPLY expr .)
     COMMA           reduce using rule 83 (expr -> expr MULTIPLY expr .)
 
-  ! PLUS            [ shift and go to state 143 ]
-  ! MINUS           [ shift and go to state 146 ]
-  ! MULTIPLY        [ shift and go to state 144 ]
-  ! DIVIDE          [ shift and go to state 139 ]
-  ! EQ              [ shift and go to state 145 ]
-  ! NEQ             [ shift and go to state 147 ]
-  ! LT              [ shift and go to state 142 ]
-  ! LEQ             [ shift and go to state 141 ]
-  ! GT              [ shift and go to state 138 ]
-  ! GEQ             [ shift and go to state 137 ]
-  ! AND             [ shift and go to state 136 ]
-  ! OR              [ shift and go to state 140 ]
+  ! PLUS            [ shift and go to state 144 ]
+  ! MINUS           [ shift and go to state 147 ]
+  ! MULTIPLY        [ shift and go to state 145 ]
+  ! DIVIDE          [ shift and go to state 140 ]
+  ! EQ              [ shift and go to state 146 ]
+  ! NEQ             [ shift and go to state 148 ]
+  ! LT              [ shift and go to state 143 ]
+  ! LEQ             [ shift and go to state 142 ]
+  ! GT              [ shift and go to state 139 ]
+  ! GEQ             [ shift and go to state 138 ]
+  ! AND             [ shift and go to state 137 ]
+  ! OR              [ shift and go to state 141 ]
 
 
-state 173
+state 174
 
     (85) expr -> expr EQ expr .
     (81) expr -> expr . PLUS expr
@@ -5082,14 +5095,14 @@ state 173
     RPAREN          reduce using rule 85 (expr -> expr EQ expr .)
     RBRACKET        reduce using rule 85 (expr -> expr EQ expr .)
     COMMA           reduce using rule 85 (expr -> expr EQ expr .)
-    PLUS            shift and go to state 143
-    MINUS           shift and go to state 146
-    MULTIPLY        shift and go to state 144
-    DIVIDE          shift and go to state 139
-    LT              shift and go to state 142
-    LEQ             shift and go to state 141
-    GT              shift and go to state 138
-    GEQ             shift and go to state 137
+    PLUS            shift and go to state 144
+    MINUS           shift and go to state 147
+    MULTIPLY        shift and go to state 145
+    DIVIDE          shift and go to state 140
+    LT              shift and go to state 143
+    LEQ             shift and go to state 142
+    GT              shift and go to state 139
+    GEQ             shift and go to state 138
 
   ! PLUS            [ reduce using rule 85 (expr -> expr EQ expr .) ]
   ! MINUS           [ reduce using rule 85 (expr -> expr EQ expr .) ]
@@ -5099,13 +5112,13 @@ state 173
   ! LEQ             [ reduce using rule 85 (expr -> expr EQ expr .) ]
   ! GT              [ reduce using rule 85 (expr -> expr EQ expr .) ]
   ! GEQ             [ reduce using rule 85 (expr -> expr EQ expr .) ]
-  ! EQ              [ shift and go to state 145 ]
-  ! NEQ             [ shift and go to state 147 ]
-  ! AND             [ shift and go to state 136 ]
-  ! OR              [ shift and go to state 140 ]
+  ! EQ              [ shift and go to state 146 ]
+  ! NEQ             [ shift and go to state 148 ]
+  ! AND             [ shift and go to state 137 ]
+  ! OR              [ shift and go to state 141 ]
 
 
-state 174
+state 175
 
     (82) expr -> expr MINUS expr .
     (81) expr -> expr . PLUS expr
@@ -5135,24 +5148,24 @@ state 174
     RPAREN          reduce using rule 82 (expr -> expr MINUS expr .)
     RBRACKET        reduce using rule 82 (expr -> expr MINUS expr .)
     COMMA           reduce using rule 82 (expr -> expr MINUS expr .)
-    MULTIPLY        shift and go to state 144
-    DIVIDE          shift and go to state 139
+    MULTIPLY        shift and go to state 145
+    DIVIDE          shift and go to state 140
 
   ! MULTIPLY        [ reduce using rule 82 (expr -> expr MINUS expr .) ]
   ! DIVIDE          [ reduce using rule 82 (expr -> expr MINUS expr .) ]
-  ! PLUS            [ shift and go to state 143 ]
-  ! MINUS           [ shift and go to state 146 ]
-  ! EQ              [ shift and go to state 145 ]
-  ! NEQ             [ shift and go to state 147 ]
-  ! LT              [ shift and go to state 142 ]
-  ! LEQ             [ shift and go to state 141 ]
-  ! GT              [ shift and go to state 138 ]
-  ! GEQ             [ shift and go to state 137 ]
-  ! AND             [ shift and go to state 136 ]
-  ! OR              [ shift and go to state 140 ]
+  ! PLUS            [ shift and go to state 144 ]
+  ! MINUS           [ shift and go to state 147 ]
+  ! EQ              [ shift and go to state 146 ]
+  ! NEQ             [ shift and go to state 148 ]
+  ! LT              [ shift and go to state 143 ]
+  ! LEQ             [ shift and go to state 142 ]
+  ! GT              [ shift and go to state 139 ]
+  ! GEQ             [ shift and go to state 138 ]
+  ! AND             [ shift and go to state 137 ]
+  ! OR              [ shift and go to state 141 ]
 
 
-state 175
+state 176
 
     (86) expr -> expr NEQ expr .
     (81) expr -> expr . PLUS expr
@@ -5176,14 +5189,14 @@ state 175
     RPAREN          reduce using rule 86 (expr -> expr NEQ expr .)
     RBRACKET        reduce using rule 86 (expr -> expr NEQ expr .)
     COMMA           reduce using rule 86 (expr -> expr NEQ expr .)
-    PLUS            shift and go to state 143
-    MINUS           shift and go to state 146
-    MULTIPLY        shift and go to state 144
-    DIVIDE          shift and go to state 139
-    LT              shift and go to state 142
-    LEQ             shift and go to state 141
-    GT              shift and go to state 138
-    GEQ             shift and go to state 137
+    PLUS            shift and go to state 144
+    MINUS           shift and go to state 147
+    MULTIPLY        shift and go to state 145
+    DIVIDE          shift and go to state 140
+    LT              shift and go to state 143
+    LEQ             shift and go to state 142
+    GT              shift and go to state 139
+    GEQ             shift and go to state 138
 
   ! PLUS            [ reduce using rule 86 (expr -> expr NEQ expr .) ]
   ! MINUS           [ reduce using rule 86 (expr -> expr NEQ expr .) ]
@@ -5193,13 +5206,13 @@ state 175
   ! LEQ             [ reduce using rule 86 (expr -> expr NEQ expr .) ]
   ! GT              [ reduce using rule 86 (expr -> expr NEQ expr .) ]
   ! GEQ             [ reduce using rule 86 (expr -> expr NEQ expr .) ]
-  ! EQ              [ shift and go to state 145 ]
-  ! NEQ             [ shift and go to state 147 ]
-  ! AND             [ shift and go to state 136 ]
-  ! OR              [ shift and go to state 140 ]
+  ! EQ              [ shift and go to state 146 ]
+  ! NEQ             [ shift and go to state 148 ]
+  ! AND             [ shift and go to state 137 ]
+  ! OR              [ shift and go to state 141 ]
 
 
-state 176
+state 177
 
     (76) array_access -> primary LBRACKET expr RBRACKET .
 
@@ -5220,13 +5233,13 @@ state 176
     GEQ             reduce using rule 76 (array_access -> primary LBRACKET expr RBRACKET .)
     AND             reduce using rule 76 (array_access -> primary LBRACKET expr RBRACKET .)
     OR              reduce using rule 76 (array_access -> primary LBRACKET expr RBRACKET .)
-    SEMICOLON       reduce using rule 76 (array_access -> primary LBRACKET expr RBRACKET .)
-    RPAREN          reduce using rule 76 (array_access -> primary LBRACKET expr RBRACKET .)
-    RBRACKET        reduce using rule 76 (array_access -> primary LBRACKET expr RBRACKET .)
     COMMA           reduce using rule 76 (array_access -> primary LBRACKET expr RBRACKET .)
+    RPAREN          reduce using rule 76 (array_access -> primary LBRACKET expr RBRACKET .)
+    SEMICOLON       reduce using rule 76 (array_access -> primary LBRACKET expr RBRACKET .)
+    RBRACKET        reduce using rule 76 (array_access -> primary LBRACKET expr RBRACKET .)
 
 
-state 177
+state 178
 
     (46) stmt -> WHILE LPAREN expr RPAREN . stmt
     (44) stmt -> . IF LPAREN expr RPAREN stmt ELSE stmt
@@ -5274,58 +5287,57 @@ state 177
     (59) literal -> . TRUE
     (60) literal -> . FALSE
 
-    IF              shift and go to state 88
-    WHILE           shift and go to state 69
-    FOR             shift and go to state 84
-    RETURN          shift and go to state 67
-    BREAK           shift and go to state 91
-    CONTINUE        shift and go to state 93
-    error           shift and go to state 188
-    LBRACE          shift and go to state 62
-    INC             shift and go to state 99
-    DEC             shift and go to state 72
+    IF              shift and go to state 89
+    WHILE           shift and go to state 70
+    FOR             shift and go to state 85
+    RETURN          shift and go to state 68
+    BREAK           shift and go to state 92
+    CONTINUE        shift and go to state 94
+    error           shift and go to state 189
+    LBRACE          shift and go to state 63
+    INC             shift and go to state 100
+    DEC             shift and go to state 73
     INT             shift and go to state 27
     BOOLEAN         shift and go to state 31
     FLOAT           shift and go to state 29
-    ID              shift and go to state 87
-    THIS            shift and go to state 92
-    SUPER           shift and go to state 96
-    LPAREN          shift and go to state 86
-    NEW             shift and go to state 71
-    INT_CONST       shift and go to state 75
-    FLOAT_CONST     shift and go to state 70
-    STRING_CONST    shift and go to state 74
-    NULL            shift and go to state 76
-    TRUE            shift and go to state 77
-    FALSE           shift and go to state 89
+    ID              shift and go to state 88
+    THIS            shift and go to state 93
+    SUPER           shift and go to state 97
+    LPAREN          shift and go to state 87
+    NEW             shift and go to state 72
+    INT_CONST       shift and go to state 76
+    FLOAT_CONST     shift and go to state 71
+    STRING_CONST    shift and go to state 75
+    NULL            shift and go to state 77
+    TRUE            shift and go to state 78
+    FALSE           shift and go to state 90
 
-    field_access                   shift and go to state 82
-    array_access                   shift and go to state 73
-    stmt_expr                      shift and go to state 78
-    stmt                           shift and go to state 187
-    primary                        shift and go to state 68
-    literal                        shift and go to state 79
-    lhs                            shift and go to state 94
-    var_decl                       shift and go to state 90
-    method_invocation              shift and go to state 80
-    type                           shift and go to state 81
-    assign                         shift and go to state 97
-    block                          shift and go to state 98
+    field_access                   shift and go to state 83
+    array_access                   shift and go to state 74
+    stmt_expr                      shift and go to state 79
+    stmt                           shift and go to state 188
+    primary                        shift and go to state 69
+    literal                        shift and go to state 80
+    lhs                            shift and go to state 95
+    var_decl                       shift and go to state 91
+    method_invocation              shift and go to state 81
+    type                           shift and go to state 82
+    assign                         shift and go to state 98
+    block                          shift and go to state 99
 
-state 178
+state 179
 
     (65) primary -> NEW ID LPAREN args_opt . RPAREN
 
-    RPAREN          shift and go to state 189
+    RPAREN          shift and go to state 190
 
 
-state 179
+state 180
 
     (77) method_invocation -> field_access LPAREN args_opt RPAREN .
 
     DOT             reduce using rule 77 (method_invocation -> field_access LPAREN args_opt RPAREN .)
     LBRACKET        reduce using rule 77 (method_invocation -> field_access LPAREN args_opt RPAREN .)
-    RBRACKET        reduce using rule 77 (method_invocation -> field_access LPAREN args_opt RPAREN .)
     PLUS            reduce using rule 77 (method_invocation -> field_access LPAREN args_opt RPAREN .)
     MINUS           reduce using rule 77 (method_invocation -> field_access LPAREN args_opt RPAREN .)
     MULTIPLY        reduce using rule 77 (method_invocation -> field_access LPAREN args_opt RPAREN .)
@@ -5340,10 +5352,11 @@ state 179
     OR              reduce using rule 77 (method_invocation -> field_access LPAREN args_opt RPAREN .)
     SEMICOLON       reduce using rule 77 (method_invocation -> field_access LPAREN args_opt RPAREN .)
     RPAREN          reduce using rule 77 (method_invocation -> field_access LPAREN args_opt RPAREN .)
+    RBRACKET        reduce using rule 77 (method_invocation -> field_access LPAREN args_opt RPAREN .)
     COMMA           reduce using rule 77 (method_invocation -> field_access LPAREN args_opt RPAREN .)
 
 
-state 180
+state 181
 
     (70) arg_plus -> arg_plus COMMA . expr
     (78) expr -> . primary
@@ -5390,34 +5403,34 @@ state 180
     (75) field_access -> . ID
     (76) array_access -> . primary LBRACKET expr RBRACKET
 
-    PLUS            shift and go to state 105
-    MINUS           shift and go to state 103
-    NOT             shift and go to state 112
-    THIS            shift and go to state 92
-    SUPER           shift and go to state 96
-    LPAREN          shift and go to state 86
-    NEW             shift and go to state 102
-    INC             shift and go to state 99
-    DEC             shift and go to state 72
-    INT_CONST       shift and go to state 75
-    FLOAT_CONST     shift and go to state 70
-    STRING_CONST    shift and go to state 74
-    NULL            shift and go to state 76
-    TRUE            shift and go to state 77
-    FALSE           shift and go to state 89
-    ID              shift and go to state 108
+    PLUS            shift and go to state 106
+    MINUS           shift and go to state 104
+    NOT             shift and go to state 113
+    THIS            shift and go to state 93
+    SUPER           shift and go to state 97
+    LPAREN          shift and go to state 87
+    NEW             shift and go to state 103
+    INC             shift and go to state 100
+    DEC             shift and go to state 73
+    INT_CONST       shift and go to state 76
+    FLOAT_CONST     shift and go to state 71
+    STRING_CONST    shift and go to state 75
+    NULL            shift and go to state 77
+    TRUE            shift and go to state 78
+    FALSE           shift and go to state 90
+    ID              shift and go to state 109
 
-    new_array                      shift and go to state 100
-    field_access                   shift and go to state 107
-    expr                           shift and go to state 190
-    primary                        shift and go to state 101
-    array_access                   shift and go to state 73
-    literal                        shift and go to state 79
-    lhs                            shift and go to state 111
-    method_invocation              shift and go to state 106
-    assign                         shift and go to state 110
+    new_array                      shift and go to state 101
+    field_access                   shift and go to state 108
+    expr                           shift and go to state 191
+    primary                        shift and go to state 102
+    array_access                   shift and go to state 74
+    literal                        shift and go to state 80
+    lhs                            shift and go to state 112
+    method_invocation              shift and go to state 107
+    assign                         shift and go to state 111
 
-state 181
+state 182
 
     (47) stmt -> FOR LPAREN stmt_expr_opt SEMICOLON . expr_opt SEMICOLON stmt_expr_opt RPAREN stmt
     (111) expr_opt -> . expr
@@ -5467,35 +5480,35 @@ state 181
     (76) array_access -> . primary LBRACKET expr RBRACKET
 
     SEMICOLON       reduce using rule 112 (expr_opt -> .)
-    PLUS            shift and go to state 105
-    MINUS           shift and go to state 103
-    NOT             shift and go to state 112
-    THIS            shift and go to state 92
-    SUPER           shift and go to state 96
-    LPAREN          shift and go to state 86
-    NEW             shift and go to state 102
-    INC             shift and go to state 99
-    DEC             shift and go to state 72
-    INT_CONST       shift and go to state 75
-    FLOAT_CONST     shift and go to state 70
-    STRING_CONST    shift and go to state 74
-    NULL            shift and go to state 76
-    TRUE            shift and go to state 77
-    FALSE           shift and go to state 89
-    ID              shift and go to state 108
+    PLUS            shift and go to state 106
+    MINUS           shift and go to state 104
+    NOT             shift and go to state 113
+    THIS            shift and go to state 93
+    SUPER           shift and go to state 97
+    LPAREN          shift and go to state 87
+    NEW             shift and go to state 103
+    INC             shift and go to state 100
+    DEC             shift and go to state 73
+    INT_CONST       shift and go to state 76
+    FLOAT_CONST     shift and go to state 71
+    STRING_CONST    shift and go to state 75
+    NULL            shift and go to state 77
+    TRUE            shift and go to state 78
+    FALSE           shift and go to state 90
+    ID              shift and go to state 109
 
-    new_array                      shift and go to state 100
-    field_access                   shift and go to state 107
-    expr                           shift and go to state 109
-    array_access                   shift and go to state 73
-    primary                        shift and go to state 101
-    literal                        shift and go to state 79
-    expr_opt                       shift and go to state 191
-    lhs                            shift and go to state 111
-    method_invocation              shift and go to state 106
-    assign                         shift and go to state 110
+    new_array                      shift and go to state 101
+    field_access                   shift and go to state 108
+    expr                           shift and go to state 110
+    array_access                   shift and go to state 74
+    primary                        shift and go to state 102
+    literal                        shift and go to state 80
+    expr_opt                       shift and go to state 192
+    lhs                            shift and go to state 112
+    method_invocation              shift and go to state 107
+    assign                         shift and go to state 111
 
-state 182
+state 183
 
     (44) stmt -> IF LPAREN expr RPAREN . stmt ELSE stmt
     (45) stmt -> IF LPAREN expr RPAREN . stmt
@@ -5544,45 +5557,45 @@ state 182
     (59) literal -> . TRUE
     (60) literal -> . FALSE
 
-    IF              shift and go to state 88
-    WHILE           shift and go to state 69
-    FOR             shift and go to state 84
-    RETURN          shift and go to state 67
-    BREAK           shift and go to state 91
-    CONTINUE        shift and go to state 93
-    error           shift and go to state 188
-    LBRACE          shift and go to state 62
-    INC             shift and go to state 99
-    DEC             shift and go to state 72
+    IF              shift and go to state 89
+    WHILE           shift and go to state 70
+    FOR             shift and go to state 85
+    RETURN          shift and go to state 68
+    BREAK           shift and go to state 92
+    CONTINUE        shift and go to state 94
+    error           shift and go to state 189
+    LBRACE          shift and go to state 63
+    INC             shift and go to state 100
+    DEC             shift and go to state 73
     INT             shift and go to state 27
     BOOLEAN         shift and go to state 31
     FLOAT           shift and go to state 29
-    ID              shift and go to state 87
-    THIS            shift and go to state 92
-    SUPER           shift and go to state 96
-    LPAREN          shift and go to state 86
-    NEW             shift and go to state 71
-    INT_CONST       shift and go to state 75
-    FLOAT_CONST     shift and go to state 70
-    STRING_CONST    shift and go to state 74
-    NULL            shift and go to state 76
-    TRUE            shift and go to state 77
-    FALSE           shift and go to state 89
+    ID              shift and go to state 88
+    THIS            shift and go to state 93
+    SUPER           shift and go to state 97
+    LPAREN          shift and go to state 87
+    NEW             shift and go to state 72
+    INT_CONST       shift and go to state 76
+    FLOAT_CONST     shift and go to state 71
+    STRING_CONST    shift and go to state 75
+    NULL            shift and go to state 77
+    TRUE            shift and go to state 78
+    FALSE           shift and go to state 90
 
-    field_access                   shift and go to state 82
-    array_access                   shift and go to state 73
-    stmt_expr                      shift and go to state 78
-    stmt                           shift and go to state 192
-    primary                        shift and go to state 68
-    literal                        shift and go to state 79
-    lhs                            shift and go to state 94
-    var_decl                       shift and go to state 90
-    method_invocation              shift and go to state 80
-    type                           shift and go to state 81
-    assign                         shift and go to state 97
-    block                          shift and go to state 98
+    field_access                   shift and go to state 83
+    array_access                   shift and go to state 74
+    stmt_expr                      shift and go to state 79
+    stmt                           shift and go to state 193
+    primary                        shift and go to state 69
+    literal                        shift and go to state 80
+    lhs                            shift and go to state 95
+    var_decl                       shift and go to state 91
+    method_invocation              shift and go to state 81
+    type                           shift and go to state 82
+    assign                         shift and go to state 98
+    block                          shift and go to state 99
 
-state 183
+state 184
 
     (101) new_array -> NEW type dim_expr_plus dim_star .
 
@@ -5604,7 +5617,7 @@ state 183
     COMMA           reduce using rule 101 (new_array -> NEW type dim_expr_plus dim_star .)
 
 
-state 184
+state 185
 
     (102) dim_expr_plus -> dim_expr_plus dim_expr .
 
@@ -5627,7 +5640,7 @@ state 184
     COMMA           reduce using rule 102 (dim_expr_plus -> dim_expr_plus dim_expr .)
 
 
-state 185
+state 186
 
     (105) dim_star -> LBRACKET . RBRACKET dim_star
     (104) dim_expr -> LBRACKET . expr RBRACKET
@@ -5675,35 +5688,35 @@ state 185
     (75) field_access -> . ID
     (76) array_access -> . primary LBRACKET expr RBRACKET
 
-    RBRACKET        shift and go to state 193
-    PLUS            shift and go to state 105
-    MINUS           shift and go to state 103
-    NOT             shift and go to state 112
-    THIS            shift and go to state 92
-    SUPER           shift and go to state 96
-    LPAREN          shift and go to state 86
-    NEW             shift and go to state 102
-    INC             shift and go to state 99
-    DEC             shift and go to state 72
-    INT_CONST       shift and go to state 75
-    FLOAT_CONST     shift and go to state 70
-    STRING_CONST    shift and go to state 74
-    NULL            shift and go to state 76
-    TRUE            shift and go to state 77
-    FALSE           shift and go to state 89
-    ID              shift and go to state 108
+    RBRACKET        shift and go to state 194
+    PLUS            shift and go to state 106
+    MINUS           shift and go to state 104
+    NOT             shift and go to state 113
+    THIS            shift and go to state 93
+    SUPER           shift and go to state 97
+    LPAREN          shift and go to state 87
+    NEW             shift and go to state 103
+    INC             shift and go to state 100
+    DEC             shift and go to state 73
+    INT_CONST       shift and go to state 76
+    FLOAT_CONST     shift and go to state 71
+    STRING_CONST    shift and go to state 75
+    NULL            shift and go to state 77
+    TRUE            shift and go to state 78
+    FALSE           shift and go to state 90
+    ID              shift and go to state 109
 
-    new_array                      shift and go to state 100
-    field_access                   shift and go to state 107
-    expr                           shift and go to state 186
-    primary                        shift and go to state 101
-    array_access                   shift and go to state 73
-    literal                        shift and go to state 79
-    lhs                            shift and go to state 111
-    method_invocation              shift and go to state 106
-    assign                         shift and go to state 110
+    new_array                      shift and go to state 101
+    field_access                   shift and go to state 108
+    expr                           shift and go to state 187
+    primary                        shift and go to state 102
+    array_access                   shift and go to state 74
+    literal                        shift and go to state 80
+    lhs                            shift and go to state 112
+    method_invocation              shift and go to state 107
+    assign                         shift and go to state 111
 
-state 186
+state 187
 
     (104) dim_expr -> LBRACKET expr . RBRACKET
     (81) expr -> expr . PLUS expr
@@ -5719,22 +5732,22 @@ state 186
     (91) expr -> expr . AND expr
     (92) expr -> expr . OR expr
 
-    RBRACKET        shift and go to state 194
-    PLUS            shift and go to state 143
-    MINUS           shift and go to state 146
-    MULTIPLY        shift and go to state 144
-    DIVIDE          shift and go to state 139
-    EQ              shift and go to state 145
-    NEQ             shift and go to state 147
-    LT              shift and go to state 142
-    LEQ             shift and go to state 141
-    GT              shift and go to state 138
-    GEQ             shift and go to state 137
-    AND             shift and go to state 136
-    OR              shift and go to state 140
+    RBRACKET        shift and go to state 195
+    PLUS            shift and go to state 144
+    MINUS           shift and go to state 147
+    MULTIPLY        shift and go to state 145
+    DIVIDE          shift and go to state 140
+    EQ              shift and go to state 146
+    NEQ             shift and go to state 148
+    LT              shift and go to state 143
+    LEQ             shift and go to state 142
+    GT              shift and go to state 139
+    GEQ             shift and go to state 138
+    AND             shift and go to state 137
+    OR              shift and go to state 141
 
 
-state 187
+state 188
 
     (46) stmt -> WHILE LPAREN expr RPAREN stmt .
 
@@ -5766,19 +5779,20 @@ state 187
     ELSE            reduce using rule 46 (stmt -> WHILE LPAREN expr RPAREN stmt .)
 
 
-state 188
+state 189
 
     (54) stmt -> error . SEMICOLON
 
-    SEMICOLON       shift and go to state 129
+    SEMICOLON       shift and go to state 130
 
 
-state 189
+state 190
 
     (65) primary -> NEW ID LPAREN args_opt RPAREN .
 
     DOT             reduce using rule 65 (primary -> NEW ID LPAREN args_opt RPAREN .)
     LBRACKET        reduce using rule 65 (primary -> NEW ID LPAREN args_opt RPAREN .)
+    RPAREN          reduce using rule 65 (primary -> NEW ID LPAREN args_opt RPAREN .)
     PLUS            reduce using rule 65 (primary -> NEW ID LPAREN args_opt RPAREN .)
     MINUS           reduce using rule 65 (primary -> NEW ID LPAREN args_opt RPAREN .)
     MULTIPLY        reduce using rule 65 (primary -> NEW ID LPAREN args_opt RPAREN .)
@@ -5792,12 +5806,11 @@ state 189
     AND             reduce using rule 65 (primary -> NEW ID LPAREN args_opt RPAREN .)
     OR              reduce using rule 65 (primary -> NEW ID LPAREN args_opt RPAREN .)
     SEMICOLON       reduce using rule 65 (primary -> NEW ID LPAREN args_opt RPAREN .)
-    RPAREN          reduce using rule 65 (primary -> NEW ID LPAREN args_opt RPAREN .)
     RBRACKET        reduce using rule 65 (primary -> NEW ID LPAREN args_opt RPAREN .)
     COMMA           reduce using rule 65 (primary -> NEW ID LPAREN args_opt RPAREN .)
 
 
-state 190
+state 191
 
     (70) arg_plus -> arg_plus COMMA expr .
     (81) expr -> expr . PLUS expr
@@ -5815,33 +5828,33 @@ state 190
 
     COMMA           reduce using rule 70 (arg_plus -> arg_plus COMMA expr .)
     RPAREN          reduce using rule 70 (arg_plus -> arg_plus COMMA expr .)
-    PLUS            shift and go to state 143
-    MINUS           shift and go to state 146
-    MULTIPLY        shift and go to state 144
-    DIVIDE          shift and go to state 139
-    EQ              shift and go to state 145
-    NEQ             shift and go to state 147
-    LT              shift and go to state 142
-    LEQ             shift and go to state 141
-    GT              shift and go to state 138
-    GEQ             shift and go to state 137
-    AND             shift and go to state 136
-    OR              shift and go to state 140
-
-
-state 191
-
-    (47) stmt -> FOR LPAREN stmt_expr_opt SEMICOLON expr_opt . SEMICOLON stmt_expr_opt RPAREN stmt
-
-    SEMICOLON       shift and go to state 195
+    PLUS            shift and go to state 144
+    MINUS           shift and go to state 147
+    MULTIPLY        shift and go to state 145
+    DIVIDE          shift and go to state 140
+    EQ              shift and go to state 146
+    NEQ             shift and go to state 148
+    LT              shift and go to state 143
+    LEQ             shift and go to state 142
+    GT              shift and go to state 139
+    GEQ             shift and go to state 138
+    AND             shift and go to state 137
+    OR              shift and go to state 141
 
 
 state 192
 
+    (47) stmt -> FOR LPAREN stmt_expr_opt SEMICOLON expr_opt . SEMICOLON stmt_expr_opt RPAREN stmt
+
+    SEMICOLON       shift and go to state 196
+
+
+state 193
+
     (44) stmt -> IF LPAREN expr RPAREN stmt . ELSE stmt
     (45) stmt -> IF LPAREN expr RPAREN stmt .
 
-    ELSE            shift and go to state 196
+    ELSE            shift and go to state 197
     RBRACE          reduce using rule 45 (stmt -> IF LPAREN expr RPAREN stmt .)
     error           reduce using rule 45 (stmt -> IF LPAREN expr RPAREN stmt .)
     IF              reduce using rule 45 (stmt -> IF LPAREN expr RPAREN stmt .)
@@ -5871,13 +5884,13 @@ state 192
   ! ELSE            [ reduce using rule 45 (stmt -> IF LPAREN expr RPAREN stmt .) ]
 
 
-state 193
+state 194
 
     (105) dim_star -> LBRACKET RBRACKET . dim_star
     (105) dim_star -> . LBRACKET RBRACKET dim_star
     (106) dim_star -> .
 
-    LBRACKET        shift and go to state 197
+    LBRACKET        shift and go to state 198
     PLUS            reduce using rule 106 (dim_star -> .)
     MINUS           reduce using rule 106 (dim_star -> .)
     MULTIPLY        reduce using rule 106 (dim_star -> .)
@@ -5895,9 +5908,9 @@ state 193
     RBRACKET        reduce using rule 106 (dim_star -> .)
     COMMA           reduce using rule 106 (dim_star -> .)
 
-    dim_star                       shift and go to state 198
+    dim_star                       shift and go to state 199
 
-state 194
+state 195
 
     (104) dim_expr -> LBRACKET expr RBRACKET .
 
@@ -5920,7 +5933,7 @@ state 194
     COMMA           reduce using rule 104 (dim_expr -> LBRACKET expr RBRACKET .)
 
 
-state 195
+state 196
 
     (47) stmt -> FOR LPAREN stmt_expr_opt SEMICOLON expr_opt SEMICOLON . stmt_expr_opt RPAREN stmt
     (109) stmt_expr_opt -> . stmt_expr
@@ -5953,31 +5966,31 @@ state 195
     (60) literal -> . FALSE
 
     RPAREN          reduce using rule 110 (stmt_expr_opt -> .)
-    INC             shift and go to state 99
-    DEC             shift and go to state 72
-    ID              shift and go to state 108
-    THIS            shift and go to state 92
-    SUPER           shift and go to state 96
-    LPAREN          shift and go to state 86
-    NEW             shift and go to state 71
-    INT_CONST       shift and go to state 75
-    FLOAT_CONST     shift and go to state 70
-    STRING_CONST    shift and go to state 74
-    NULL            shift and go to state 76
-    TRUE            shift and go to state 77
-    FALSE           shift and go to state 89
+    INC             shift and go to state 100
+    DEC             shift and go to state 73
+    ID              shift and go to state 109
+    THIS            shift and go to state 93
+    SUPER           shift and go to state 97
+    LPAREN          shift and go to state 87
+    NEW             shift and go to state 72
+    INT_CONST       shift and go to state 76
+    FLOAT_CONST     shift and go to state 71
+    STRING_CONST    shift and go to state 75
+    NULL            shift and go to state 77
+    TRUE            shift and go to state 78
+    FALSE           shift and go to state 90
 
-    field_access                   shift and go to state 82
-    primary                        shift and go to state 68
-    stmt_expr_opt                  shift and go to state 199
-    stmt_expr                      shift and go to state 156
-    literal                        shift and go to state 79
-    lhs                            shift and go to state 94
-    method_invocation              shift and go to state 80
-    array_access                   shift and go to state 73
-    assign                         shift and go to state 97
+    field_access                   shift and go to state 83
+    primary                        shift and go to state 69
+    stmt_expr_opt                  shift and go to state 200
+    stmt_expr                      shift and go to state 157
+    literal                        shift and go to state 80
+    lhs                            shift and go to state 95
+    method_invocation              shift and go to state 81
+    array_access                   shift and go to state 74
+    assign                         shift and go to state 98
 
-state 196
+state 197
 
     (44) stmt -> IF LPAREN expr RPAREN stmt ELSE . stmt
     (44) stmt -> . IF LPAREN expr RPAREN stmt ELSE stmt
@@ -6025,52 +6038,52 @@ state 196
     (59) literal -> . TRUE
     (60) literal -> . FALSE
 
-    IF              shift and go to state 88
-    WHILE           shift and go to state 69
-    FOR             shift and go to state 84
-    RETURN          shift and go to state 67
-    BREAK           shift and go to state 91
-    CONTINUE        shift and go to state 93
-    error           shift and go to state 188
-    LBRACE          shift and go to state 62
-    INC             shift and go to state 99
-    DEC             shift and go to state 72
+    IF              shift and go to state 89
+    WHILE           shift and go to state 70
+    FOR             shift and go to state 85
+    RETURN          shift and go to state 68
+    BREAK           shift and go to state 92
+    CONTINUE        shift and go to state 94
+    error           shift and go to state 189
+    LBRACE          shift and go to state 63
+    INC             shift and go to state 100
+    DEC             shift and go to state 73
     INT             shift and go to state 27
     BOOLEAN         shift and go to state 31
     FLOAT           shift and go to state 29
-    ID              shift and go to state 87
-    THIS            shift and go to state 92
-    SUPER           shift and go to state 96
-    LPAREN          shift and go to state 86
-    NEW             shift and go to state 71
-    INT_CONST       shift and go to state 75
-    FLOAT_CONST     shift and go to state 70
-    STRING_CONST    shift and go to state 74
-    NULL            shift and go to state 76
-    TRUE            shift and go to state 77
-    FALSE           shift and go to state 89
+    ID              shift and go to state 88
+    THIS            shift and go to state 93
+    SUPER           shift and go to state 97
+    LPAREN          shift and go to state 87
+    NEW             shift and go to state 72
+    INT_CONST       shift and go to state 76
+    FLOAT_CONST     shift and go to state 71
+    STRING_CONST    shift and go to state 75
+    NULL            shift and go to state 77
+    TRUE            shift and go to state 78
+    FALSE           shift and go to state 90
 
-    field_access                   shift and go to state 82
-    array_access                   shift and go to state 73
-    stmt_expr                      shift and go to state 78
-    stmt                           shift and go to state 200
-    primary                        shift and go to state 68
-    literal                        shift and go to state 79
-    lhs                            shift and go to state 94
-    var_decl                       shift and go to state 90
-    method_invocation              shift and go to state 80
-    type                           shift and go to state 81
-    assign                         shift and go to state 97
-    block                          shift and go to state 98
+    field_access                   shift and go to state 83
+    array_access                   shift and go to state 74
+    stmt_expr                      shift and go to state 79
+    stmt                           shift and go to state 201
+    primary                        shift and go to state 69
+    literal                        shift and go to state 80
+    lhs                            shift and go to state 95
+    var_decl                       shift and go to state 91
+    method_invocation              shift and go to state 81
+    type                           shift and go to state 82
+    assign                         shift and go to state 98
+    block                          shift and go to state 99
 
-state 197
+state 198
 
     (105) dim_star -> LBRACKET . RBRACKET dim_star
 
-    RBRACKET        shift and go to state 193
+    RBRACKET        shift and go to state 194
 
 
-state 198
+state 199
 
     (105) dim_star -> LBRACKET RBRACKET dim_star .
 
@@ -6092,14 +6105,14 @@ state 198
     COMMA           reduce using rule 105 (dim_star -> LBRACKET RBRACKET dim_star .)
 
 
-state 199
+state 200
 
     (47) stmt -> FOR LPAREN stmt_expr_opt SEMICOLON expr_opt SEMICOLON stmt_expr_opt . RPAREN stmt
 
-    RPAREN          shift and go to state 201
+    RPAREN          shift and go to state 202
 
 
-state 200
+state 201
 
     (44) stmt -> IF LPAREN expr RPAREN stmt ELSE stmt .
 
@@ -6131,7 +6144,7 @@ state 200
     ELSE            reduce using rule 44 (stmt -> IF LPAREN expr RPAREN stmt ELSE stmt .)
 
 
-state 201
+state 202
 
     (47) stmt -> FOR LPAREN stmt_expr_opt SEMICOLON expr_opt SEMICOLON stmt_expr_opt RPAREN . stmt
     (44) stmt -> . IF LPAREN expr RPAREN stmt ELSE stmt
@@ -6179,45 +6192,45 @@ state 201
     (59) literal -> . TRUE
     (60) literal -> . FALSE
 
-    IF              shift and go to state 88
-    WHILE           shift and go to state 69
-    FOR             shift and go to state 84
-    RETURN          shift and go to state 67
-    BREAK           shift and go to state 91
-    CONTINUE        shift and go to state 93
-    error           shift and go to state 188
-    LBRACE          shift and go to state 62
-    INC             shift and go to state 99
-    DEC             shift and go to state 72
+    IF              shift and go to state 89
+    WHILE           shift and go to state 70
+    FOR             shift and go to state 85
+    RETURN          shift and go to state 68
+    BREAK           shift and go to state 92
+    CONTINUE        shift and go to state 94
+    error           shift and go to state 189
+    LBRACE          shift and go to state 63
+    INC             shift and go to state 100
+    DEC             shift and go to state 73
     INT             shift and go to state 27
     BOOLEAN         shift and go to state 31
     FLOAT           shift and go to state 29
-    ID              shift and go to state 87
-    THIS            shift and go to state 92
-    SUPER           shift and go to state 96
-    LPAREN          shift and go to state 86
-    NEW             shift and go to state 71
-    INT_CONST       shift and go to state 75
-    FLOAT_CONST     shift and go to state 70
-    STRING_CONST    shift and go to state 74
-    NULL            shift and go to state 76
-    TRUE            shift and go to state 77
-    FALSE           shift and go to state 89
+    ID              shift and go to state 88
+    THIS            shift and go to state 93
+    SUPER           shift and go to state 97
+    LPAREN          shift and go to state 87
+    NEW             shift and go to state 72
+    INT_CONST       shift and go to state 76
+    FLOAT_CONST     shift and go to state 71
+    STRING_CONST    shift and go to state 75
+    NULL            shift and go to state 77
+    TRUE            shift and go to state 78
+    FALSE           shift and go to state 90
 
-    field_access                   shift and go to state 82
-    primary                        shift and go to state 68
-    array_access                   shift and go to state 73
-    stmt                           shift and go to state 202
-    stmt_expr                      shift and go to state 78
-    literal                        shift and go to state 79
-    lhs                            shift and go to state 94
-    var_decl                       shift and go to state 90
-    method_invocation              shift and go to state 80
-    type                           shift and go to state 81
-    assign                         shift and go to state 97
-    block                          shift and go to state 98
+    field_access                   shift and go to state 83
+    primary                        shift and go to state 69
+    array_access                   shift and go to state 74
+    stmt                           shift and go to state 203
+    stmt_expr                      shift and go to state 79
+    literal                        shift and go to state 80
+    lhs                            shift and go to state 95
+    var_decl                       shift and go to state 91
+    method_invocation              shift and go to state 81
+    type                           shift and go to state 82
+    assign                         shift and go to state 98
+    block                          shift and go to state 99
 
-state 202
+state 203
 
     (47) stmt -> FOR LPAREN stmt_expr_opt SEMICOLON expr_opt SEMICOLON stmt_expr_opt RPAREN stmt .
 
