@@ -432,12 +432,12 @@ def p_stmt_for(p):
     pass
 def p_stmt_return(p):
     'stmt : RETURN expr_opt SEMICOLON'
-    p[0] = 'Return('+ str(p[2])+')'
+    p[0] = 'Return( '+ str(p[2])+' )'
     print 's42'
     pass
 def p_stmt_stmt_expr(p):
     'stmt : stmt_expr SEMICOLON'
-    p[0] = 'Expr( ' + str(p[1]) + ')'
+    p[0] = 'Expr( ' + str(p[1]) + ' )'
     print 's43'
     pass
 def p_stmt_break(p):
@@ -614,7 +614,7 @@ def p_array_access(p):
         localVariableMap[variableName] = localVariableCounter
 
     counter = localVariableMap[variableName]
-    p[0] = 'Array-Access(Variable(' + str(counter) + ')'
+    p[0] = 'Array-Access(Variable(' + str(counter) + '),'+str(p[3])+')'
     print 's69'
     pass
 
@@ -696,12 +696,12 @@ def p_assign_equals(p):
 
     if localVariableMap.__contains__(p[1]):
         varCounter=localVariableMap[p[1]]
-        p[0] = 'Assign(' + 'Variable('+ str(varCounter )+')' + ',' + str(p[3]) + ')'
+        p[0] = 'Assign(' + 'Variable('+ str(varCounter )+')' + ', ' + str(p[3]) + ')'
     else:
         if 'Array-Access' in p[1]:
-            p[0] = 'Assign(' + str(p[1])+ ',' + str(p[3]) + '))'
+            p[0] = 'Assign(' + str(p[1])+ ', ' + str(p[3]) + '))'
         else:
-            p[0] = 'Assign(' + str(p[1])+ ',' + str(p[3]) + ')'
+            p[0] = 'Assign(' + str(p[1])+ ', ' + str(p[3]) + ')'
 
     print 's74'
     pass
@@ -734,18 +734,25 @@ def p_assign_pre_dec(p):
 
 def p_new_array(p):
     'new_array : NEW type dim_expr_plus dim_star'
-    p[0] = 'New-array(' + str(p[2]) + ',' + p[3] +')'
+    dimstr = ''
+    if (p[3]):
+        dimstr = '('
+        for elem in p[3]:
+            dimstr +=  str(elem)+','
+        dimstr = dimstr[0:-1]
+        dimstr += ')'
+    p[0] = 'New-array(' + str(p[2]) + ',' + dimstr +')'
     print 's79'
     pass
 
 def p_dim_expr_plus(p):
     'dim_expr_plus : dim_expr_plus dim_expr'
     print 's80'
-    p[0] = p[1] + p[2]
+    p[0] = p[1] + (p[2],)
     pass
 def p_dim_expr_single(p):
     'dim_expr_plus : dim_expr'
-    p[0] = p[1]
+    p[0] = (p[1],)
     print 's81'
     pass
 
