@@ -398,22 +398,22 @@ def p_stmt_if(p):
           | IF LPAREN expr RPAREN stmt'''
     print 'p[5] = ' + str(p[5])
     result = ''
-    result = 'If (Condition, ' + str(p[3]) + ')\n' + 'Then (Statement, '
+    result = 'If (' + str(p[3]) + ')\n' + 'Then ('
     for element in p[5]:
         if element is None:
             continue
-        result += element +','
+        result += element +', '
     if len(p[5]) >0:
-        result = result[0:-1]
+        result = result[0:-2]
     result+=')'
     try:
-        result += '\nElse (Statement, '
+        result += '\nElse ('
         for element in p[7]:
             if element is None:
                 continue
-            result += element +','
+            result += element +', '
         if len(p[7]) >0:
-            result = result[0:-1]
+            result = result[0:-2]
         result+=')'
     except:
         pass
