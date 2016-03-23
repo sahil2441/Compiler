@@ -88,10 +88,10 @@ class DecafClass(object):
                 retstr += str(variable)
                 retstr +="\n"
             retstr += "Constructor Body:\n";
-            retstr+= 'Block(['
+            retstr+= 'Block([\n'
             blockstr = ""
             for block in constructor.body:
-                blockstr += str(block)+",\n";
+                blockstr += str(block)+"\n,";
             if len(constructor.body)>0:
                 blockstr = blockstr[:-2]
                 blockstr += '\n\n'
@@ -113,10 +113,10 @@ class DecafClass(object):
                 retstr += str(variable)
                 retstr +="\n"
             retstr += "Method Body:\n"
-            retstr+= 'Block(['
+            retstr+= 'Block([\n'
             blockstr = ""
             for block in method.body:
-                blockstr += str(block)+ ",\n";
+                blockstr += str(block)+ "\n,";
             if len(method.body)>0:
                 blockstr = blockstr[:-2]
                 blockstr += '\n\n'
