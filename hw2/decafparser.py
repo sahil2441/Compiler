@@ -80,7 +80,6 @@ def p_constructor_decl(p):
 def p_formals(p):
     '''formals : type variables
                 | type variables COMMA formals'''
-#TODO
 def p_block(p):
     '''block : LCURLY empty RCURLY
               | LCURLY stmthelper RCURLY'''

@@ -660,12 +660,24 @@ def p_expr_unop(p):
 
 def p_assign_equals(p):
     'assign : lhs ASSIGN expr'
-    p[0] = 'Assign(' + p[1] + ',' + str(p[3]) + ')'
+    global localVariableMap
+    if localVariableMap.__contains__(p[1]):
+        varCounter=localVariableMap[p[1]]
+        p[0] = 'Assign(' + 'Variable('+ str(varCounter )+')' + ',' + str(p[3]) + ')'
+    else:
+        p[0] = 'Assign(' + p[1] + ',' + str(p[3]) + ')'
+
     print 's74'
     pass
 def p_assign_post_inc(p):
     'assign : lhs INC'
-    p[0] = 'Auto('+p[1]+', inc, post)'
+    global localVariableMap
+    if localVariableMap.__contains__(p[1]):
+        varCounter=localVariableMap[p[1]]
+        p[0] = 'Auto('+'Variable('+ str(varCounter )+')' + ', inc, post)'
+    else:
+        p[0] = 'Auto('+p[1]+', inc, post)'
+
     print 's75'
     pass
 def p_assign_pre_inc(p):

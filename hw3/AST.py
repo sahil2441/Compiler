@@ -19,7 +19,7 @@ class Method(object):
         self.variables = list();
         # Added for body
         self.body = body;
-    def toString(self):#TODO parameters, body
+    def toString(self):
         return ", ".join(["METHOD: "+str(self.id), self.name, self.containingClass, self.visibility, self.applicability, self.returnType]);
 
 class Field(object):
