@@ -174,8 +174,15 @@ def p_method_decl_void(p):
                 scope.body.append(content)
     print ('body void: ' + str(body))
     pop_scope()
+
     # Reset the method parameter list
     methodParameterList = list()
+
+    # Reset local variable map and local variable counter
+    global localVariableCounter
+    global localVariableMap
+    localVariableCounter=0
+    localVariableMap =dict()
     print 's12'
     pass
 
@@ -191,6 +198,16 @@ def p_method_decl_nonvoid(p):
                 scope.body.append(content)
     print ('body non void: ' + str(body))
     pop_scope()
+
+    # Reset the method parameter list
+    methodParameterList = list()
+
+    # Reset local variable map and local variable counter
+    global localVariableCounter
+    global localVariableMap
+    localVariableCounter=0
+    localVariableMap =dict()
+
     print 's13'
     pass
 
