@@ -448,8 +448,43 @@ def p_stmt_while(p):
 
 def p_stmt_for(p):
     'stmt : FOR LPAREN stmt_expr_opt SEMICOLON expr_opt SEMICOLON stmt_expr_opt RPAREN stmt'
+    result = ''
+    result += 'For([\n'
+
+    result += '['
+    # stmt_expr_opt
+    if p[3] is not None:
+        result += str(p[3])
+    result += ']\n, '
+    result += '['
+
+    # expr_opt
+    if p[5] is not None:
+        result += str(p[5])
+    result += ']\n, '
+    result += '['
+
+    # stmt_expr_opt
+    if p[7] is not None:
+        result += str(p[7])
+    result += ']\n, '
+
+    # Statements
+    result += '['
+    for s in p[9]:
+        if s is None:
+            continue
+        result += str(s) +', '
+    if(len(p[9])>0):
+        result = result[0:-2]
+    result += ']'
+
+    # final bracket
+    result += ']'
+    p[0] = result
     print 's41'
     pass
+
 def p_stmt_return(p):
     'stmt : RETURN expr_opt SEMICOLON'
     p[0] = 'Return('+ str(p[2])+')'

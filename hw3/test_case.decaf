@@ -1,7 +1,11 @@
 class A {
    public int g() {
-        while(x==10){
-            y=9;
+        int i;
+        for(; ; i++){
+            x=10;
+            y++;
+            y=10;
         }
-    }
+
+   }
 }
