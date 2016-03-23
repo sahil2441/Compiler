@@ -225,7 +225,7 @@ def p_method_decl_nonvoid(p):
     else:
         bodycontent = contents
     # print variables
-    # print ('body : ' + str(body))
+    print ('body non void: ' + str(body))
     methodMap[methodCounter] = Method(methodCounter, p[3], scope.name, visibility, applicability=applicability, returnType=p[2], body=bodycontent)
     methodMap[methodCounter].variables = variables
     classesMap[scope.name].methodList.append(methodMap[methodCounter])
@@ -501,20 +501,25 @@ def p_primary_literal(p):
     pass
 def p_primary_this(p):
     'primary : THIS'
-    p[0] = p[1]
+    p[0] = 'This'
     print 's56'
     pass
 def p_primary_super(p):
     'primary : SUPER'
-    p[0] = p[1]
+    p[0] = 'Super'
     print 's57'
     pass
 def p_primary_paren(p):
     'primary : LPAREN expr RPAREN'
+    p[0] = '(' + p[2] + ')'
     print 's58'
     pass
 def p_primary_newobj(p):
     'primary : NEW ID LPAREN args_opt RPAREN'
+    args = '[]'
+    if (not p[4] is None):
+        args = str(p[4])
+    p[0] = 'New-object(' + str(p[2]) +args+ ')'
     print 's59'
     pass
 def p_primary_lhs(p):
@@ -567,8 +572,8 @@ def p_lhs(p):
 
 def p_field_access_dot(p):
     'field_access : primary DOT ID'
-    p[0] = p[1] + ', ' + p[3] + ')'
-    # p[0] = 'Field-access(' + p[1] + ', ' + p[3] + ')'
+    #p[0] = p[1] + ', ' + p[3] + ')'
+    p[0] = 'Field-access(' + p[1] + ', ' + p[3] + ')'
     print 's67'
     pass
 def p_field_access_id(p):
@@ -657,18 +662,22 @@ def p_assign_equals(p):
     pass
 def p_assign_post_inc(p):
     'assign : lhs INC'
+    p[0] = 'Auto('+p[1]+', inc, post)'
     print 's75'
     pass
 def p_assign_pre_inc(p):
     'assign : INC lhs'
+    p[0] = 'Auto('+p[2]+', inc, pre)'
     print 's76'
     pass
 def p_assign_post_dec(p):
     'assign : lhs DEC'
+    p[0] = 'Auto('+p[1]+', dec, post)'
     print 's77'
     pass
 def p_assign_pre_dec(p):
     'assign : DEC lhs'
+    p[0] = 'Auto('+p[2]+', inc, pre)'
     print 's78'
     pass
 
