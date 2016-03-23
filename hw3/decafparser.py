@@ -506,17 +506,17 @@ def p_stmt_error(p):
 # Expressions
 def p_literal_int_const(p):
     'literal : INT_CONST'
-    p[0] = 'Constant(Integer-constant('+str(p[1])+')'
+    p[0] = 'Constant(Integer-constant('+str(p[1])+'))'
     print 's49'
     pass
 def p_literal_float_const(p):
     'literal : FLOAT_CONST'
-    p[0] = 'Constant(Float-constant('+str(p[1])+')'
+    p[0] = 'Constant(Float-constant('+str(p[1])+'))'
     print 's50'
     pass
 def p_literal_string_const(p):
     'literal : STRING_CONST'
-    p[0] = 'Constant(String-constant('+str(p[1])+')'
+    p[0] = 'Constant(String-constant('+str(p[1])+'))'
     print 's51'
     pass
 def p_literal_null(p):
@@ -626,6 +626,16 @@ def p_field_access_id(p):
 
 def p_array_access(p):
     'array_access : primary LBRACKET expr RBRACKET'
+    variableName = str(p[1])
+    global localVariableMap
+    global localVariableCounter
+
+    if not localVariableMap.__contains__(variableName):
+        localVariableCounter += 1
+        localVariableMap[variableName] = localVariableCounter
+
+    counter = localVariableMap[variableName]
+    p[0] = 'Array-Access(Variable(' + str(counter) + ')'
     print 's69'
     pass
 
@@ -701,11 +711,18 @@ def p_expr_unop(p):
 def p_assign_equals(p):
     'assign : lhs ASSIGN expr'
     global localVariableMap
+
+    # TODO : Expr( Assign(a,None))
+    # This should instead be Variable(1)
+
     if localVariableMap.__contains__(p[1]):
         varCounter=localVariableMap[p[1]]
         p[0] = 'Assign(' + 'Variable('+ str(varCounter )+')' + ',' + str(p[3]) + ')'
     else:
-        p[0] = 'Assign(' + p[1] + ',' + str(p[3]) + ')'
+        if 'Array-Access' in p[1]:
+            p[0] = 'Assign(' + str(p[1])+ ',' + str(p[3]) + '))'
+        else:
+            p[0] = 'Assign(' + str(p[1])+ ',' + str(p[3]) + ')'
 
     print 's74'
     pass
@@ -738,6 +755,7 @@ def p_assign_pre_dec(p):
 
 def p_new_array(p):
     'new_array : NEW type dim_expr_plus dim_star'
+    p[0] = 'New-array(' + str(p[2]) + ',' + p[3] +')'
     print 's79'
     pass
 

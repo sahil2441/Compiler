@@ -1,13 +1,7 @@
 class A {
-int a[][];
- A(int a) {
- int i,j,k[][];
- i = 0;
- }
-
-
- /*public static void method(int x) {
-    int u;
- }*/
- int b;
+   A () {
+         int a,b,c;
+         int d;
+         x[1] = 10;
+   }
 }
