@@ -424,8 +424,28 @@ def p_stmt_if(p):
 
 def p_stmt_while(p):
     'stmt : WHILE LPAREN expr RPAREN stmt'
+    result = ''
+    result += 'While(['
+
+    # Condition
+    if p[3] is not None:
+        result += str(p[3])
+    result += '], '
+
+    # Statement
+    result += '['
+    for s in p[5]:
+        if s is None:
+            continue
+        result += s +', '
+
+    if len(p[5])>0:
+        result = result[0:-2]
+    result += ')'
+    p[0] = result
     print 's40'
     pass
+
 def p_stmt_for(p):
     'stmt : FOR LPAREN stmt_expr_opt SEMICOLON expr_opt SEMICOLON stmt_expr_opt RPAREN stmt'
     print 's41'

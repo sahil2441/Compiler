@@ -1,13 +1,7 @@
 class A {
    public int g() {
-        if(x ==10){
-            int x;
-            x=20;
-            y=10;
+        while(x==10){
+            y=9;
         }
-        else{
-            z=1;
-            a=2;
-        }
-   }
+    }
 }
