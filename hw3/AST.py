@@ -1,10 +1,11 @@
 class Constructor(object):
-    def __init__(self, id, visibility="private", variables=dict(), body=list()):
+    def __init__(self, id, visibility="private", variables=list(), body=list(), localvarmap = dict()):
         self.id = id;
         self.visibility = visibility;
         self.parameters = list();
         self.variables = variables;
         self.body = body;
+        self.localvarmap = localvarmap;
         self.blocks=list();
 
 class Method(object):

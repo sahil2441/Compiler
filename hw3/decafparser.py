@@ -146,7 +146,6 @@ def p_field_decl(p):
         var = varcomponents[-1]
         if (len(varcomponents) > 0):
             varcomponents = varcomponents[0:-1]
-            # print 'varcomponents ' + str(varcomponents)
             for comp in varcomponents:
                 localtype = comp+"(" + localtype + ")"
         global counter
@@ -165,7 +164,7 @@ def p_field_decl(p):
     pass
 
 def p_method_decl_void(p):
-    'method_decl : mod VOID ID LPAREN param_list_opt RPAREN block'
+    'method_decl : mod VOID ID LPAREN methodscope param_list_opt RPAREN block'
 
     # Reinitialize the local variable map and local variable counter at every new method declaration
     global localVariableCounter
@@ -207,6 +206,9 @@ def p_method_decl_void(p):
     print 's12'
     pass
 
+def p_methodscope(p):
+    'methodscope : '
+    print 's12.1'
 def p_method_decl_nonvoid(p):
     'method_decl : mod type ID LPAREN param_list_opt RPAREN block'
 
@@ -250,37 +252,34 @@ def p_method_decl_nonvoid(p):
     pass
 
 def p_constructor_decl(p):
-    'constructor_decl : mod ID LPAREN param_list_opt RPAREN block'
+    'constructor_decl : mod ID LPAREN constructorscope param_list_opt RPAREN block'
+    scope = fetchScope()
+    variableCount = len(scope.variables) + len(scope.parameters)
+    # Added for body
+    body = p[7]
+    print 'constructor body  :' + str(body)
+    if body:
+        for content in body:
+            if (not content is None):
+                scope.body.append(content)
+    pop_scope();
+    print 's14'
+    pass
+
+def p_constructorscope(p):
+    'constructorscope : '
     scope = fetchScope();
     global constructorCounter
     constructorCounter += 1
-    visibility="private"
-    parameters = list()
-    if (p[4]):
-        for paramTuple in p[4]:
-            global localVariableCounter
-            localVariableCounter += 1
-            localVariableMap[paramTuple[1]]=localVariableCounter
-            variable = Variable(paramTuple[1], localVariableCounter, "formal", paramTuple[0])
-            parameters.append(variable)
-    # Added for body
-    body = p[6]
-    contents = body.split("$$")
-    variables=''
-    if "VARIABLE" in contents[0]:
-        variables = contents[0].split("$")
-        bodycontent = contents[1:]
-    else:
-        bodycontent = contents
-
-    if (p[1][0]):
-        print "CONSTRUCTOR IF"+str(p[1])," scope.name "+scope.name
-        visibility = p[1][0]
-    constructorMap[constructorCounter] = Constructor(constructorCounter,visibility, variables, bodycontent)
-    # print "param list " + str(p[4])
-    constructorMap[constructorCounter].parameters = parameters
+    if (scope.name != str(p[-2])):
+        print 'Error in constructor name!!!'
+    visibility = "private"
+    if (p[-3][0]):
+        visibility=str(p[-3][0])
+    constructorMap[constructorCounter] = Constructor(constructorCounter, visibility)
     classesMap[scope.name].constructorList.append(constructorMap[constructorCounter])
-    print 's14'
+    push_scope(constructorMap[constructorCounter])
+    print 's14.1'
     pass
 
 
@@ -368,6 +367,15 @@ def p_var_array(p):
 def p_param_list_opt(p):
     'param_list_opt : param_list'
     p[0] = p[1]
+    parameters = list()
+    scope = fetchScope()
+    variableCount = 0
+    if (p[1]):
+        for paramTuple in p[1]:
+            variableCount += 1
+            variable = Variable(paramTuple[1], variableCount, "formal", paramTuple[0])
+            parameters.append(variable)
+    scope.parameters = parameters;
     print 's30'
     pass
 def p_param_list_empty(p):
@@ -378,28 +386,28 @@ def p_param_list_empty(p):
 
 def p_param_list(p):
     'param_list : param_list COMMA param'
-    p[0] = (p[1],p[3])
+    p[0] = p[1] + (p[3],)
     # var = p[3][1]
     print 's32'
     pass
 def p_param_list_single(p):
     'param_list : param'
-    p[0] = p[1]
+    p[0] = (p[1],)
     print 's33'
     pass
 
 def p_param(p):
     'param : type ID'
     p[0] = (p[1],p[2])
-    global methodParameterList
-    global localVariableMap
-    global localVariableCounter
-    var = p[2]
-    if not localVariableMap.__contains__(var):
-        localVariableCounter += 1
-        localVariableMap[var] = localVariableCounter
-    varCounter = localVariableMap[var]
-    methodParameterList.append(varCounter)
+    #global methodParameterList
+    #global localVariableMap
+    #global localVariableCounter
+    #var = p[2]
+    #if not localVariableMap.__contains__(var):
+    #    localVariableCounter += 1
+    #    localVariableMap[var] = localVariableCounter
+    #varCounter = localVariableMap[var]
+    #methodParameterList.append(varCounter)
     print 's34'
     pass
 
@@ -424,9 +432,9 @@ def p_stmt_list_empty(p):
 def p_stmt_list(p):
     'stmt_list : stmt_list stmt'
     if p[1] is not None:
-        p[0] = p[1]+"$$"+ str(p[2])
+        p[0] = p[1]+ (p[2],)
     else:
-        p[0] = p[2]
+        p[0] = (p[2],)
     print 's38'
     pass
 
@@ -469,19 +477,24 @@ def p_stmt_block(p):
 def p_stmt_var_decl(p):
     'stmt : var_decl'
     type = p[1][0]
+    if (classesMap.has_key(type)):
+        type = 'user('+type+')'
     varlist = p[1][1].split(',')
-    vList = ""
+    print "varlist : " + str(varlist)
+    vList = list()
+    scope = fetchScope();
+    print 'scope : ' + str(scope)
+    localvarcounter = len(scope.parameters) + len(scope.variables)
     for var in varlist:
-        global localVariableMap
-        if (not localVariableMap.has_key(var)):
-            global localVariableCounter
-            localVariableCounter += 1
-            localVariableMap[var]=localVariableCounter
-        varcounter = localVariableMap[var]
-        vList += str(Variable(var, varcounter, 'local',type)) + "$"
-    if(len(vList) > 0):
-        vList = vList[0:-1]
-    p[0] = str(vList)
+        localtype = type;
+        vararr = var.split("(")
+        varname = vararr[-1]
+        vararr = vararr[0:-1]
+        if len(vararr) > 0:
+            for arraystr in vararr:
+                localtype = arraystr + '(' + localtype + ')'
+        localvarcounter += 1
+        scope.variables.append(Variable(varname, localvarcounter, 'local', localtype))
     print 's47'
     pass
 def p_stmt_error(p):
@@ -654,23 +667,23 @@ def p_expr_binop(p):
         print "p[3]: " + str(p[3])
         p[0] = 'Binary(add,'+str(p[1])+','+str(p[3])+')'
     elif p[2] == '-':
-        p[0] = 'Binary(subtract,'+str(p[1])+','+str(p[3])+')'
+        p[0] = 'Binary(sub,'+str(p[1])+','+str(p[3])+')'
     elif p[2] == '*':
-        p[0] = 'Binary(multiply,'+str(p[1])+','+str(p[3])+')'
+        p[0] = 'Binary(mul,'+str(p[1])+','+str(p[3])+')'
     elif p[2] == '/':
-        p[0] = 'Binary(divide,'+str(p[1])+','+str(p[3])+')'
+        p[0] = 'Binary(div,'+str(p[1])+','+str(p[3])+')'
     elif p[2] == '==':
-        p[0] = 'Binary(equals,'+str(p[1])+','+str(p[3])+')'
+        p[0] = 'Binary(eq,'+str(p[1])+','+str(p[3])+')'
     elif p[2] == '!=':
-        p[0] = 'Binary(not equals,'+str(p[1])+','+str(p[3])+')'
+        p[0] = 'Binary(neq,'+str(p[1])+','+str(p[3])+')'
     elif p[2] == '<':
-        p[0] = 'Binary(less than,'+str(p[1])+','+str(p[3])+')'
+        p[0] = 'Binary(lt,'+str(p[1])+','+str(p[3])+')'
     elif p[2] == '<=':
-        p[0] = 'Binary(less than and equal to,'+str(p[1])+','+str(p[3])+')'
+        p[0] = 'Binary(leq,'+str(p[1])+','+str(p[3])+')'
     elif p[2] == '>':
-        p[0] = 'Binary(greater than,'+str(p[1])+','+str(p[3])+')'
+        p[0] = 'Binary(gt,'+str(p[1])+','+str(p[3])+')'
     elif p[2] == '>=':
-        p[0] = 'Binary(greater than and equal to,'+str(p[1])+','+str(p[3])+')'
+        p[0] = 'Binary(geq,'+str(p[1])+','+str(p[3])+')'
     elif p[2] == '&&':
         p[0] = 'Binary(and,'+str(p[1])+','+str(p[3])+')'
     elif p[2] == '||':

@@ -1,6 +1,13 @@
-class B extends A {
+class A {
+int a[][];
+ A(int a) {
+ int i,j,k[][];
+ i = 0;
+ }
 
-   public int f(int k) {
-      return super.f() + k;
-   }
+
+ /*public static void method(int x) {
+    int u;
+ }*/
+ int b;
 }
