@@ -205,8 +205,8 @@ def p_methodscope(p):
         visibility=str(p[-4][0])
     if (p[-4][1]):
         applicability = "class"
-    returnType = p[-2]
-    methodName = p[-3]
+    returnType = p[-3]
+    methodName = p[-2]
     methodMap[methodCounter] = Method(methodCounter, name=methodName, containingClass=scope.name, visibility=visibility, applicability=applicability, returnType=returnType)
     classesMap[scope.name].methodList.append(methodMap[methodCounter])
     push_scope(methodMap[constructorCounter])
