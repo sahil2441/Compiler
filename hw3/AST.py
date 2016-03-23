@@ -8,13 +8,14 @@ class Constructor(object):
         self.blocks=list();
 
 class Method(object):
-    def __init__(self, id, name, containingClass = "", visibility="private", applicability="", returnType="void", body=list()):
+    def __init__(self, id, name, containingClass = "", visibility="private", applicability="", returnType="void", body=list(),
+                 parameters=list()):
         self.name = name;
         self.id = id;
         self.containingClass = containingClass;
         self.visibility = visibility;
         self.applicability = applicability;
-        self.parameters = list();
+        self.parameters = parameters;
         self.returnType = returnType;
         self.variables = list();
         # Added for body
@@ -108,7 +109,7 @@ class DecafClass(object):
             retstr += "\nMethod Parameters: "
             paramstr = ""
             for param in method.parameters:
-                paramstr += str(param.id)+ ","
+                paramstr += str(param)+ ","
             if (len(paramstr) > 0):
                 paramstr = paramstr[0:-1]
             retstr += paramstr+"\n"

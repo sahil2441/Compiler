@@ -39,6 +39,8 @@ methodCounter = 0
 localVariableCounter=0
 localVariableMap=dict()
 
+methodParameterList = list()
+
 scopeList = []
 def push_scope(f):
     scopeList.append(f);
@@ -191,9 +193,17 @@ def p_method_decl_void(p):
         bodycontent = contents
     # print variables
     # print ('body : ' + str(body))
-    methodMap[methodCounter] = Method(methodCounter, p[3], scope.name, visibility, applicability=applicability, returnType=p[2], body=bodycontent)
+
+    # Method parameters
+    # print 'Method Parameters: ' + str(p[5])
+    global methodParameterList
+    methodMap[methodCounter] = Method(methodCounter, p[3], scope.name, visibility, applicability=applicability,
+                                      returnType=p[2], body=bodycontent, parameters=methodParameterList)
     methodMap[methodCounter].variables = variables
     classesMap[scope.name].methodList.append(methodMap[methodCounter])
+
+    # Reset the method parameter list
+    methodParameterList = list()
     print 's12'
     pass
 
@@ -226,9 +236,16 @@ def p_method_decl_nonvoid(p):
         bodycontent = contents
     # print variables
     print ('body non void: ' + str(body))
-    methodMap[methodCounter] = Method(methodCounter, p[3], scope.name, visibility, applicability=applicability, returnType=p[2], body=bodycontent)
+    # Method parameters
+    # print 'Method Parameters: ' + str(p[5])
+    global methodParameterList
+    methodMap[methodCounter] = Method(methodCounter, p[3], scope.name, visibility, applicability=applicability,
+                                      returnType=p[2], body=bodycontent, parameters=methodParameterList)
     methodMap[methodCounter].variables = variables
     classesMap[scope.name].methodList.append(methodMap[methodCounter])
+
+    # Reset the method parameter list
+    methodParameterList = list()
     print 's13'
     pass
 
@@ -362,6 +379,7 @@ def p_param_list_empty(p):
 def p_param_list(p):
     'param_list : param_list COMMA param'
     p[0] = (p[1],p[3])
+    # var = p[3][1]
     print 's32'
     pass
 def p_param_list_single(p):
@@ -373,6 +391,15 @@ def p_param_list_single(p):
 def p_param(p):
     'param : type ID'
     p[0] = (p[1],p[2])
+    global methodParameterList
+    global localVariableMap
+    global localVariableCounter
+    var = p[2]
+    if not localVariableMap.__contains__(var):
+        localVariableCounter += 1
+        localVariableMap[var] = localVariableCounter
+    varCounter = localVariableMap[var]
+    methodParameterList.append(varCounter)
     print 's34'
     pass
 
