@@ -623,14 +623,27 @@ def p_primary_newobj(p):
 def p_primary_lhs(p):
     'primary : lhs'
     localVariable = p[1]
-    global localVariableCounter
-    if localVariableMap.__contains__(localVariable):
-        localVariableCounter = localVariableMap[localVariable]
+    if ('Field' in str(p[1])):
+        p[0] = p[1]
     else:
-        localVariableCounter += 1
-        localVariableMap[localVariable] = localVariableCounter
-    p[0] = 'Variable(' + str(localVariableCounter) +')'
-    # p[0] = p[1]
+        scope = fetchScope();
+        found = False
+        if (isinstance(scope, Method)):
+            fields = classesMap[scope.containingClass].fieldList;
+            print 'fields ',str(fields)
+            for field in fields:
+                if field.name == str(p[1]):
+                    p[0] = 'Field-access(This, ' + str(p[1]) + ')'
+                    found = True;
+                    break
+        if not found:
+            global localVariableCounter
+            if localVariableMap.__contains__(localVariable):
+                localVariableCounter = localVariableMap[localVariable]
+            else:
+                localVariableCounter += 1
+                localVariableMap[localVariable] = localVariableCounter
+            p[0] = 'Variable(' + str(localVariableCounter) +')'
     print 's60'
     pass
 
@@ -770,7 +783,6 @@ def p_assign_equals(p):
 
     # TODO : Expr( Assign(a,None))
     # This should instead be Variable(1)
-
     if localVariableMap.__contains__(p[1]):
         varCounter=localVariableMap[p[1]]
         p[0] = 'Assign(' + 'Variable('+ str(varCounter )+')' + ', ' + str(p[3]) + ')'

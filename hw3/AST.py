@@ -146,9 +146,3 @@ class AbstractSyntaxTree(object):
             retStr +="---------------------------------------------------------------------------------------------\n"
         return retStr;
 
-
-if __name__ == '__main__':
-    new =DecafClass("jugu")
-    new.test("soww")
-    print new.toString()
-
