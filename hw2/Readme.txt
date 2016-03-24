@@ -8,3 +8,5 @@ The user needs to run decafch.py.
 
 On running the program the user will be prompted to enter file name which has the code to be parsed.
 
+To consider the In and Out classes please include
+

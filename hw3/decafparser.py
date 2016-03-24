@@ -755,7 +755,12 @@ def p_expr_unop(p):
     '''expr : PLUS expr %prec UMINUS
             | MINUS expr %prec UMINUS
             | NOT expr'''
-
+    if (p[1] == '-'):
+        p[0] = '-' + p[2]
+    elif (p[1] == '!'):
+        p[0] = 'not' + p[2]
+    else:
+        p[0] = p[2]
     if (debug): print 's73'
     pass
 
