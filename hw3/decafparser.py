@@ -46,6 +46,11 @@ def fetchScope():
     return scopeList[-1]
 
 def __alreadyExistsInScope(var):
+    '''
+    This method checks if the variable is valid in the current scope.
+    :param var:
+    :return:
+    '''
     scope = fetchScope();
     if (isinstance(scope, Method) or isinstance(scope, Constructor)):
         for param in scope.parameters:
@@ -57,6 +62,11 @@ def __alreadyExistsInScope(var):
     return False;
 
 def _scopedVariable(pstr):
+    '''
+    This method creates the alias for the variable name based on the variable ID in the scope
+    :param pstr:
+    :return:
+    '''
     varstr = pstr
     if 'Array-Access' in pstr:
        return varstr;
