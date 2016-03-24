@@ -64,11 +64,13 @@ def _scopedVariable(pstr):
     for param in scope.parameters:
         if param.name == pstr:
             varstr = "Variable("+ str(param.id)+")"
-            break;
+            return varstr;
     for variable in scope.variables:
         if variable.name == pstr:
             varstr = "Variable("+ str(variable.id)+")"
-            break;
+            return varstr;
+    if (not 'Field-access' in varstr):
+        varstr = 'Field-access(This, '+varstr+')'
     return varstr
 
 ### DECAF Grammar
@@ -526,8 +528,13 @@ def p_stmt_continue(p):
     pass
 def p_stmt_block(p):
     'stmt : block'
-    p[0] = p[1]
-    if (debug): print 's46'
+    expansion = '[\n'
+    for elem in p[1]:
+        if not elem is None:
+            expansion += str(elem) + '\n, '
+    expansion = expansion[0:-2]
+    p[0] = expansion + ']'
+    if (debug): print 's46', 'p1 ',str(p[1])
     pass
 def p_stmt_var_decl(p):
     'stmt : var_decl'
@@ -735,29 +742,29 @@ def p_expr_binop(p):
             | expr OR expr
     '''
     if p[2] == '+':
-        p[0] = 'Binary(add,'+str(p[1])+','+str(p[3])+')'
+        p[0] = 'Binary(add, '+str(p[1])+', '+str(p[3])+')'
     elif p[2] == '-':
-        p[0] = 'Binary(sub,'+str(p[1])+','+str(p[3])+')'
+        p[0] = 'Binary(sub, '+str(p[1])+', '+str(p[3])+')'
     elif p[2] == '*':
-        p[0] = 'Binary(mul,'+str(p[1])+','+str(p[3])+')'
+        p[0] = 'Binary(mul, '+str(p[1])+', '+str(p[3])+')'
     elif p[2] == '/':
-        p[0] = 'Binary(div,'+str(p[1])+','+str(p[3])+')'
+        p[0] = 'Binary(div, '+str(p[1])+', '+str(p[3])+')'
     elif p[2] == '==':
-        p[0] = 'Binary(eq,'+str(p[1])+','+str(p[3])+')'
+        p[0] = 'Binary(eq, '+str(p[1])+', '+str(p[3])+')'
     elif p[2] == '!=':
-        p[0] = 'Binary(neq,'+str(p[1])+','+str(p[3])+')'
+        p[0] = 'Binary(neq, '+str(p[1])+', '+str(p[3])+')'
     elif p[2] == '<':
-        p[0] = 'Binary(lt,'+str(p[1])+','+str(p[3])+')'
+        p[0] = 'Binary(lt, '+str(p[1])+', '+str(p[3])+')'
     elif p[2] == '<=':
-        p[0] = 'Binary(leq,'+str(p[1])+','+str(p[3])+')'
+        p[0] = 'Binary(leq, '+str(p[1])+', '+str(p[3])+')'
     elif p[2] == '>':
-        p[0] = 'Binary(gt,'+str(p[1])+','+str(p[3])+')'
+        p[0] = 'Binary(gt, '+str(p[1])+', '+str(p[3])+')'
     elif p[2] == '>=':
-        p[0] = 'Binary(geq,'+str(p[1])+','+str(p[3])+')'
+        p[0] = 'Binary(geq, '+str(p[1])+', '+str(p[3])+')'
     elif p[2] == '&&':
-        p[0] = 'Binary(and,'+str(p[1])+','+str(p[3])+')'
+        p[0] = 'Binary(and, '+str(p[1])+', '+str(p[3])+')'
     elif p[2] == '||':
-        p[0] = 'Binary(or,'+str(p[1])+','+str(p[3])+')'
+        p[0] = 'Binary(or, '+str(p[1])+', '+str(p[3])+')'
     if (debug): print 's72'
     pass
 def p_expr_unop(p):
