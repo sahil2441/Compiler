@@ -134,7 +134,6 @@ class AbstractSyntaxTree(object):
     def toString(self):
         retStr = ""
         for structure in self.classes:
-            print structure
             retStr += structure.toString()
             retStr +="---------------------------------------------------------------------------------------------\n"
         return retStr;

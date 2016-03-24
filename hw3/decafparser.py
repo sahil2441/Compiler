@@ -34,8 +34,8 @@ constructorMap = dict()
 constructorCounter = 0
 methodMap = dict()
 methodCounter = 0
-
 scopeList = []
+debug = False;
 def push_scope(f):
     scopeList.append(f);
 
@@ -76,27 +76,27 @@ def _scopedVariable(pstr):
 # Top-level
 def p_pgm(p):
     'pgm : class_decl_list'
-    print 's0'
+    if (debug): print 's0'
     pass
 
 def p_class_decl_list_nonempty(p):
     'class_decl_list : class_decl class_decl_list'
-    print 's1'
+    if (debug): print 's1'
     pass
 def p_class_decl_list_empty(p):
     'class_decl_list : '
-    print 's2'
+    if (debug): print 's2'
     pass
 
 def p_class_decl(p):
     'class_decl : CLASS ID extends LBRACE newscope class_body_decl_list RBRACE'
-    print 's3.1'
+    if (debug): print 's3.1'
     pop_scope()
     pass
 
 def p_newscope(p):
     'newscope : '
-    print 's3.2'
+    if (debug): print 's3.2'
     if (p[-2]):
         newclass = DecafClass(p[-3], p[-2])
     else:
@@ -116,38 +116,38 @@ def p_class_decl_error(p):
 def p_extends_id(p):
     'extends : EXTENDS ID '
     p[0] = p[2]
-    print 's4'
+    if (debug): print 's4'
     pass
 def p_extends_empty(p):
     ' extends : '
-    print 's5'
+    if (debug): print 's5'
     pass
 
 def p_class_body_decl_list_plus(p):
     'class_body_decl_list : class_body_decl_list class_body_decl'
     p[0] = p[1]
-    print 's6'
+    if (debug): print 's6'
     pass
 def p_class_body_decl_list_single(p):
     'class_body_decl_list : class_body_decl'
     p[0] = p[1]
-    print 's7'
+    if (debug): print 's7'
     pass
 
 def p_class_body_decl_field(p):
     'class_body_decl : field_decl'
     p[0] = p[1]
-    print 's8'
+    if (debug): print 's8'
     pass
 def p_class_body_decl_method(p):
     'class_body_decl : method_decl'
     p[0] = p[1]
-    print 's9'
+    if (debug): print 's9'
     pass
 def p_class_body_decl_constructor(p):
     'class_body_decl : constructor_decl'
     p[0] = p[1]
-    print 's10'
+    if (debug): print 's10'
     pass
 
 
@@ -155,7 +155,6 @@ def p_class_body_decl_constructor(p):
 
 def p_field_decl(p):
     'field_decl : mod var_decl'
-    # print p[1],p[2]
     visibility =  p[1][0]
     modifier = p[1][1]
     scope = fetchScope()
@@ -186,7 +185,7 @@ def p_field_decl(p):
             if visibility:
                 fieldMap[counter].visibility = visibility;
             classesMap[scope.name].fieldList.append(fieldMap[counter])
-    print 's11'
+    if (debug): print 's11'
     pass
 
 def p_method_decl_void(p):
@@ -198,9 +197,9 @@ def p_method_decl_void(p):
         for content in body:
             if (not content is None):
                 scope.body.append(content)
-    print ('body void: ' + str(body))
+    if (debug): print ('body void: ' + str(body))
     pop_scope()
-    print 's12'
+    if (debug): print 's12'
     pass
 
 
@@ -213,9 +212,9 @@ def p_method_decl_nonvoid(p):
         for content in body:
             if (not content is None):
                 scope.body.append(content)
-    print ('body non void: ' + str(body))
+    if (debug): print ('body non void: ' + str(body))
     pop_scope()
-    print 's13'
+    if (debug): print 's13'
     pass
 
 def p_methodscope(p):
@@ -234,22 +233,21 @@ def p_methodscope(p):
     methodMap[methodCounter] = Method(methodCounter, name=methodName, containingClass=scope.name, visibility=visibility, applicability=applicability, returnType=returnType)
     classesMap[scope.name].methodList.append(methodMap[methodCounter])
     push_scope(methodMap[methodCounter])
-    print 's12.1 and s13.1'
+    if (debug): print 's12.1 and s13.1'
 
 def p_constructor_decl(p):
     'constructor_decl : mod ID LPAREN constructorscope param_list_opt RPAREN block'
     scope = fetchScope()
-    variableCount = len(scope.variables) + len(scope.parameters)
     # Added for body
     scope.body = list()
     body = p[7]
-    print 'constructor body  :' + str(body)
+    if (debug): print 'constructor body  :' + str(body)
     if body:
         for content in body:
             if (not content is None):
                 scope.body.append(content)
     pop_scope()
-    print 's14'
+    if (debug): print 's14'
     pass
 
 def p_constructorscope(p):
@@ -265,89 +263,89 @@ def p_constructorscope(p):
     constructorMap[constructorCounter] = Constructor(constructorCounter, visibility)
     classesMap[scope.name].constructorList.append(constructorMap[constructorCounter])
     push_scope(constructorMap[constructorCounter])
-    print 's14.1'
+    if (debug): print 's14.1'
     pass
 
 
 def p_mod(p):
     'mod : visibility_mod storage_mod'
-    print 's15'
+    if (debug): print 's15'
     p[0] = (p[1],p[2])
     pass
 
 def p_visibility_mod_pub(p):
     'visibility_mod : PUBLIC'
-    print 's16'
+    if (debug): print 's16'
     p[0] = p[1]
     pass
 def p_visibility_mod_priv(p):
     'visibility_mod : PRIVATE'
-    print 's17'
+    if (debug): print 's17'
     p[0] = p[1]
     pass
 def p_visibility_mod_empty(p):
     'visibility_mod : '
-    print 's18'
+    if (debug): print 's18'
     pass
 
 def p_storage_mod_static(p):
     'storage_mod : STATIC'
     p[0] = p[1]
-    print 's19'
+    if (debug): print 's19'
     pass
 def p_storage_mod_empty(p):
     'storage_mod : '
-    print 's20'
+    if (debug): print 's20'
     pass
 
 def p_var_decl(p):
     'var_decl : type var_list SEMICOLON'
-    print 's21'
+    if (debug): print 's21'
     p[0] = (p[1], p[2])
     pass
 
 def p_type_int(p):
     'type :  INT'
-    print 's22'
+    if (debug): print 's22'
     p[0] = p[1]
     pass
 def p_type_bool(p):
     'type :  BOOLEAN'
-    print 's23'
+    if (debug): print 's23'
     p[0] = p[1]
     pass
 def p_type_float(p):
     'type :  FLOAT'
-    print 's24'
+    if (debug): print 's24'
     p[0] = p[1]
     pass
 def p_type_id(p):
     'type :  ID'
-    print 's25'
+    if (debug): print 's25'
     p[0] = p[1]
     pass
 
 def p_var_list_plus(p):
     'var_list : var_list COMMA var'
     p[0] = p[1]+','+p[3]
-    print 's26'
+    if (debug): print 's26'
     pass
 def p_var_list_single(p):
     'var_list : var'
     p[0] = p[1]
-    print 's27'
+    if (debug): print 's27'
     pass
 
 def p_var_id(p):
     'var : ID'
-    print 's28'
+    if (debug): print 's28'
     p[0] = p[1]
     pass
 
 def p_var_array(p):
     'var : var LBRACKET RBRACKET'
     p[0] = 'array('+p[1]
-    print 's29'
+    if (debug): print 's29'
     pass
 
 def p_param_list_opt(p):
@@ -362,31 +360,30 @@ def p_param_list_opt(p):
             variable = Variable(paramTuple[1], variableCount, "formal", paramTuple[0])
             parameters.append(variable)
     scope.parameters = parameters;
-    print 's30'
+    if (debug): print 's30'
     pass
 
 def p_param_list_empty(p):
     'param_list_opt : '
     p[0] = None
-    print 's31'
+    if (debug): print 's31'
     pass
 
 def p_param_list(p):
     'param_list : param_list COMMA param'
     p[0] = p[1] + (p[3],)
-    # var = p[3][1]
-    print 's32'
+    if (debug): print 's32'
     pass
 def p_param_list_single(p):
     'param_list : param'
     p[0] = (p[1],)
-    print 's33'
+    if (debug): print 's33'
     pass
 
 def p_param(p):
     'param : type ID'
     p[0] = (p[1],p[2])
-    print 's34'
+    if (debug): print 's34'
     pass
 
 # Statements
@@ -394,18 +391,18 @@ def p_param(p):
 def p_block(p):
     'block : LBRACE stmt_list RBRACE'
     p[0] = p[2]
-    print 's35'
+    if (debug): print 's35'
     pass
 
 def p_block_error(p):
     'block : LBRACE stmt_list error RBRACE'
-    print 's36'
+    if (debug): print 's36'
     # error within a block; skip to enclosing block
     pass
 
 def p_stmt_list_empty(p):
     'stmt_list : '
-    print 's37'
+    if (debug): print 's37'
     pass
 def p_stmt_list(p):
     'stmt_list : stmt_list stmt'
@@ -413,15 +410,13 @@ def p_stmt_list(p):
         p[0] = p[1]+ (p[2],)
     else:
         p[0] = (p[2],)
-    print 's38'
+    if (debug): print 's38'
     pass
 
 
 def p_stmt_if(p):
     '''stmt : IF LPAREN expr RPAREN stmt ELSE stmt
           | IF LPAREN expr RPAREN stmt'''
-    print 'p[5] = ' + str(p[5])
-    result = ''
     result = 'If (' + str(p[3]) + ')\n' + 'Then ('
     for element in p[5]:
         if element is None:
@@ -443,7 +438,7 @@ def p_stmt_if(p):
         pass
 
     p[0] = result
-    print 's39'
+    if (debug): print 's39'
     pass
 
 def p_stmt_while(p):
@@ -467,7 +462,7 @@ def p_stmt_while(p):
         result = result[0:-2]
     result += ')'
     p[0] = result
-    print 's40'
+    if (debug): print 's40'
     pass
 
 def p_stmt_for(p):
@@ -506,31 +501,33 @@ def p_stmt_for(p):
     # final bracket
     result += ']'
     p[0] = result
-    print 's41'
+    if (debug): print 's41'
     pass
 
 def p_stmt_return(p):
     'stmt : RETURN expr_opt SEMICOLON'
     p[0] = 'Return( '+ str(p[2])+' )'
-    print 's42'
+    if (debug): print 's42'
     pass
 def p_stmt_stmt_expr(p):
     'stmt : stmt_expr SEMICOLON'
     p[0] = 'Expr( ' + str(p[1]) + ' )'
-    print 's43'
+    if (debug): print 's43'
     pass
 def p_stmt_break(p):
     'stmt : BREAK SEMICOLON'
-    print 's44'
+    p[0] = p[1]
+    if (debug): print 's44'
     pass
 def p_stmt_continue(p):
     'stmt : CONTINUE SEMICOLON'
-    print 's45'
+    p[0] = p[1]
+    if (debug): print 's45'
     pass
 def p_stmt_block(p):
     'stmt : block'
     p[0] = p[1]
-    print 's46'
+    if (debug): print 's46'
     pass
 def p_stmt_var_decl(p):
     'stmt : var_decl'
@@ -540,7 +537,6 @@ def p_stmt_var_decl(p):
     varlist = p[1][1].split(',')
     vList = list()
     scope = fetchScope();
-    print 'scope : ' + str(scope)
     localvarcounter = len(scope.parameters) + len(scope.variables)
     for var in varlist:
         localtype = type;
@@ -556,11 +552,11 @@ def p_stmt_var_decl(p):
                     localtype = arraystr + '(' + localtype + ')'
             localvarcounter += 1
             scope.variables.append(Variable(varname, localvarcounter, 'local', localtype))
-    print 's47'
+    if (debug): print 's47'
     pass
 def p_stmt_error(p):
     'stmt : error SEMICOLON'
-    print 's48'
+    if (debug): print 's48'
     print("Invalid statement near line {}".format(p.lineno(1)))
     decaflexer.errorflag = True
 
@@ -568,54 +564,54 @@ def p_stmt_error(p):
 def p_literal_int_const(p):
     'literal : INT_CONST'
     p[0] = 'Constant(Integer-constant('+str(p[1])+'))'
-    print 's49'
+    if (debug): print 's49'
     pass
 def p_literal_float_const(p):
     'literal : FLOAT_CONST'
     p[0] = 'Constant(Float-constant('+str(p[1])+'))'
-    print 's50'
+    if (debug): print 's50'
     pass
 def p_literal_string_const(p):
     'literal : STRING_CONST'
     p[0] = 'Constant(String-constant('+str(p[1])+'))'
-    print 's51'
+    if (debug): print 's51'
     pass
 def p_literal_null(p):
     'literal : NULL'
     p[0] = p[1]
     p[0] = 'Constant('+str(p[1])+')'
-    print 's52'
+    if (debug): print 's52'
     pass
 def p_literal_true(p):
     'literal : TRUE'
     p[0] = 'Constant(Boolean-constant('+str(p[1])+')'
-    print 's53'
+    if (debug): print 's53'
     pass
 def p_literal_false(p):
     'literal : FALSE'
     p[0] = 'Constant(Boolean-constant('+str(p[1])+')'
-    print 's54'
+    if (debug): print 's54'
     pass
 
 def p_primary_literal(p):
     'primary : literal'
     p[0] = p[1]
-    print 's55'
+    if (debug): print 's55'
     pass
 def p_primary_this(p):
     'primary : THIS'
     p[0] = 'This'
-    print 's56'
+    if (debug): print 's56'
     pass
 def p_primary_super(p):
     'primary : SUPER'
     p[0] = 'Super'
-    print 's57'
+    if (debug): print 's57'
     pass
 def p_primary_paren(p):
     'primary : LPAREN expr RPAREN'
     p[0] = '(' + p[2] + ')'
-    print 's58'
+    if (debug): print 's58'
     pass
 def p_primary_newobj(p):
     'primary : NEW ID LPAREN args_opt RPAREN'
@@ -623,7 +619,7 @@ def p_primary_newobj(p):
     if (not p[4] is None):
         args = str(p[4])
     p[0] = 'New-object(' + str(p[2]) + ',' + args + ')'
-    print 's59'
+    if (debug): print 's59'
     pass
 def p_primary_lhs(p):
     'primary : lhs'
@@ -634,7 +630,6 @@ def p_primary_lhs(p):
         found = False
         if (isinstance(scope, Method)):
             fields = classesMap[scope.containingClass].fieldList;
-            print 'fields ',str(fields)
             for field in fields:
                 if field.name == str(p[1]):
                     p[0] = 'Field-access(This, ' + str(p[1]) + ')'
@@ -643,60 +638,60 @@ def p_primary_lhs(p):
         if not found:
             varstr = _scopedVariable(str(p[1]));
             p[0] = varstr
-    print 's60'
+    if (debug): print 's60'
     pass
 
 def p_primary_method_invocation(p):
     'primary : method_invocation'
     p[0] = p[1]
-    print 's61'
+    if (debug):     print 's61'
     pass
 
 def p_args_opt_nonempty(p):
     'args_opt : arg_plus'
     p[0] = p[1]
-    print 's62'
+    if (debug): print 's62'
     pass
 def p_args_opt_empty(p):
     'args_opt : '
-    print 's63'
+    if (debug): print 's63'
     pass
 
 def p_args_plus(p):
     'arg_plus : arg_plus COMMA expr'
     p[0] = p[1],p[2]
-    print 's64'
+    if (debug): print 's64'
     pass
 def p_args_single(p):
     'arg_plus : expr'
     p[0] = p[1]
-    print 's65'
+    if (debug): print 's65'
     pass
 
 def p_lhs(p):
     '''lhs : field_access
            | array_access'''
     p[0] = p[1]
-    print 's66'
+    if (debug): print 's66'
     pass
 
 def p_field_access_dot(p):
     'field_access : primary DOT ID'
     #p[0] = p[1] + ', ' + p[3] + ')'
     p[0] = 'Field-access(' + p[1] + ', ' + p[3] + ')'
-    print 's67'
+    if (debug): print 's67'
     pass
 def p_field_access_id(p):
     'field_access : ID'
     p[0] = p[1]
-    print 's68'
+    if (debug): print 's68'
     pass
 
 def p_array_access(p):
     'array_access : primary LBRACKET expr RBRACKET'
     varstr = _scopedVariable(str(p[1]))
     p[0] = 'Array-Access(' + varstr + '),'+str(p[3])+')'
-    print 's69'
+    if (debug): print 's69'
     pass
 
 def p_method_invocation(p):
@@ -715,7 +710,7 @@ def p_method_invocation(p):
     result = result[:-1]
     result += ', ' + arguments+')'
     p[0] = result
-    print 's70'
+    if (debug): print 's70'
     pass
 
 def p_expr_basic(p):
@@ -723,7 +718,7 @@ def p_expr_basic(p):
             | assign
             | new_array'''
     p[0] = p[1]
-    print 's71'
+    if (debug): print 's71'
     pass
 def p_expr_binop(p):
     '''expr : expr PLUS expr
@@ -740,8 +735,6 @@ def p_expr_binop(p):
             | expr OR expr
     '''
     if p[2] == '+':
-        print "p[1]: " + str(p[1])
-        print "p[3]: " + str(p[3])
         p[0] = 'Binary(add,'+str(p[1])+','+str(p[3])+')'
     elif p[2] == '-':
         p[0] = 'Binary(sub,'+str(p[1])+','+str(p[3])+')'
@@ -765,14 +758,14 @@ def p_expr_binop(p):
         p[0] = 'Binary(and,'+str(p[1])+','+str(p[3])+')'
     elif p[2] == '||':
         p[0] = 'Binary(or,'+str(p[1])+','+str(p[3])+')'
-    print 's72'
+    if (debug): print 's72'
     pass
 def p_expr_unop(p):
     '''expr : PLUS expr %prec UMINUS
             | MINUS expr %prec UMINUS
             | NOT expr'''
 
-    print 's73'
+    if (debug): print 's73'
     pass
 
 def p_assign_equals(p):
@@ -780,7 +773,7 @@ def p_assign_equals(p):
     pstr = str(p[1])
     varstr = _scopedVariable(pstr);
     p[0] = 'Assign(' + varstr + ', ' + str(p[3]) + ')'
-    print 's74'
+    if (debug): print 's74'
     pass
 def p_assign_post_inc(p):
     'assign : lhs INC'
@@ -788,22 +781,22 @@ def p_assign_post_inc(p):
     varstr = _scopedVariable(pstr);
     p[0] = 'Auto('+varstr+', inc, post)'
 
-    print 's75'
+    if (debug): print 's75'
     pass
 def p_assign_pre_inc(p):
     'assign : INC lhs'
     p[0] = 'Auto('+p[2]+', inc, pre)'
-    print 's76'
+    if (debug): print 's76'
     pass
 def p_assign_post_dec(p):
     'assign : lhs DEC'
     p[0] = 'Auto('+p[1]+', dec, post)'
-    print 's77'
+    if (debug): print 's77'
     pass
 def p_assign_pre_dec(p):
     'assign : DEC lhs'
     p[0] = 'Auto('+p[2]+', inc, pre)'
-    print 's78'
+    if (debug): print 's78'
     pass
 
 def p_new_array(p):
@@ -816,61 +809,61 @@ def p_new_array(p):
         dimstr = dimstr[0:-1]
         dimstr += ')'
     p[0] = 'New-array(' + str(p[2]) + ',' + dimstr +')'
-    print 's79'
+    if (debug): print 's79'
     pass
 
 def p_dim_expr_plus(p):
     'dim_expr_plus : dim_expr_plus dim_expr'
-    print 's80'
+    if (debug): print 's80'
     p[0] = p[1] + (p[2],)
     pass
 def p_dim_expr_single(p):
     'dim_expr_plus : dim_expr'
     p[0] = (p[1],)
-    print 's81'
+    if (debug): print 's81'
     pass
 
 def p_dim_expr(p):
     'dim_expr : LBRACKET expr RBRACKET'
     p[0] = p[2]
-    print 's82'
+    if (debug): print 's82'
     pass
 
 def p_dim_star(p):
     'dim_star : LBRACKET RBRACKET dim_star'
     p[0] = p[3]
-    print 's83'
+    if (debug): print 's83'
     pass
 def p_dim_star_empty(p):
     'dim_star : '
-    print 's84'
+    if (debug): print 's84'
     pass
 
 def p_stmt_expr(p):
     '''stmt_expr : assign
                  | method_invocation'''
     p[0] = p[1]
-    print 's85'
+    if (debug): print 's85'
     pass
 
 def p_stmt_expr_opt(p):
     'stmt_expr_opt : stmt_expr'
     p[0] = p[1]
-    print 's86'
+    if (debug): print 's86'
     pass
 def p_stmt_expr_empty(p):
     'stmt_expr_opt : '
-    print 's87'
+    if (debug): print 's87'
     pass
 
 def p_expr_opt(p):
     'expr_opt : expr'
     p[0] = p[1]
-    print 's88'
+    if (debug): print 's88'
     pass
 def p_expr_empty(p):
     'expr_opt : '
-    print 's89'
+    if (debug): print 's89'
     pass
 
 
