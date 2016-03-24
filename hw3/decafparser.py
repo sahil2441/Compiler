@@ -710,10 +710,17 @@ def p_array_access(p):
 
 def p_method_invocation(p):
     'method_invocation : field_access LPAREN args_opt RPAREN'
+    result=''
     arguments=p[3]
     if p[3] is None:
         arguments='[]'
-    result='Method-call('+p[1]
+
+    # Remove field access from the string
+    if p[1] is not None:
+        fieldAccess= str(p[1])
+        fieldAccess = fieldAccess[13:]
+
+    result += 'Method-call('+ fieldAccess
     result = result[:-1]
     result += ', ' + arguments+')'
     p[0] = result
