@@ -50,6 +50,21 @@ def pop_scope():
 def fetchScope():
     return scopeList[-1]
 
+def _scopedVariable(pstr):
+    varstr = pstr
+    if 'Array-Access' in pstr:
+       return varstr;
+    scope = fetchScope();
+    for param in scope.parameters:
+        if param.name == pstr:
+            varstr = "Variable("+ str(param.id)+")"
+            break;
+    for variable in scope.variables:
+        if variable.name == pstr:
+            varstr = "Variable("+ str(variable.id)+")"
+            break;
+    return varstr
+
 ### DECAF Grammar
 
 # Top-level
@@ -622,7 +637,6 @@ def p_primary_newobj(p):
     pass
 def p_primary_lhs(p):
     'primary : lhs'
-    localVariable = p[1]
     if ('Field' in str(p[1])):
         p[0] = p[1]
     else:
@@ -637,13 +651,8 @@ def p_primary_lhs(p):
                     found = True;
                     break
         if not found:
-            global localVariableCounter
-            if localVariableMap.__contains__(localVariable):
-                localVariableCounter = localVariableMap[localVariable]
-            else:
-                localVariableCounter += 1
-                localVariableMap[localVariable] = localVariableCounter
-            p[0] = 'Variable(' + str(localVariableCounter) +')'
+            varstr = _scopedVariable(str(p[1]));
+            p[0] = varstr
     print 's60'
     pass
 
@@ -786,29 +795,16 @@ def p_expr_unop(p):
 
 def p_assign_equals(p):
     'assign : lhs ASSIGN expr'
-    global localVariableMap
-
-    # TODO : Expr( Assign(a,None))
-    # This should instead be Variable(1)
-    if localVariableMap.__contains__(p[1]):
-        varCounter=localVariableMap[p[1]]
-        p[0] = 'Assign(' + 'Variable('+ str(varCounter )+')' + ', ' + str(p[3]) + ')'
-    else:
-        if 'Array-Access' in p[1]:
-            p[0] = 'Assign(' + str(p[1])+ ', ' + str(p[3]) + '))'
-        else:
-            p[0] = 'Assign(' + str(p[1])+ ', ' + str(p[3]) + ')'
-
+    pstr = str(p[1])
+    varstr = _scopedVariable(pstr);
+    p[0] = 'Assign(' + varstr + ', ' + str(p[3]) + ')'
     print 's74'
     pass
 def p_assign_post_inc(p):
     'assign : lhs INC'
-    global localVariableMap
-    if localVariableMap.__contains__(p[1]):
-        varCounter=localVariableMap[p[1]]
-        p[0] = 'Auto('+'Variable('+ str(varCounter )+')' + ', inc, post)'
-    else:
-        p[0] = 'Auto('+p[1]+', inc, post)'
+    pstr = str(p[1])
+    varstr = _scopedVariable(pstr);
+    p[0] = 'Auto('+varstr+', inc, post)'
 
     print 's75'
     pass
