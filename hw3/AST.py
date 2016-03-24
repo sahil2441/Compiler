@@ -49,13 +49,6 @@ class Type(object):
     def __init__(self, basetype):
         self.base = basetype
 
-class Statement(object):
-    #TODO
-    def __init__(self):
-        pass;
-
-
-
 class DecafClass(object):
     def __init__(self, name, superclass=""):
         self.name = name;
