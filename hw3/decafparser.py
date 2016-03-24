@@ -35,11 +35,6 @@ constructorCounter = 0
 methodMap = dict()
 methodCounter = 0
 
-localVariableCounter=0
-localVariableMap=dict()
-
-methodParameterList = list()
-
 scopeList = []
 def push_scope(f):
     scopeList.append(f);
@@ -49,6 +44,17 @@ def pop_scope():
 
 def fetchScope():
     return scopeList[-1]
+
+def __alreadyExistsInScope(var):
+    scope = fetchScope();
+    if (isinstance(scope, Method) or isinstance(scope, Constructor)):
+        for param in scope.parameters:
+            if (param.name == var):
+                return True;
+        for param in scope.variables:
+            if (param.name == var):
+                return True;
+    return False;
 
 def _scopedVariable(pstr):
     varstr = pstr
@@ -194,15 +200,6 @@ def p_method_decl_void(p):
                 scope.body.append(content)
     print ('body void: ' + str(body))
     pop_scope()
-
-    # Reset the method parameter list
-    methodParameterList = list()
-
-    # Reset local variable map and local variable counter
-    global localVariableCounter
-    global localVariableMap
-    localVariableCounter=0
-    localVariableMap =dict()
     print 's12'
     pass
 
@@ -218,16 +215,6 @@ def p_method_decl_nonvoid(p):
                 scope.body.append(content)
     print ('body non void: ' + str(body))
     pop_scope()
-
-    # Reset the method parameter list
-    methodParameterList = list()
-
-    # Reset local variable map and local variable counter
-    global localVariableCounter
-    global localVariableMap
-    localVariableCounter=0
-    localVariableMap =dict()
-
     print 's13'
     pass
 
@@ -551,7 +538,6 @@ def p_stmt_var_decl(p):
     if (classesMap.has_key(type)):
         type = 'user('+type+')'
     varlist = p[1][1].split(',')
-    print "varlist : " + str(varlist)
     vList = list()
     scope = fetchScope();
     print 'scope : ' + str(scope)
@@ -560,12 +546,16 @@ def p_stmt_var_decl(p):
         localtype = type;
         vararr = var.split("(")
         varname = vararr[-1]
-        vararr = vararr[0:-1]
-        if len(vararr) > 0:
-            for arraystr in vararr:
-                localtype = arraystr + '(' + localtype + ')'
-        localvarcounter += 1
-        scope.variables.append(Variable(varname, localvarcounter, 'local', localtype))
+        if (__alreadyExistsInScope(varname)):
+            print 'Variable name "' + varname + '" already exists in the current scope!'
+            decaflexer.errorflag = True;
+        else:
+            vararr = vararr[0:-1]
+            if len(vararr) > 0:
+                for arraystr in vararr:
+                    localtype = arraystr + '(' + localtype + ')'
+            localvarcounter += 1
+            scope.variables.append(Variable(varname, localvarcounter, 'local', localtype))
     print 's47'
     pass
 def p_stmt_error(p):
@@ -704,16 +694,8 @@ def p_field_access_id(p):
 
 def p_array_access(p):
     'array_access : primary LBRACKET expr RBRACKET'
-    variableName = str(p[1])
-    global localVariableMap
-    global localVariableCounter
-
-    if not localVariableMap.__contains__(variableName):
-        localVariableCounter += 1
-        localVariableMap[variableName] = localVariableCounter
-
-    counter = localVariableMap[variableName]
-    p[0] = 'Array-Access(Variable(' + str(counter) + '),'+str(p[3])+')'
+    varstr = _scopedVariable(str(p[1]))
+    p[0] = 'Array-Access(' + varstr + '),'+str(p[3])+')'
     print 's69'
     pass
 
