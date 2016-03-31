@@ -1,8 +1,9 @@
 class A {
    int x;
-   int f(int ab, int cd) {
-      int aa[], cc;
-      aa[5] = ab;
+   A () {
+     this.x = 0;
+   }
+   int f() {
       return this.x + 1;
    }
    public int g() {
@@ -10,19 +11,16 @@ class A {
       i = this.f();
       i++;
       return i;
-      if(i == 0)
-      {
-        int j;
-        j = 0;
-      }
-      else
-      {
-       int k;
-        {
-        k = 15.665;
-        }
-        int y;
-        y = -k;
-      }
+   }
+}
+class B extends A {
+   int y;
+   public A s;
+   B () {
+     this.y = 2;
+     this.s = new A();
+   }
+   public int f(int k) {
+      return super.f() + k;
    }
 }
