@@ -9,6 +9,8 @@ import getopt
 import decafparser
 import ast
 
+import typecheck
+
 class Usage(Exception):
     def __init__(self, msg):
         self.msg = msg
@@ -22,6 +24,7 @@ def main(argv=None):
     try:
         try:
             opts, args = getopt.getopt(argv[1:], "h", ["help"])
+            args.append("test_case.decaf")
         except getopt.error, msg:
             raise Usage(msg)
         for o,a in opts:
@@ -38,6 +41,7 @@ def main(argv=None):
         infile = filename + ".decaf"
         ast.initialize_ast()
         if decafparser.from_file(infile):
+            typecheck.checktype(classtable=ast.classtable)
             ast.print_ast()            
         else:
             print "Failure: there were errors."
