@@ -458,10 +458,11 @@ class AutoExpr(Expr):
         return "Auto({0}, {1}, {2})".format(self.arg, self.oper, self.when)
         
 class FieldAccessExpr(Expr):
-    def __init__(self, base, fname, lines):
+    def __init__(self, base, fname, lines, resolvedId = -1):
         self.lines = lines
         self.base = base
         self.fname = fname
+        self.resolvedId = resolvedId
     def __repr__(self):
         return "Field-access({0}, {1}, {2})".format(self.base, self.fname, self.resolvedId)
         
