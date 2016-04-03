@@ -17,7 +17,6 @@ def addtotable(table, key, value):
 def print_ast():
     for cid in classtable:
         c = classtable[cid]
-        typecheck.currentClass = c;
         c.printout()
     print "-----------------------------------------------------------------------------"
     

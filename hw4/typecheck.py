@@ -28,6 +28,10 @@ def resolve(expr, currentClass, currentScope = None):
             fieldobj = currentClass.fields[expr.fname]
             expr.resolvedId = fieldobj.id
             return ResolvingClass(ast.Type(fieldobj.type), True)
+    elif isinstance(expr, ast.AutoExpr):
+        obj = resolve(expr.arg, currentClass, currentScope);
+        if (not obj.objtype.typename in ('int', 'float')):
+            return ResolvingClass(None, False)
     elif isinstance(expr, ast.UnaryExpr):
         if expr.uop == 'uminus':
             obj = resolve(expr.arg, currentClass, currentScope)
@@ -45,7 +49,7 @@ def resolve(expr, currentClass, currentScope = None):
         b = resolve(arg2, currentClass, currentScope);
         if (a.valid and b.valid):
             if (a.objtype.typename == b.objtype.typename):
-                return ResolvingClass(None, True)
+                return a;
         return ResolvingClass(None, False)
     elif isinstance(expr, ast.ConstantExpr):
         if expr.kind == 'int':
@@ -60,8 +64,6 @@ def resolve(expr, currentClass, currentScope = None):
             return ResolvingClass(ast.Type('boolean'), True)
     elif isinstance(expr, ast.VarExpr):
         return ResolvingClass(ast.Type(expr.var.type), True)
-
-
 
 def checktype(classtable):
     lhstype = ''
