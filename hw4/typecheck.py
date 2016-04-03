@@ -13,12 +13,12 @@ def validateBlock(block):
         if isinstance(stmt, ast.ExprStmt):
             resolve(stmt.expr);
 
-def resolve(expr, currentClass):
+def resolve(expr, currentClass, currentScope = None):
     if isinstance(expr, ast.AssignExpr):
         lhs = expr.lhs;
         rhs = expr.rhs;
-        objRHS = resolve(rhs, currentClass);
-        objLHS = resolve(lhs, currentClass);
+        objRHS = resolve(rhs, currentClass, currentScope);
+        objLHS = resolve(lhs, currentClass, currentScope);
         print 'objLHS ' + str(objLHS);
         print 'objRHS ' + str(objRHS);
         if objRHS.valid and objLHS.valid:
@@ -33,15 +33,13 @@ def resolve(expr, currentClass):
     elif isinstance(expr, ast.BinaryExpr):
         arg1 = expr.arg1;
         arg2 = expr.arg2;
-        a = resolve(arg1, currentClass);
-        b = resolve(arg2, currentClass);
+        a = resolve(arg1, currentClass, currentScope);
+        b = resolve(arg2, currentClass, currentScope);
         if (a.valid and b.valid):
             if (a.objtype.typename == b.objtype.typename):
                 return ResolvingClass(None, True)
         return ResolvingClass(None, False)
     elif isinstance(expr, ast.ConstantExpr):
-        print 'exprkind ' + expr.kind
-        print 'sss ' + str(expr)
         if expr.kind == 'int':
             return ResolvingClass(ast.Type('int'), True)
         elif expr.kind == 'float':
@@ -52,6 +50,10 @@ def resolve(expr, currentClass):
             return ResolvingClass(ast.Type('null'), True)
         elif expr.kind == 'True' or expr.kind == 'False':
             return ResolvingClass(ast.Type('boolean'), True)
+    elif isinstance(expr, ast.VarExpr):
+        return ResolvingClass(ast.Type(expr.var.type), True)
+
+
 
 def checktype(classtable):
     lhstype = ''
@@ -65,3 +67,5 @@ def checktype(classtable):
                         obj = resolve(x.expr, c);
                         if obj.valid:
                             print 'Everything is Fine'
+                        else:
+                            print "Error at line " + str(x.lines)+". Incomaptible type found"
