@@ -1,3 +1,4 @@
+import typecheck
 classtable = {}  # initially empty dictionary of classes.
 lastmethod = 0
 lastconstructor = 0
@@ -16,6 +17,7 @@ def addtotable(table, key, value):
 def print_ast():
     for cid in classtable:
         c = classtable[cid]
+        typecheck.currentClass = c;
         c.printout()
     print "-----------------------------------------------------------------------------"
     
@@ -461,7 +463,7 @@ class FieldAccessExpr(Expr):
         self.base = base
         self.fname = fname
     def __repr__(self):
-        return "Field-access({0}, {1})".format(self.base, self.fname)
+        return "Field-access({0}, {1}, {2})".format(self.base, self.fname, self.resolvedId)
         
 class MethodInvocationExpr(Expr):
     def __init__(self, field, args, lines):
