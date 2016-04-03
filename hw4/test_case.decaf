@@ -2,9 +2,8 @@ class A {
    int x;
    public void method() {
        boolean y;
-       x =  "5";
-
-       y = false;
+       x =  -5;
+       y = !true;
        /*x = y;*/
    }
 }

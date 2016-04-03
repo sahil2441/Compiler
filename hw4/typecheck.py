@@ -19,8 +19,6 @@ def resolve(expr, currentClass, currentScope = None):
         rhs = expr.rhs;
         objRHS = resolve(rhs, currentClass, currentScope);
         objLHS = resolve(lhs, currentClass, currentScope);
-        print 'objLHS ' + str(objLHS);
-        print 'objRHS ' + str(objRHS);
         if objRHS.valid and objLHS.valid:
             if str(objRHS.objtype.typename) == str(objLHS.objtype.typename):
                 return ResolvingClass(None, True)
@@ -30,6 +28,16 @@ def resolve(expr, currentClass, currentScope = None):
             fieldobj = currentClass.fields[expr.fname]
             expr.resolvedId = fieldobj.id
             return ResolvingClass(ast.Type(fieldobj.type), True)
+    elif isinstance(expr, ast.UnaryExpr):
+        if expr.uop == 'uminus':
+            obj = resolve(expr.arg, currentClass, currentScope)
+            if (obj.valid and obj.objtype.typename in ('int', 'float') ):
+                return obj
+        elif expr.uop == 'neg':
+            obj = resolve(expr.arg, currentClass, currentScope)
+            if (obj.valid and obj.objtype.typename == 'boolean' ):
+                return obj
+        return ResolvingClass(None, False)
     elif isinstance(expr, ast.BinaryExpr):
         arg1 = expr.arg1;
         arg2 = expr.arg2;
@@ -65,7 +73,5 @@ def checktype(classtable):
                 for x in m.body.stmtlist:
                     if isinstance(x, ast.ExprStmt):
                         obj = resolve(x.expr, c);
-                        if obj.valid:
-                            print 'Everything is Fine'
-                        else:
+                        if not obj.valid:
                             print "Error at line " + str(x.lines)+". Incomaptible type found"
