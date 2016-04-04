@@ -1,12 +1,15 @@
 class A {
    int x;
    A obj;
+   public A(int a, int b) {
+
+   }
    public void some(int a, int b)
    {
 
    }
 
-   public int some()
+   /*public int some()
    {
 
    }
@@ -14,13 +17,12 @@ class A {
    public float some(float y)
    {
         int z;
-   }
+   }*/
 
    public void method()
    {
-       float y;
-       y = !true;
-       boolean x;
-       x++;
+       A x;
+        x = new A(5,"String");
+       //x.some(1,2);
    }
 }

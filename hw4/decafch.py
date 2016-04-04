@@ -42,7 +42,7 @@ def main(argv=None):
         # ast.initialize_ast()
         if decafparser.from_file(infile):
             typecheck.checktype(classtable=ast.classtable)
-            # ast.print_ast()
+            ast.print_ast()
         else:
             print "Failure: there were errors."
     except Usage, err:

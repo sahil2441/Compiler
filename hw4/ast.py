@@ -475,12 +475,13 @@ class MethodInvocationExpr(Expr):
         return "Method-call({0}, {1}, {2})".format(self.base, self.mname, self.args)
         
 class NewObjectExpr(Expr):
-    def __init__(self, cref, args, lines):
+    def __init__(self, cref, args, lines, nameResolution = ''):
         self.lines = lines
         self.classref = cref
         self.args = args
+        self.nameResolution = nameResolution
     def __repr__(self):
-        return "New-object({0}, {1})".format(self.classref.name, self.args)
+        return "New-object({0}, {1}, {2})".format(self.classref.name, self.args, self.nameResolution)
 
 class ThisExpr(Expr):
     def __init__(self, lines):
