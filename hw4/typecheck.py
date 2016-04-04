@@ -35,7 +35,7 @@ def nameResolutionForNewObject(currentClass, currentScope, constructorName, argu
     constructor_match_flag = False
     for constructor in classTable[constructorName].constructors:
         if len(arguments) == len(constructor.vars.get_params()) and checkParamTypes(constructor, arguments):
-            return ResolvingClass(ast.Type(constructorName), True)
+            return ResolvingClass(ast.Type(constructorName), True, nameresolution=constructor.id)
     return ResolvingClass(ast.Type("No constructor with those parameters"), False)
 
 

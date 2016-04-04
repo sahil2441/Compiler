@@ -1,28 +1,29 @@
 class A {
    int x;
    A obj;
-   public A(int a, int b) {
-
-   }
-   public void some(int a, int b)
+   public A()
    {
-
    }
-
-   /*public int some()
+   private A(int a)
    {
-
    }
-
-   public float some(float y)
+   public A(float a)
    {
-        int z;
-   }*/
+   }
+   public A(int a, float b) {
+   }
+}
 
+class B extends A{
+    public B()
+    {
+
+    }
    public void method()
    {
        A x;
-        x = new A(5,"String");
-       //x.some(1,2);
+       x = new B(); // should not give error (subtyping)
+       x = new A(5); // Resolve to constructor id 3, currently resolving to 2
+       x = new A(5,1.5);
    }
 }
