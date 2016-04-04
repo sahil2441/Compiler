@@ -108,7 +108,7 @@ class Type:
     """A class encoding Types in Decaf"""
     def __init__(self, basetype, params=None):
         if ((params == None) or (params == 0)):
-            if (basetype in ['int', 'boolean', 'float', 'string', 'void']):
+            if (basetype in ['int', 'boolean', 'float', 'string', 'void', 'null', 'error']):
                 self.kind = 'basic'
                 self.typename = basetype
             elif (isinstance(basetype, Type)):

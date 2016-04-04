@@ -1,13 +1,26 @@
 class A {
    int x;
    A obj;
-   public void method() {
-       A obj2;
-       boolean y;
-       obj2 = obj;
-       x =  -5 + 6 + y;
-       y = !x;
-       y++;
-       /*x = y;*/
+   public void some(int a, int b)
+   {
+
+   }
+
+   public int some()
+   {
+
+   }
+
+   public float some(float y)
+   {
+        int z;
+   }
+
+   public void method()
+   {
+       float y;
+       y = !true;
+       boolean x;
+       x++;
    }
 }
