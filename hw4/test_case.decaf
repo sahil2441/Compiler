@@ -1,29 +1,7 @@
 class A {
-   int x;
-   A obj;
-   public A()
-   {
+   private A(int a, int b){
    }
-   private A(int a)
-   {
-   }
-   public A(float a)
-   {
-   }
-   public A(int a, float b) {
-   }
-}
 
-class B extends A{
-    public B()
-    {
-
-    }
-   public void method()
-   {
-       A x;
-       x = new B(); // should not give error (subtyping)
-       x = new A(5); // Resolve to constructor id 3, currently resolving to 2
-       x = new A(5,1.5);
+   private A(int a, int b){
    }
 }
