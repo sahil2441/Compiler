@@ -41,8 +41,9 @@ def main(argv=None):
         infile = filename + ".decaf"
         # ast.initialize_ast()
         if decafparser.from_file(infile):
-            typecheck.checktype(classtable=ast.classtable)
-            ast.print_ast()
+            errorFlag = typecheck.checktype(classtable=ast.classtable)
+            if (not errorFlag):
+                ast.print_ast()
         else:
             print "Failure: there were errors."
     except Usage, err:

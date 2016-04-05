@@ -1,7 +1,19 @@
 class A {
-   private A(int a, int b){
-   }
+   int a[];
+   public int methodA()
+   {
+        int y;
+        y = 5;
+        if(true) {
+            int z;
+            z = 6;
+        }
+        else {
+          y = 6;
+        }
+        for (y=0;true;y=y+5) {
 
-   private A(int a, int b){
+        }
+        return 0;
    }
-}
+ }

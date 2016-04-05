@@ -121,6 +121,7 @@ class Type:
             bt = Type(basetype, params-1)
             self.kind = 'array'
             self.basetype = bt
+            self.typename = basetype;#'array(%s)'%(self.basetype.__str__())
 
     def __str__(self):
         if (self.kind == 'array'):
@@ -422,39 +423,44 @@ class VarExpr(Expr):
         return "Variable(%d)"%self.var.id
 
 class UnaryExpr(Expr):
-    def __init__(self, uop, expr, lines):
+    def __init__(self, uop, expr, lines, exprtype = ''):
         self.lines = lines
         self.uop = uop
         self.arg = expr
+        self.exprtype = exprtype
     def __repr__(self):
-        return "Unary({0}, {1})".format(self.uop, self.arg)
+        return "Unary({0}, {1}, {2})".format(self.uop, self.arg, self.exprtype)
         
 class BinaryExpr(Expr):
-    def __init__(self, bop, arg1, arg2, lines):
+    def __init__(self, bop, arg1, arg2, lines, exprtype = ''):
         self.lines = lines
         self.bop = bop
         self.arg1 = arg1
         self.arg2 = arg2
+        self.exprtype = exprtype
     def __repr__(self):
-        return "Binary({0}, {1}, {2})".format(self.bop,self.arg1,self.arg2)
+        return "Binary({0}, {1}, {2}, {3})".format(self.bop,self.arg1,self.arg2, self.exprtype)
 
 class AssignExpr(Expr):
-    def __init__(self, lhs, rhs, lines):
+    def __init__(self, lhs, rhs, lines, lhstype = '', rhstype = ''):
         self.lines = lines
         self.lhs = lhs
         self.rhs = rhs
+        self.lhstype = lhstype;
+        self.rhstype = rhstype;
     def __repr__(self):
-        return "Assign({0}, {1})".format(self.lhs, self.rhs)
+        return "Assign({0}, {1}, {2}, {3})".format(self.lhs, self.rhs, self.lhstype, self.rhstype)
         
         
 class AutoExpr(Expr):
-    def __init__(self, arg, oper, when, lines):
+    def __init__(self, arg, oper, when, lines, exprtype = ''):
         self.lines = lines
         self.arg = arg
         self.oper = oper
         self.when = when
+        self.exprtype = exprtype
     def __repr__(self):
-        return "Auto({0}, {1}, {2})".format(self.arg, self.oper, self.when)
+        return "Auto({0}, {1}, {2}, {3})".format(self.arg, self.oper, self.when, self.exprtype)
         
 class FieldAccessExpr(Expr):
     def __init__(self, base, fname, lines, resolvedId = -1):
@@ -466,13 +472,14 @@ class FieldAccessExpr(Expr):
         return "Field-access({0}, {1}, {2})".format(self.base, self.fname, self.resolvedId)
         
 class MethodInvocationExpr(Expr):
-    def __init__(self, field, args, lines):
+    def __init__(self, field, args, lines, nameResolution = ''):
         self.lines = lines
         self.base = field.base
         self.mname = field.fname
         self.args = args
+        self.nameResolution = nameResolution
     def __repr__(self):
-        return "Method-call({0}, {1}, {2})".format(self.base, self.mname, self.args)
+        return "Method-call({0}, {1}, {2}, {3})".format(self.base, self.mname, self.args, self.nameResolution)
         
 class NewObjectExpr(Expr):
     def __init__(self, cref, args, lines, nameResolution = ''):
