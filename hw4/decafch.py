@@ -14,7 +14,6 @@ import typecheck
 class Usage(Exception):
     def __init__(self, msg):
         self.msg = msg
-
     
 def main(argv=None):
     if argv is None:
@@ -24,7 +23,7 @@ def main(argv=None):
     try:
         try:
             opts, args = getopt.getopt(argv[1:], "h", ["help"])
-            args.append("test_case.decaf")
+            # args.append("test_case.decaf")
         except getopt.error, msg:
             raise Usage(msg)
         for o,a in opts:

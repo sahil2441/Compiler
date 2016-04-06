@@ -14,3 +14,9 @@ In stage 2, we go through each constructor of the class and resolve type errors.
 
 In the resolveBlock function we check the instance of each statement list and call the function resolve, which is a
 recursive function.
+
+To run the program:
+Go the directory
+~/jsundar-sahjain/hw4
+and run
+python decafch.py test_case.decaf
