@@ -121,7 +121,7 @@ class Type:
             bt = Type(basetype, params-1)
             self.kind = 'array'
             self.basetype = bt
-            self.typename = basetype;#'array(%s)'%(self.basetype.__str__())
+            self.typename = 'array(%s)'%(self.basetype.__str__())
 
     def __str__(self):
         if (self.kind == 'array'):

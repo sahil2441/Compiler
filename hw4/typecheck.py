@@ -2,16 +2,26 @@ from itertools import islice
 
 import ast
 errorFlag = False
+
 class ResolvingClass:
+    '''
+    Data structure to hold the object type and error message and resolved name for the type
+    '''
     def __init__(self, objtype, valid, errorMsg="", nameresolution = ""):
         self.objtype = objtype;
         self.valid = valid;
         self.errorMsg = errorMsg;
         self.nameresolution = nameresolution;
-
+# global variable to store class dictionary
 classTable = dict();
 
 def fieldResoultion(currentClass, checkClass, fieldName, expr, checkStatic = True):
+    '''
+    :return: instance of resolvingClass
+    This method checks if class is defined.
+    If class is defined, check if field is defined.
+    If field is defined, check the visibility and storage
+    '''
     if (checkClass is None) or not classTable.has_key(checkClass.name):
         return ResolvingClass(ast.Type("error"), False, "No such class constructor exists!")
     if (checkClass.fields.has_key(fieldName)):
@@ -21,11 +31,15 @@ def fieldResoultion(currentClass, checkClass, fieldName, expr, checkStatic = Tru
         elif checkStatic and fieldObj.storage != 'static':
             return ResolvingClass(ast.Type(fieldObj.type), False, "Cannot access non static variable using class reference")
         expr.resolvedId = fieldObj.id
-        return ResolvingClass(ast.Type(fieldObj.type), True)
+        return ResolvingClass(fieldObj.type, True)
     else:
         return ResolvingClass(ast.Type(fieldName), False, "No such field exists!")
 
 def getSuperClasses(classInstance):
+    '''
+    :param classInstance:
+    :return: comma separated string of superclass names for a class by recursion
+    '''
     if classInstance is None:
         return ""
     l = str(classInstance.name) + ",";
@@ -47,11 +61,13 @@ def nameResolutionForMethod (currentClass, currentScope, methodName, arguments, 
         classesToCheck = getSuperClasses(classInstance=checkClass);
         classesArr = classesToCheck.split(",")
         validMethod = None
+        validMethodCount = 0
         # Check if the method is present in the corresponding class and check the visibility and storage
         for classStr in classesArr:
             if classStr == '':
                 continue
             checkClass = classTable[classStr]
+            allmatchcount = 0;
             for method in checkClass.methods:
                 ids = method.vars.get_params();
                 if (method.name == methodName):
@@ -59,9 +75,14 @@ def nameResolutionForMethod (currentClass, currentScope, methodName, arguments, 
                         if (len(arguments) == 0 and len(ids) == 0):
                             validMethod = method
                             break
-                        elif (len(ids) == len(arguments) and checkParamTypes(method, arguments, currentClass, currentScope)):
-                            validMethod = method
-                            break
+                        elif len(ids) == len(arguments):
+                            match, matchcount = checkParamTypes(method, arguments, currentClass, currentScope)
+                            if match:
+                                allmatchcount += matchcount;
+                                validMethodCount += 1
+                                validMethod = method
+            if allmatchcount > 0 and validMethodCount > 1:
+                return ResolvingClass(ast.Type("error"), False, "The method invocation resolve to more than one method!")
         if validMethod is None:
             return ResolvingClass(ast.Type("error"), False, "The method does not exist!")
         return ResolvingClass(ast.Type(validMethod.rtype), True, nameresolution=validMethod.id)
@@ -89,14 +110,31 @@ def nameResolutionForNewObject(currentClass, currentScope, constructorName, argu
 
     # Now the number of arguments also match, i.e there exists at least one constructor with those no of
     # arguments. Now match the type.
-    constructor_match_flag = False
+    allmatchcount = 0
+    validconstructorcount = 0;
+    validConstructor = None
     for constructor in classTable[constructorName].constructors:
-        if len(arguments) == len(constructor.vars.get_params()) and checkParamTypes(constructor, arguments, currentClass, currentScope):
-            return ResolvingClass(ast.Type(constructorName), True, nameresolution=constructor.id)
+        if len(arguments) == len(constructor.vars.get_params()):
+            match, matchcount = checkParamTypes(constructor, arguments, currentClass, currentScope)
+            if match:
+                allmatchcount += matchcount
+                validConstructor =  ResolvingClass(ast.Type(constructorName), True, nameresolution=constructor.id)
+                validconstructorcount += 1
+    if allmatchcount > 0 and validconstructorcount > 1:
+        return ResolvingClass(ast.Type("error"), False, "The object creation resolves using more than one constructor!")
+    if not validConstructor is None:
+        return validConstructor;
     return ResolvingClass(ast.Type(constructorName), False, "No constructor with those parameters for class {0}".format(constructorName))
 
 
 def resolve(expr, currentClass = None, currentScope = None):
+    '''
+    Main recursive method which checks the validity of each expression
+    :param expr:
+    :param currentClass:
+    :param currentScope:
+    :return: instance of Resolving class object
+    '''
     if isinstance(expr, ast.ThisExpr):
         return ResolvingClass(ast.Type(currentClass.name), True)
 
@@ -114,7 +152,8 @@ def resolve(expr, currentClass = None, currentScope = None):
         if objRHS.valid and objLHS.valid:
             lhsType = str(objLHS.objtype.typename)
             rhsType = str(objRHS.objtype.typename)
-            if isSubType(objRHS.objtype, objLHS.objtype):
+            subTypeBool, sameType = isSubType(objRHS.objtype, objLHS.objtype)
+            if subTypeBool:
                 expr.lhstype = lhsType;
                 expr.rhstype = rhsType
                 return ResolvingClass(objRHS.objtype, True)
@@ -216,54 +255,94 @@ def resolve(expr, currentClass = None, currentScope = None):
             expr.nameResolution = obj.nameresolution
         return obj
 
+    # Evaluate array access - the index elements should be of type int
     elif isinstance(expr, ast.ArrayAccessExpr):
-        print 'Array Access Expr'
         obj = resolve(expr.base, currentClass, currentScope)
-        indextype = resolve(expr.index,currentClass, currentScope);
+        indextype = resolve(expr.index, currentClass, currentScope);
         if (indextype.objtype.typename != 'int'):
             return ResolvingClass(ast.Type("error"), False, "Array access index should be of int type")
-        return obj
+        try:
+            return ResolvingClass(obj.objtype.basetype, True)
+        except:
+            return ResolvingClass(ast.Type("error"), False, "Invalid array access!.")
+
+    # Evaluate new array creation - the index elements should be of type int
     elif isinstance(expr, ast.NewArrayExpr):
-        print 'New Array Expr'
+        for arg in expr.args:
+            indextype = resolve(arg, currentClass, currentScope);
+            if (indextype.objtype.typename != 'int'):
+                return ResolvingClass(ast.Type("error"), False, "Array initialization parameter should be of int type")
+        return ResolvingClass(ast.Type(expr.basetype, len(expr.args)), True)
 
 def checkParamTypes(method, arguments, currentClass, currentScope):
-    print ' Check Parameter Types'
+    '''
+    Check the signature of the parameters and compare with the arugments passed
+    :param method:
+    :param arguments:
+    :param currentClass:
+    :param currentScope: constructor or method
+    :return:
+    '''
     vartable = method.vars
     outermost = vartable.vars[0]
     ids = [outermost[vname].name for vname in outermost if outermost[vname].kind=='formal']
     count = 0;
+    sameTypeCount = 0;
     for id in ids:
         argParamObj = resolve(arguments[count], currentClass, currentScope)
         count = count + 1;
         formalParamType = outermost[id].type;
-        if (not isSubType(argParamObj.objtype, formalParamType)):
-            return False;
-    return True
+        subTypeBool, sameType = isSubType(argParamObj.objtype, formalParamType)# argParamObj.objtype must be strict subtype of formalParamType in case of multiple parameters
+        sameTypeCount += sameType
+        if (not subTypeBool):
+            return False, 0;
+    if (sameTypeCount == len(ids)):
+        sameTypeCount = 0 # If the parameters are strict subtypes then it is fine. So we reset the value to 0
+    return True, sameTypeCount
 
 def isSubType(aType, fType):
+    '''
+    Subtype checking for every parameter
+    :param aType:
+    :param fType:
+    :return:
+    '''
     if (aType.kind == 'basic'):
         if (fType.kind == 'basic'):
             if (aType.typename  == fType.typename):
-                return True;
+                return True, 0;
             if(aType.typename == 'int' and fType.typename == 'float'):
-                return True;
+                return True, 1;
         if (aType.typename == 'null' and fType.kind == 'class'):
-            return True;
+            return True, 1;
     elif (aType.kind == 'class'):
         if fType.kind == 'class':
             if (aType.typename == fType.typename):
-                return True
+                return True, 0
             if (not classTable.has_key(aType.typename) or not classTable.has_key(fType.typename)):
-                return False
+                return False, 0
             aClass = classTable[aType.typename];
             fClass = classTable[fType.typename];
             asuperClassesStr = getSuperClasses(aClass);
             asuperClasses = asuperClassesStr.split(",")
             for aSuperClass in asuperClasses:
                 if aSuperClass == fClass.name:
-                    return True;
-        return False
-    return False;
+                    return True , 1;
+        return False, 0
+    elif (aType.kind == 'array'):
+        if (fType.kind == 'array'):
+            if (str(aType.typename) == str(fType.typename)):
+                return True, 0
+            if (not classTable.has_key(aType.typename) or not classTable.has_key(fType.typename)):
+                return False, 0
+            aClass = classTable[aType.typename];
+            fClass = classTable[fType.typename];
+            asuperClassesStr = getSuperClasses(aClass);
+            asuperClasses = asuperClassesStr.split(",")
+            for aSuperClass in asuperClasses:
+                if aSuperClass == fClass.name:
+                    return True , 1;
+    return False, 0;
 
 def resolveBlock(m, c):
     global errorFlag
@@ -305,7 +384,10 @@ def resolveBlock(m, c):
                 errorFlag = True;
             resolveBlock(x.body, c);
         elif isinstance(x, ast.ReturnStmt):
-            obj = resolve(x.expr, c, m)
+            if (x.expr is None):
+                obj = ResolvingClass(ast.Type("void"), True)
+            else:
+                obj = resolve(x.expr, c, m)
             if (not obj.valid):
                 print "Type error at line " + str(x.lines)+". The return expression is incorrect!"
                 errorFlag = True;
@@ -313,18 +395,19 @@ def resolveBlock(m, c):
                 print "Type error at line " + str(x.lines)+". Constructor cannot return anything!"
                 errorFlag = True;
             elif isinstance(m, ast.Method):
-                if not isSubType(m.rtype, obj.objtype):
+                subTypeBool, sameType = isSubType(obj.objtype, m.rtype)
+                if not subTypeBool:
                     print "Type error at line " + str(x.lines)+". The return type does not match with method return type!"
                     errorFlag = True;
     return errorFlag
 
 
-
+'''
+Main method which is invoked after the construction of AST for typechecking
+'''
 def checktype(classtable):
     global errorFlag;
-    lhstype = ''
-    rhstype = ''
-    global classTable
+    global classTable;
     classTable = classtable
     for cid in classtable:
         c = classtable[cid]

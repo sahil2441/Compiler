@@ -1,19 +1,35 @@
 class A {
-   int a[];
-   public int methodA()
-   {
-        int y;
-        y = 5;
-        if(true) {
-            int z;
-            z = 6;
-        }
-        else {
-          y = 6;
-        }
-        for (y=0;true;y=y+5) {
+static int a;
+int b;
+public A(int b, int a)
+{
 
-        }
-        return 0;
-   }
- }
+}
+public A(float a, float b)
+{
+
+}
+public int methodA(int a, float b)
+{
+
+}
+private int methodA(int a, float b)
+{
+    A x;
+   methodA(1,2);
+    x = new A(1,6);
+}
+}
+
+class B extends A{
+
+public B() {
+
+}
+public int methodA(float a)
+{
+    A x;
+    x= new B();
+    x = new A(1.2,2);
+}
+}
