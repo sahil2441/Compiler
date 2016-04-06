@@ -221,7 +221,7 @@ def resolve(expr, currentClass = None, currentScope = None):
                     return a;
                 expr.exprtype = str(b.objtype.typename)
                 return b;
-        return ResolvingClass(a, False, "Incompatible binary operation on types detected")
+        return ResolvingClass(ast.Type("error"), False, "Incompatible binary operation on types detected")
     
     # Evaluate Constant Expression Type
     elif isinstance(expr, ast.ConstantExpr):
