@@ -1,35 +1,26 @@
 class A {
-static int a;
-int b;
-public A(int b, int a)
-{
-
+   int x;
+   public A () {
+     this.x = 0;
+   }
+   public int f() {
+      return this.x + 1;
+   }
+   public int g() {
+      int i;
+      i = this.f();
+      i++;
+      return i;
+   }
 }
-public A(float a, float b)
-{
-
-}
-public int methodA(int a, float b)
-{
-
-}
-private int methodA(int a, float b)
-{
-    A x;
-   methodA(1,2);
-    x = new A(1,6);
-}
-}
-
-class B extends A{
-
-public B() {
-
-}
-public int methodA(float a)
-{
-    A x;
-    x= new B();
-    x = new A(1.2,2);
-}
+class B extends A {
+   int y;
+   public A s;
+   B () {
+     this.y = 2;
+     this.s = new A();
+   }
+   public int f(int k) {
+      return super.f() + k;
+   }
 }
