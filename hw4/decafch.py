@@ -39,7 +39,7 @@ def main(argv=None):
         else:
             filename=fullfilename
         infile = filename + ".decaf"
-        # ast.initialize_ast()
+        ast.initialize_ast()
         if decafparser.from_file(infile):
             errorFlag = typecheck.checktype(classtable=ast.classtable)
             if (not errorFlag):
