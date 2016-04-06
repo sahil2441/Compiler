@@ -1,20 +1,16 @@
-Example implementation of Decaf AST builder.	
-Report errors to Yuxuan Shui and C. R. Ramakrishnan
+The program is initialized from the file decafch.py
+In line 44 it calls the class typecheck.py
+            errorFlag = typecheck.checktype(classtable=ast.classtable)
 
-README.txt:	this file
-decaflexer.py	PLY/lex specification of Decaf tokens.
-		Also defines "errorflag" used to signal error during scanning/parsing.
-decafparser.py	PLY/yacc specification of Decaf grammar.
-		The encoded grammar rules appear in the same order as in decaf manual.
-		Defines "from_file" function that takes a file name
-		and parses that file's contents. "from_file" returns
-		True if no error, and False if error.
+and passes the class table as argument.
 
-ast.py		Class structure and functions for AST construction.
+The file typecheck.py handles all the typechecking and it's function checktype returns true if it
+encounters any error in typechecking.
 
-decafch.py	Driver: processes arguments and gets file name to pass
-		to decafparser.from_file
-		Decaf programs are assumed to be in files with ".decaf" suffix.
-		Argument given to decafch may omit this suffix; e.g.
-				python decafch test
-		will read from test.decaf.
+In the method checktype the idea is to iterate all the classes of the classtable and go through each block/ methods to
+check for type errors.
+
+In stage 2, we go through each constructor of the class and resolve type errors.
+
+In the resolveBlock function we check the instance of each statement list and call the function resolve, which is a
+recursive function.
