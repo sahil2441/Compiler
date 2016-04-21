@@ -2,6 +2,7 @@ classtable = {}  # initially empty dictionary of classes.
 lastmethod = 0
 lastconstructor = 0
 
+import absmc;
 # Class table.  Only user-defined classes are placed in the class table.
 def lookup(table, key):
     if key in table:
@@ -18,6 +19,13 @@ def print_ast():
         c = classtable[cid]
         c.printout()
     print "-----------------------------------------------------------------------------"
+
+def generatecode():
+    for cid in classtable:
+        c = classtable[cid]
+        if (not c.builtin):
+            c.generatecode();
+
 
 def typecheck():
     global errorflag
@@ -103,6 +111,17 @@ class Class:
         for m in self.methods:
             m.printout()
 
+    def generatecode(self):
+        totalFields = len(self.fields)
+        for field in self.fields:
+            if self.fields[field].storage == 'static':
+                absmc.staticAreaCounter = absmc.staticAreaCounter + 1
+        n = len(self.methods)
+        for method in self.methods:
+            method.generatecode()
+
+        print absmc.staticAreaCounter;
+
     def typecheck(self):
         global current_class
         if (self.builtin):
@@ -146,7 +165,7 @@ class Class:
                 if (isinstance(m.body, BlockStmt)):
                     m.body.stmtlist.append(ReturnStmt(None,m.body.lines))
                 else:
-                    m.body = BlockStmt([m.body, ReturnStmt(None,m.body.lines)], mbody.lines)
+                    m.body = BlockStmt([m.body, ReturnStmt(None,m.body.lines)], m.body.lines)
             else:
                 if (m.body.has_return() < 2):
                     signal_type_error("Method needs a return statement on every control flow path", m.body.lines)
@@ -293,6 +312,11 @@ class Method:
 
     def argtypes(self):
         return [v.type for v in self.vars.get_params()]
+
+    def generatecode(self):
+        print 'M_' + self.name+'_'+str(self.id)+':\n'
+        self.body.generatecode();
+
 
     def typecheck(self):
         global current_method
@@ -514,7 +538,6 @@ class ForStmt(Stmt):
         else:
             return 0
 
-
 class ReturnStmt(Stmt):
     def __init__(self, expr, lines):
         self.lines = lines
@@ -526,6 +549,9 @@ class ReturnStmt(Stmt):
         if (self.expr != None):
             self.expr.printout()
         print ")"
+
+    def generatecode(self):
+        print 'return, ',str(self.expr)
 
     def typecheck(self):
         global current_method
@@ -557,10 +583,15 @@ class BlockStmt(Stmt):
             s.printout()
         print "])"
 
+    def generatecode(self):
+        for statement in self.stmtlist:
+            statement.generatecode()
+
     def typecheck(self):
         if (self.__typecorrect == None):
             self.__typecorrect = all([s.typecheck() for s in self.stmtlist])
         return self.__typecorrect
+
 
     def has_return(self):
         rs = [s.has_return() for s in self.stmtlist]
@@ -610,6 +641,9 @@ class ExprStmt(Stmt):
         print "Expr(",
         self.expr.printout()
         print ")"
+
+    def generatecode(self):
+        self.expr.generatecode();
 
     def typecheck(self):
         if (self.__typecorrect == None):
@@ -700,6 +734,7 @@ class VarExpr(Expr):
         self.__typeof = None
     def __repr__(self):
         return "Variable(%d)"%self.var.id
+
 
     def typeof(self):
         if (self.__typeof == None):
@@ -800,6 +835,18 @@ class AssignExpr(Expr):
         self.lhs = lhs
         self.rhs = rhs
         self.__typeof = None
+
+    def generatecode(self):
+        if (isinstance(self.lhs, VarExpr)):
+            print 'load_immed_i',
+        if (isinstance(self.rhs, ConstantExpr)):
+            if self.rhs.kind == 'int':
+                absmc.addInstruction(LOADINTEGER, self.rhs.int)
+            else:
+                absmc.addInstruction(LOADFLOAT, self.rhs.float)
+        #lhscode = self.lhs.generatecode()
+        #rhscode = self.rhs.generatecode()
+        #print lhscode
     def __repr__(self):
         return "Assign({0}, {1}, {2}, {3})".format(self.lhs, self.rhs, self.lhs.typeof(), self.rhs.typeof())
 

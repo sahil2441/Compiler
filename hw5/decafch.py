@@ -17,7 +17,7 @@ class Usage(Exception):
 def main(argv=None):
     if argv is None:
         argv = sys.argv
-        
+    argv.append('tests/test_case1.decaf')
     # parse command line options
     try:
         try:
@@ -39,7 +39,9 @@ def main(argv=None):
         ast.initialize_ast()
         if decafparser.from_file(infile):
             if (ast.typecheck()):
-                ast.print_ast()            
+                ast.generatecode();
+                #ast.print_ast()
+
         else:
             print "Failure: there were errors."
     except Usage, err:

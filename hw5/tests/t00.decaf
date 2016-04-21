@@ -14,4 +14,4 @@ class C extends A {
 
 class D extends B   {
       D w[];
-}
+}cd..
