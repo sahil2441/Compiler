@@ -4,8 +4,45 @@ attributeRegister = -1;
 temporaryRegister = -1;
 
 class INSTRUCTION(object):
-    instList =  ['ildc','iadd']#TODO CREATE LIST OF ALL INSTRUCTIONS WHICH IS MENTIONED IN HW5 DETAILS
-    ILDC, IADD = instList
+    instList =  [ 'move_immed_i',
+                  'move_immed_f',
+                  'move',
+                  'iadd',
+                  'isub',
+                  'imul',
+                  'idiv',
+                  'imod',
+                  'igt',
+                  'igeq',
+                  'ilt',
+                  'ileq',
+                  'fadd',
+                  'fsub',
+                  'fmul',
+                  'fdiv',
+                  'fgt',
+                  'fgeq',
+                  'flt',
+                  'fleq',
+                  'itof',
+                  'ftoi',
+                  'hload',
+                  'hstore',
+                  'halloc',
+                  'bz',
+                  'bnz',
+                  'jmp',
+                  'call',
+                  'ret',
+                  'save',
+                  'restore',
+                  'peek',
+                  'nop',
+                  ]
+
+    MOVE_IMMED_I,MOVE_IMMED_F,MOVE, IADD,ISUB,IMUL,IDIV,IMOD,IGT,IGEQ,ILT,ILEQ, \
+    FADD,FSUB,FMUL,FDIV,FGT,FGEQ,FLT,FLEQ, ITOF,FTOI, \
+    HLOAD,HSTORE,HALLOC,BZ,BNZ,JMP, CALL,RET,SAVE,RESTORE,PEEK,NOP = instList
 
 
 def methodMachineCode():
