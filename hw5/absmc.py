@@ -1,7 +1,22 @@
 staticAreaCounter = 0
 registerMap = dict() # Map of variable name/id/type to register address
+instructionList = list()
 attributeRegister = -1;
 temporaryRegister = -1;
+
+import ast
+class Instruction:
+	pass
+
+class AddInstruction(Instruction):
+	def __init__(self, ra, rb, rc):
+		self.ra = ra
+		self.rb = rb
+		self.rc = rc
+
+	def __str__(self):
+		return " ".join([INSTRUCTION.IADD, self.ra, self.rb , self.rc])
+
 
 class INSTRUCTION(object):
     instList =  [ 'move_immed_i',
@@ -45,19 +60,12 @@ class INSTRUCTION(object):
     HLOAD,HSTORE,HALLOC,BZ,BNZ,JMP, CALL,RET,SAVE,RESTORE,PEEK,NOP = instList
 
 
-def methodMachineCode():
-    pass
-
-def constructorMachineCode():
-    pass
-
-def SSA():
-    pass
-
 
 def getRegister(obj):
     global attributeRegister, temporaryRegister
-    key =  ','.join([obj.name, obj.id, obj.kind])
+    if isinstance(obj, ast.ConstantExpr):
+        obj.kind = ''
+    key =  str(obj.id)
     if (not registerMap.has_key(key)):
         if (obj.kind == 'formal'):
             attributeRegister = attributeRegister + 1;

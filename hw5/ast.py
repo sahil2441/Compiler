@@ -2,7 +2,7 @@ classtable = {}  # initially empty dictionary of classes.
 lastmethod = 0
 lastconstructor = 0
 
-import absmc;
+import absmc
 # Class table.  Only user-defined classes are placed in the class table.
 def lookup(table, key):
     if key in table:
@@ -841,9 +841,11 @@ class AssignExpr(Expr):
             print 'load_immed_i',
         if (isinstance(self.rhs, ConstantExpr)):
             if self.rhs.kind == 'int':
-                absmc.addInstruction(LOADINTEGER, self.rhs.int)
+                print 'register', absmc.getRegister(self.rhs)
+                #absmc.addInstruction(absmc.INSTRUCTION.LOADI, self.rhs.int)
             else:
-                absmc.addInstruction(LOADFLOAT, self.rhs.float)
+                pass
+                #absmc.addInstruction(LOADFLOAT, self.rhs.float)
         #lhscode = self.lhs.generatecode()
         #rhscode = self.rhs.generatecode()
         #print lhscode
