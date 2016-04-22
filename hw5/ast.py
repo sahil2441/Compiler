@@ -1,6 +1,7 @@
 classtable = {}  # initially empty dictionary of classes.
 lastmethod = 0
 lastconstructor = 0
+currentRegister = 0
 
 import absmc
 # Class table.  Only user-defined classes are placed in the class table.
@@ -21,6 +22,14 @@ def print_ast():
     print "-----------------------------------------------------------------------------"
 
 def generatecode():
+    for cid in classtable:
+        c = classtable[cid]
+        for field in c.fields:
+            if c.fields[field].storage == 'static':
+                absmc.staticAreaCounter = absmc.staticAreaCounter + 1
+                absmc.sapRegisterOffset[field] = absmc.staticAreaCounter
+    absmc.heapStartRegister = absmc.staticAreaCounter + 1;
+    absmc.add(absmc.Misc_Instruction('.statid_data ' + str(absmc.staticAreaCounter)))
     for cid in classtable:
         c = classtable[cid]
         if (not c.builtin):
@@ -113,14 +122,9 @@ class Class:
 
     def generatecode(self):
         totalFields = len(self.fields)
-        for field in self.fields:
-            if self.fields[field].storage == 'static':
-                absmc.staticAreaCounter = absmc.staticAreaCounter + 1
         n = len(self.methods)
         for method in self.methods:
             method.generatecode()
-
-        print absmc.staticAreaCounter;
 
     def typecheck(self):
         global current_class
@@ -314,7 +318,8 @@ class Method:
         return [v.type for v in self.vars.get_params()]
 
     def generatecode(self):
-        print 'M_' + self.name+'_'+str(self.id)+':\n'
+        label = 'M_' + self.name+'_'+str(self.id)+":"
+        absmc.add(absmc.Label_Instruction(label))
         self.body.generatecode();
 
 
@@ -551,7 +556,7 @@ class ReturnStmt(Stmt):
         print ")"
 
     def generatecode(self):
-        print 'return, ',str(self.expr)
+        pass
 
     def typecheck(self):
         global current_method
@@ -693,7 +698,24 @@ class ConstantExpr(Expr):
             self.string = arg
         self.__typeof = None
 
-            
+    def generatecode(self):
+        instructionList = []
+        register = absmc.generateTemporaryRegister()
+        if self.kind == 'int':
+            instruction = absmc.Move_Immed_i_Instruction(register, self.int)
+        else:
+            instruction = absmc.Move_Immed_f_Instruction(register, self.float)
+        instructionList.append(instruction)
+        return register, instructionList
+
+    def backpatch(self, instructionList, address):
+        instruction = instructionList[-1]
+        while address[-1] == None:
+            del address[-1]
+        if (not address is None):
+            instruction.ra = address
+
+
     def __repr__(self):
         s = "Unknown"
         if (self.kind == 'int'):
@@ -732,9 +754,19 @@ class VarExpr(Expr):
         self.lines = lines
         self.var = var
         self.__typeof = None
+
     def __repr__(self):
         return "Variable(%d)"%self.var.id
 
+    def generatecode(self):
+        if (absmc.registerMap.has_key(self.var)):
+            register = absmc.registerMap[self.var]
+        else:
+            register = None
+        return register, []
+
+    def backpatch(self, addr):
+        absmc.registerMap[self.var] = addr
 
     def typeof(self):
         if (self.__typeof == None):
@@ -780,6 +812,28 @@ class BinaryExpr(Expr):
         self.arg1 = arg1
         self.arg2 = arg2
         self.__typeof = None
+
+    def generatecode(self):
+        register = absmc.generateTemporaryRegister()
+        instructionList = []
+        if self.bop == 'add':
+            registerArg1, instructionArg1List = self.arg1.generatecode()
+            registerArg2, instructionArg2List = self.arg2.generatecode()
+            if (str(self.typeof()) == 'int'):
+                instruction = absmc.AddInstruction(register, registerArg1, registerArg2)
+            else:
+                instruction = absmc.AddInstructionFloat(register, registerArg1, registerArg2)
+        instructionList.append(instruction)
+        return register, instructionList
+
+    def backpatch(self, instructionList, address):
+        for instr in instructionList:
+            if not instr is None:
+                if (not address is None):
+                    instr.ra = address
+                else:
+                    address = instr.ra
+
     def __repr__(self):
         return "Binary({0}, {1}, {2})".format(self.bop,self.arg1,self.arg2)            
 
@@ -837,18 +891,11 @@ class AssignExpr(Expr):
         self.__typeof = None
 
     def generatecode(self):
-        if (isinstance(self.lhs, VarExpr)):
-            print 'load_immed_i',
-        if (isinstance(self.rhs, ConstantExpr)):
-            if self.rhs.kind == 'int':
-                print 'register', absmc.getRegister(self.rhs)
-                #absmc.addInstruction(absmc.INSTRUCTION.LOADI, self.rhs.int)
-            else:
-                pass
-                #absmc.addInstruction(LOADFLOAT, self.rhs.float)
-        #lhscode = self.lhs.generatecode()
-        #rhscode = self.rhs.generatecode()
-        #print lhscode
+        rhsaddr, instructionRHSList = self.rhs.generatecode()
+        lhsaddr, instructionLHSList = self.lhs.generatecode()
+        absmc.addAll(instructionRHSList)
+        self.lhs.backpatch(rhsaddr);
+
     def __repr__(self):
         return "Assign({0}, {1}, {2}, {3})".format(self.lhs, self.rhs, self.lhs.typeof(), self.rhs.typeof())
 
@@ -1016,6 +1063,10 @@ class FieldAccessExpr(Expr):
         self.fname = fname
         self.__typeof = None
         self.field = None
+
+    def generatecode(self):
+        instructionList = []
+        print self.base;
         
     def __repr__(self):
         return "Field-access({0}, {1}, {2})".format(self.base, self.fname, self.field.id)
@@ -1055,6 +1106,7 @@ class MethodInvocationExpr(Expr):
         self.args = args
         self.method = None
         self.__typeof = None
+
     def __repr__(self):
         return "Method-call({0}, {1}, {2})".format(self.base, self.mname, self.args)
 
@@ -1094,6 +1146,61 @@ class NewObjectExpr(Expr):
         self.classref = cref
         self.args = args
         self.__typeof = None
+
+    def generatecode(self):
+        # Resolve constructor
+        argtypes = [a.typeof() for a in self.args]
+        j = resolve_constructor(current_class, self.classref, argtypes, self.lines)
+        print j.id;
+        instructionList = []
+        #part1
+        hallocsize = 0
+        for field in classtable[j.name].fields:
+            if not classtable[j.name].fields[field].storage is 'static':
+                hallocsize = hallocsize + 1
+        heapRegister = absmc.generateTemporaryRegister()
+        instruction = absmc.HallocInstruction(heapRegister, str(hallocsize))
+        instructionList.append(instruction)
+        #part2
+        argRegisterList = []
+        argRegisterList.append(heapRegister)
+        saveStack = []
+        dataStack = []
+        if (not self.args is None and len(self.args) > 0):
+            for arg in self.args:
+                argRegister, argInstructionList = arg.generatecode()
+                argRegisterList.append(argRegister)
+                for argInstr in argInstructionList:
+                    instructionList.append(argInstr)
+        instructionList.append(absmc.Save_Instruction('a0'))
+        dataStack.append('a0')
+        saveStack.append("a0")
+        counter = 0
+        if (not self.args is None and len(self.args) > 0):
+            for arg in self.args:
+                counter = counter + 1
+                argReg = ''.join(['a', str(counter)])
+                instructionList.append(absmc.Save_Instruction(argReg))
+                dataStack.append(argReg)
+                saveStack.append(argReg)
+        instructionList.append(absmc.Save_Instruction(heapRegister))
+        saveStack.append(heapRegister)
+        counter = 0
+        for reg in dataStack:
+            instructionList.append(absmc.Move_Instruction(reg, argRegisterList[counter]))
+            counter = counter + 1
+        constructor = 'C_' + str(j.id)
+        instructionList.append(absmc.Call_Instruction(constructor))
+        saveStack.reverse()
+        for reg in saveStack:
+            instructionList.append(absmc.Restore_Instruction(reg))
+        return heapRegister, instructionList;
+
+
+        print 'class ref : ' , self.classref
+        #absmc.Move_Immed_i_Instruction()
+
+        #absmc.instructionList.append()
     def __repr__(self):
         return "New-object({0}, {1})".format(self.classref.name, self.args)
 

@@ -8,6 +8,7 @@ import getopt
 
 import decafparser
 import ast
+import absmc
 
 class Usage(Exception):
     def __init__(self, msg):
@@ -40,7 +41,9 @@ def main(argv=None):
         if decafparser.from_file(infile):
             if (ast.typecheck()):
                 ast.generatecode();
+                absmc.printAMI();
                 #ast.print_ast()
+
 
         else:
             print "Failure: there were errors."

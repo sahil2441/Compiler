@@ -9,16 +9,36 @@ class A{
     static int h;
     static int i;
     static int j;
+    int oi;
+    int jl;
+    public A(int a)
+    {
+
+    }
+
+    public A(int a, int b)
+    {
+
+    }
+
+    /*public int method()
+    {
+        oi = 15;
+        return oi;
+    }*/
 
     public static void main()
     {
-        int u;
-        int v;
-        int w;
-        int x;
-        u = 1;
-        v = 2;
-        w = u + v;
-        x = v + w;
+        int i;
+        int j;
+        int k;
+        /*A a;
+        a = new A(2, 3);*/
+        i = 1;
+        j = 2;
+        k = i + j;
+        i = i + j;
+        i = i + k;
+        k = j + k;
     }
 }
