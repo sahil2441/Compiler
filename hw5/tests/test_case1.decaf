@@ -29,16 +29,9 @@ class A{
 
     public static void main()
     {
-        int i;
-        int j;
-        int k;
-        /*A a;
-        a = new A(2, 3);*/
-        i = 1;
-        j = 2;
-        k = i + j;
-        i = i + j;
-        i = i + k;
-        k = j + k;
+        int x, y;
+        x=10;
+        y = --x;
+
     }
 }

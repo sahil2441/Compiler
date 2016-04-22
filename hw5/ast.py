@@ -1,3 +1,5 @@
+import ast
+
 classtable = {}  # initially empty dictionary of classes.
 lastmethod = 0
 lastconstructor = 0
@@ -782,6 +784,22 @@ class UnaryExpr(Expr):
     def __repr__(self):
         return "Unary({0}, {1})".format(self.uop, self.arg)
 
+    def generateCode(self):
+        register = absmc.generateTemporaryRegister()
+        instructionList = []
+        print 'self.arg1', self.arg1
+        print 'self.arg2', self.arg2
+        registerArg1, instructionArg1List = self.arg1.generatecode()
+        registerArg2, instructionArg2List = self.arg2.generatecode()
+        for instr in instructionArg1List:
+            instructionList.append(instr)
+        for instr in instructionArg2List:
+            instructionList.append(instr)
+
+        # instructionList.append(instruction)
+        return register, instructionList
+
+
     def typeof(self):
         if (self.__typeof == None):
             argtype = self.arg.typeof()
@@ -816,13 +834,69 @@ class BinaryExpr(Expr):
     def generatecode(self):
         register = absmc.generateTemporaryRegister()
         instructionList = []
+        registerArg1, instructionArg1List = self.arg1.generatecode()
+        registerArg2, instructionArg2List = self.arg2.generatecode()
+        for instr in instructionArg1List:
+            instructionList.append(instr)
+        for instr in instructionArg2List:
+            instructionList.append(instr)
+
         if self.bop == 'add':
-            registerArg1, instructionArg1List = self.arg1.generatecode()
-            registerArg2, instructionArg2List = self.arg2.generatecode()
             if (str(self.typeof()) == 'int'):
                 instruction = absmc.AddInstruction(register, registerArg1, registerArg2)
             else:
                 instruction = absmc.AddInstructionFloat(register, registerArg1, registerArg2)
+
+        if self.bop == 'sub':
+            if (str(self.typeof()) == 'int'):
+                instruction = absmc.SubInstruction(register, registerArg1, registerArg2)
+            else:
+                instruction = absmc.SubInstructionFloat(register, registerArg1, registerArg2)
+
+        if self.bop == 'mul':
+            if (str(self.typeof()) == 'int'):
+                instruction = absmc.MulInstruction(register, registerArg1, registerArg2)
+            else:
+                instruction = absmc.MulInstructionFloat(register, registerArg1, registerArg2)
+
+        if self.bop == 'div':
+            if (str(self.typeof()) == 'int'):
+                instruction = absmc.DivInstruction(register, registerArg1, registerArg2)
+            else:
+                instruction = absmc.DivInstructionFloat(register, registerArg1, registerArg2)
+
+        # Boolean expressions
+        if self.bop == 'gt' or self.bop == 'geq' or self.bop == 'lt' or self.bop == 'leq':
+            self.type1 = self.arg1.kind
+            self.type2 = self.arg2.kind
+            if (self.type1 == self.type2 == 'int'):
+                if self.bop == 'gt' :
+                    instruction = absmc.GtInstruction(register, registerArg1, registerArg2)
+                if self.bop == 'geq' :
+                    instruction = absmc.GeqInstruction(register, registerArg1, registerArg2)
+                if self.bop == 'lt' :
+                    instruction = absmc.LtInstruction(register, registerArg1, registerArg2)
+                if self.bop == 'leq':
+                    instruction = absmc.LeqInstruction(register, registerArg1, registerArg2)
+            # Case of float
+            else:
+                if (self.type1 == self.type2 == 'float'):
+                    pass
+                else:
+                    if (self.type1 == 'float'):
+                        instruction = absmc.Itof_Instruction(registerArg1, registerArg2)
+                    else:
+                        instruction = absmc.Itof_Instruction(registerArg2, registerArg1)
+                    instructionList.append(instruction)
+                if self.bop == 'gt' :
+                    instruction = absmc.GtInstructionFloat(register, registerArg1, registerArg2)
+                if self.bop == 'geq' :
+                    instruction = absmc.GeqInstructionFloat(register, registerArg1, registerArg2)
+                if self.bop == 'lt' :
+                    instruction = absmc.LtInstructionFloat(register, registerArg1, registerArg2)
+                if self.bop == 'leq':
+                    instruction = absmc.LeqInstructionFloat(register, registerArg1, registerArg2)
+
         instructionList.append(instruction)
         return register, instructionList
 
@@ -891,6 +965,7 @@ class AssignExpr(Expr):
         self.__typeof = None
 
     def generatecode(self):
+        # print 'self.rhs', self.rhs
         rhsaddr, instructionRHSList = self.rhs.generatecode()
         lhsaddr, instructionLHSList = self.lhs.generatecode()
         absmc.addAll(instructionRHSList)
@@ -922,6 +997,48 @@ class AutoExpr(Expr):
         self.__typeof = None
     def __repr__(self):
         return "Auto({0}, {1}, {2})".format(self.arg, self.oper, self.when)
+
+    def generatecode(self):
+        # print 'Inside generate code of autoExp'
+        # print 'self.arg', self.arg
+        # print 'self.oper', self.oper
+        # print 'self.when', self.when
+
+        registerLHS = absmc.generateTemporaryRegister()
+        registerRHSNew = absmc.generateTemporaryRegister()
+        instructionList = []
+        arg1 = self.arg
+        arg2 =ast.ConstantExpr('int', 1)
+
+        registerArg1, instructionArg1List = arg1.generatecode()
+        registerArg2, instructionArg2List = arg2.generatecode()
+        for instr in instructionArg1List:
+            instructionList.append(instr)
+        for instr in instructionArg2List:
+            instructionList.append(instr)
+
+        # y = ++x ; first assign x = x+1 and then assign the new value of x to y.
+        if self.oper == 'inc' :
+            if self.when == 'post':
+                instructionList.append(absmc.Move_Instruction(registerLHS, registerArg1))
+                instructionList.append(absmc.AddInstruction(registerRHSNew, registerArg1, registerArg2))
+                instructionList.append(absmc.Move_Instruction(registerArg1, registerRHSNew))
+            elif self.when == 'pre':
+                instructionList.append(absmc.AddInstruction(registerRHSNew, registerArg1, registerArg2))
+                instructionList.append(absmc.Move_Instruction(registerArg1, registerRHSNew))
+                instructionList.append(absmc.Move_Instruction(registerLHS, registerArg1))
+        elif self.oper == 'dec' :
+            if self.when == 'post':
+                instructionList.append(absmc.Move_Instruction(registerLHS, registerArg1))
+                instructionList.append(absmc.SubInstruction(registerRHSNew, registerArg1, registerArg2))
+                instructionList.append(absmc.Move_Instruction(registerArg1, registerRHSNew))
+            elif self.when == 'pre':
+                instructionList.append(absmc.SubInstruction(registerRHSNew, registerArg1, registerArg2))
+                instructionList.append(absmc.Move_Instruction(registerArg1, registerRHSNew))
+                instructionList.append(absmc.Move_Instruction(registerLHS, registerArg1))
+
+        return registerLHS, instructionList
+
 
     def typeof(self):
         if (self.__typeof == None):
@@ -1197,7 +1314,7 @@ class NewObjectExpr(Expr):
         return heapRegister, instructionList;
 
 
-        print 'class ref : ' , self.classref
+        # print 'class ref : ' , self.classref
         #absmc.Move_Immed_i_Instruction()
 
         #absmc.instructionList.append()

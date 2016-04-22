@@ -41,7 +41,7 @@ def main(argv=None):
         if decafparser.from_file(infile):
             if (ast.typecheck()):
                 ast.generatecode();
-                absmc.printAMI();
+                absmc.printAMI(filename);
                 #ast.print_ast()
 
 

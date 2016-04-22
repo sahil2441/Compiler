@@ -9,6 +9,8 @@ controlStack = []
 dataStack = []
 
 import ast
+import sys
+
 class Instruction:
 	pass
 
@@ -52,7 +54,7 @@ class Move_Immed_f_Instruction(Instruction):
         return self.__str__()
 
     def __str__(self):
-        return " ".join([INSTRUCTION.MOVE_IMMED_F, self.ra, self.rb])
+        return " ".join([INSTRUCTION.MOVE_IMMED_F, str(self.ra), str(self.rb)])
 
 class Move_Instruction(Instruction):
     def __init__(self, ra, rb):
@@ -533,13 +535,23 @@ def generateTemporaryRegister():
     regStr = 't' + str(temporaryRegister);
     return regStr
 
-
-
-def printAMI():
+def printAMI(filename):
     for instr in instructionList:
         print instr;
+
     # create new file
     # print the generated machine code into new file
+
+    orig_stdout = sys.stdout
+    filename = filename + '.ami'
+    f = open(filename, 'w')
+    # sys.stdout = f
+
+    for instr in instructionList:
+        print >>f , instr
+
+    # sys.stdout = orig_stdout
+    f.close()
 
 
 
