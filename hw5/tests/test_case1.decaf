@@ -28,11 +28,10 @@ class A{
     }*/
 
     public static void main(){
-
-        int x, y;
-        x=8;
-        while(x<5){
-            y = x++;
+        int i;
+        for (i =0 ; i<6 ; i++){
+            int y;
+            y=10;
         }
     }
 }

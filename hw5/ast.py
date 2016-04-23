@@ -500,7 +500,7 @@ class WhileStmt(Stmt):
             return 0
 
     def generatecode(self):
-        register = absmc.generateTemporaryRegister()
+        # register = absmc.generateTemporaryRegister()
         instructionList = []
         firstLabel = absmc.generateLabel()                # For first label
         secondLabel = absmc.generateLabel()               # For second label
@@ -533,7 +533,7 @@ class WhileStmt(Stmt):
         instructionList.append(absmc.Jmp_Instruction(firstLabel[0:-1]))
         instructionList.append(absmc.Label_Instruction(thirdLabel))       # For last label
         absmc.addAll(instructionList)
-        return register, instructionList
+        # return register, instructionList
 
 class ForStmt(Stmt):
     def __init__(self, init, cond, update, body, lines):
@@ -543,6 +543,46 @@ class ForStmt(Stmt):
         self.update = update
         self.body = body
         self.__typecorrect = None
+
+    def generatecode(self):
+        instructionList = []
+        firstLabel = absmc.generateLabel()                # For first label
+        secondLabel = absmc.generateLabel()               # For second label
+        thirdLabel = absmc.generateLabel()                # For third label
+
+        instruction = absmc.Label_Instruction(firstLabel)
+        instructionList.append(instruction)
+
+        self.init.generatecode()    # from initial
+
+        register2, instruction2 = self.cond.generatecode()      # from condn
+        # add all instructions from instruction1
+        for instr in instruction2:
+            instructionList.append(instr)
+
+        register3, instruction3 = self.update.generatecode()      # from update
+        # add all instructions from instruction1
+        for instr in instruction3:
+            instructionList.append(instr)
+
+        # if the cond is true then bz, else bnz
+        instruction = absmc.Bz_Instruction(register2, secondLabel[0:-1])
+        instructionList.append(instruction)
+        absmc.addAll(instructionList)
+
+
+        instructionList = []
+        instructionList.append(absmc.Label_Instruction(secondLabel))       # For middle label
+        absmc.addAll(instructionList)
+
+        print 'body: ', self.body
+        # Add code for block here
+        self.body.generatecode()
+
+        instructionList = []
+        instructionList.append(absmc.Jmp_Instruction(firstLabel[0:-1]))
+        instructionList.append(absmc.Label_Instruction(thirdLabel))       # For last label
+        absmc.addAll(instructionList)
 
     def printout(self):
         print "For(",
@@ -627,14 +667,8 @@ class BlockStmt(Stmt):
         print "])"
 
     def generatecode(self):
-        # instructionList=[]
-        # register = ''
         for statement in self.stmtlist:
-            # print 'statement: ', statement
             statement.generatecode()
-        #     instructionList = instructionList + currentList
-        # return register, instructionList
-
 
     def typecheck(self):
         if (self.__typecorrect == None):
@@ -1078,7 +1112,6 @@ class AutoExpr(Expr):
         # y = ++x ; first assign x = x+1 and then assign the new value of x to y.    x++
         if self.oper == 'inc' :
             if self.when == 'post':
-                print 'inside post inc'
                 instructionList.append(absmc.Move_Instruction(registerLHS, registerArg1))
                 instructionList.append(absmc.AddInstruction(registerRHSNew, registerArg1, registerArg2))
                 instructionList.append(absmc.Move_Instruction(registerArg1, registerRHSNew))
