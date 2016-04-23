@@ -505,6 +505,39 @@ class IfStmt(Stmt):
         else:
             return 0
 
+    def generatecode(self):
+        # register = absmc.generateTemporaryRegister()
+        instructionList = []
+        firstLabel = absmc.generateLabel()                # For first label
+        secondLabel = absmc.generateLabel()               # For second label
+        thirdLabel = absmc.generateLabel()               # For third label
+
+        instructionList.append(absmc.Label_Instruction(firstLabel))
+
+        register1, instruction1 = self.condition.generatecode()
+        # add all instructions from instruction1
+        for instr in instruction1:
+            # print 'instr: ', instr
+            instructionList.append(instr)
+
+        # if the cond is true then bz, else bnz
+        instructionList.append(absmc.Bz_Instruction(register1, secondLabel[0:-1]))
+        instructionList.append(absmc.Bnz_Instruction(register1, thirdLabel[0:-1]))
+        absmc.addAll(instructionList)
+
+        instructionList = []
+        instructionList.append(absmc.Label_Instruction(secondLabel))       # For middle label
+        absmc.addAll(instructionList)
+
+        # Add code for then part here
+        self.thenpart.generatecode()
+
+        instructionList = []
+        instructionList.append(absmc.Label_Instruction(thirdLabel))       # For third label
+        absmc.addAll(instructionList)
+
+        self.elsepart.generatecode() # generateCode for last part
+
 class WhileStmt(Stmt):
     def __init__(self, cond, body, lines):
         self.lines = lines
@@ -549,7 +582,7 @@ class WhileStmt(Stmt):
         # print 'self.body: ',self.body
         # add all instructions from instruction1
         for instr in instruction1:
-            print 'instr: ', instr
+            # print 'instr: ', instr
             instructionList.append(instr)
 
         # if the cond is true then bz, else bnz

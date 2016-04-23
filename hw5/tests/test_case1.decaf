@@ -27,19 +27,14 @@ class A{
         return oi;
     }*/
 
-    public static void main()
-    {
-        int i;
-        int j;
-        int k;
-        A a;
-        a = new A();
-        a.oi = a.oi*2 + 10;
-        /*i = 1;
-        j = 2;
-        k = i + 10;
-        i = i + j;
-        i = i + k;
-        k = j + k;*/
+    public static void main(){
+        if (10 > 4){
+            int x;
+            x = 20;
+        }
+        else{
+            int y;
+            y = 60;
+        }
     }
 }
