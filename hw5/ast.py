@@ -705,6 +705,7 @@ class ConstantExpr(Expr):
         register = absmc.generateTemporaryRegister()
         if self.kind == 'int':
             instruction = absmc.Move_Immed_i_Instruction(register, self.int)
+        # TODO for boolean
         else:
             instruction = absmc.Move_Immed_f_Instruction(register, self.float)
         instructionList.append(instruction)
@@ -784,34 +785,42 @@ class UnaryExpr(Expr):
     def __repr__(self):
         return "Unary({0}, {1})".format(self.uop, self.arg)
 
-    def generateCode(self):
+    def generatecode(self):
         register = absmc.generateTemporaryRegister()
         instructionList = []
-        print 'self.arg1', self.arg1
-        print 'self.arg2', self.arg2
-        registerArg1, instructionArg1List = self.arg1.generatecode()
-        registerArg2, instructionArg2List = self.arg2.generatecode()
-        for instr in instructionArg1List:
-            instructionList.append(instr)
-        for instr in instructionArg2List:
-            instructionList.append(instr)
+        print 'uop: ', self.uop
+        print 'arg: ', self.arg
+        # Multiply the expression on RHS by -1 and then assign to lhs expression
+        if self.uop == 'uminus' :
+            arg1 =ast.ConstantExpr('int', -1)
+            arg2 = self.arg
+            registerArg1, instructionArg1List = arg1.generatecode()
+            registerArg2, instructionArg2List = arg2.generatecode()
+            for instr in instructionArg1List:
+                instructionList.append(instr)
+            for instr in instructionArg2List:
+                instructionList.append(instr)
+            instructionList.append(absmc.MulInstruction(register, registerArg1, registerArg2))
 
-        # instructionList.append(instruction)
+        # Check if type of arg is True ; if true then assign false to the lhs assignment, else do vice versa
+        elif self.uop == 'unot' :
+            # if self.arg.kind == True:
+            #     absmc.
+            pass
         return register, instructionList
-
 
     def typeof(self):
         if (self.__typeof == None):
             argtype = self.arg.typeof()
             self.__typeof = Type('error')
             if (self.uop == 'uminus'):
-                if ((argtype.kind == 'int') or (argtype.kind == 'float')):
+                if (argtype.isnumeric()):
                     self.__typeof = argtype
                 elif (argtype.kind != 'error'):
                     # not already in error
                     signal_type_error("Type error in unary minus expression: int/float expected, found {0}".format(str(argtype)), self.arg.lines)
             elif (self.uop == 'neg'):
-                if (argtype.kind == 'boolean'):
+                if (argtype.isboolean()):
                     self.__typeof = argtype
                 elif (argtype.kind != 'error'):
                     # not already in error
@@ -965,7 +974,7 @@ class AssignExpr(Expr):
         self.__typeof = None
 
     def generatecode(self):
-        # print 'self.rhs', self.rhs
+        print 'self.rhs', self.rhs
         rhsaddr, instructionRHSList = self.rhs.generatecode()
         lhsaddr, instructionLHSList = self.lhs.generatecode()
         absmc.addAll(instructionRHSList)

@@ -29,9 +29,8 @@ class A{
 
     public static void main()
     {
-        int x, y;
-        x=10;
-        y = --x;
+        boolean x;
+        x=!x;
 
     }
 }
