@@ -517,10 +517,9 @@ class WhileStmt(Stmt):
             instructionList.append(instr)
 
         # if the cond is true then bz, else bnz
-        instruction = absmc.Bz_Instruction(register1, secondLabel[0:-1])
-        instructionList.append(instruction)
+        instructionList.append(absmc.Bz_Instruction(register1, secondLabel[0:-1]))
+        instructionList.append(absmc.Bnz_Instruction(register1, thirdLabel[0:-1]))
         absmc.addAll(instructionList)
-
 
         instructionList = []
         instructionList.append(absmc.Label_Instruction(secondLabel))       # For middle label
@@ -566,10 +565,9 @@ class ForStmt(Stmt):
             instructionList.append(instr)
 
         # if the cond is true then bz, else bnz
-        instruction = absmc.Bz_Instruction(register2, secondLabel[0:-1])
-        instructionList.append(instruction)
+        instructionList.append(absmc.Bz_Instruction(register2, secondLabel[0:-1]))
+        instructionList.append(absmc.Bnz_Instruction(register2, thirdLabel[0:-1]))
         absmc.addAll(instructionList)
-
 
         instructionList = []
         instructionList.append(absmc.Label_Instruction(secondLabel))       # For middle label
