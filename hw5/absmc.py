@@ -8,6 +8,7 @@ temporaryRegister = -1;
 controlStack = []
 dataStack = []
 labelCounter = 0
+labelStack = []
 
 import ast
 import sys
@@ -528,7 +529,6 @@ def add(instruction):
 def addAll(instList):
     for inst in instList:
         instructionList.append(inst)
-
 
 def generateTemporaryRegister():
     global temporaryRegister
