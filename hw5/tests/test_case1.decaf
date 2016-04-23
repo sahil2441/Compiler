@@ -16,7 +16,7 @@ class A{
 
     }
 
-    public A(int a, int b)
+    public A()
     {
 
     }
@@ -27,12 +27,19 @@ class A{
         return oi;
     }*/
 
-    public static void main(){
+    public static void main()
+    {
         int i;
-        for (i =0 ; i<6 ; i++){
-            int y;
-            y=10;
-        }
+        int j;
+        int k;
+        A a;
+        a = new A();
+        a.oi = a.oi*2 + 10;
+        /*i = 1;
+        j = 2;
+        k = i + 10;
+        i = i + j;
+        i = i + k;
+        k = j + k;*/
     }
 }
-
