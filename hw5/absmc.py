@@ -7,6 +7,7 @@ attributeRegister = -1;
 temporaryRegister = -1;
 controlStack = []
 dataStack = []
+labelCounter = 0
 
 import ast
 import sys
@@ -553,5 +554,10 @@ def printAMI(filename):
     # sys.stdout = orig_stdout
     f.close()
 
+def generateLabel():
+    global labelCounter
+    labelCounter += 1
+    labelStr = 'label' + str(labelCounter) + ':';
+    return labelStr
 
 

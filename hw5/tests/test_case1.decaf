@@ -27,10 +27,13 @@ class A{
         return oi;
     }*/
 
-    public static void main()
-    {
-        boolean x;
-        x=!x;
+    public static void main(){
 
+        int x, y;
+        x=8;
+        while(x<5){
+            y = x++;
+        }
     }
 }
+

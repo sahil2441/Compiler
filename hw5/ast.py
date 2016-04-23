@@ -499,6 +499,42 @@ class WhileStmt(Stmt):
         else:
             return 0
 
+    def generatecode(self):
+        register = absmc.generateTemporaryRegister()
+        instructionList = []
+        firstLabel = absmc.generateLabel()                # For first label
+        secondLabel = absmc.generateLabel()               # For second label
+        thirdLabel = absmc.generateLabel()                # For third label
+
+        instruction = absmc.Label_Instruction(firstLabel)
+        instructionList.append(instruction)
+
+        register1, instruction1 = self.cond.generatecode()
+        # print 'self.body: ',self.body
+        # add all instructions from instruction1
+        for instr in instruction1:
+            print 'instr: ', instr
+            instructionList.append(instr)
+
+        # if the cond is true then bz, else bnz
+        instruction = absmc.Bz_Instruction(register1, secondLabel[0:-1])
+        instructionList.append(instruction)
+        absmc.addAll(instructionList)
+
+
+        instructionList = []
+        instructionList.append(absmc.Label_Instruction(secondLabel))       # For middle label
+        absmc.addAll(instructionList)
+
+        # Add code for block here
+        self.body.generatecode()
+
+        instructionList = []
+        instructionList.append(absmc.Jmp_Instruction(firstLabel[0:-1]))
+        instructionList.append(absmc.Label_Instruction(thirdLabel))       # For last label
+        absmc.addAll(instructionList)
+        return register, instructionList
+
 class ForStmt(Stmt):
     def __init__(self, init, cond, update, body, lines):
         self.lines = lines
@@ -591,8 +627,14 @@ class BlockStmt(Stmt):
         print "])"
 
     def generatecode(self):
+        # instructionList=[]
+        # register = ''
         for statement in self.stmtlist:
+            # print 'statement: ', statement
             statement.generatecode()
+        #     instructionList = instructionList + currentList
+        # return register, instructionList
+
 
     def typecheck(self):
         if (self.__typecorrect == None):
@@ -650,7 +692,10 @@ class ExprStmt(Stmt):
         print ")"
 
     def generatecode(self):
+        # print 'self.expr: ', self.expr
+        # register, instructionList =  self.expr.generatecode();
         self.expr.generatecode();
+        # absmc.addAll(instructionList)
 
     def typecheck(self):
         if (self.__typecorrect == None):
@@ -803,10 +848,10 @@ class UnaryExpr(Expr):
             instructionList.append(absmc.MulInstruction(register, registerArg1, registerArg2))
 
         # Check if type of arg is True ; if true then assign false to the lhs assignment, else do vice versa
-        elif self.uop == 'unot' :
-            # if self.arg.kind == True:
-            #     absmc.
-            pass
+        # elif self.uop == 'unot' :
+        #     if self.arg.kind == True:
+        #         absmc.
+        #     pass
         return register, instructionList
 
     def typeof(self):
@@ -876,9 +921,11 @@ class BinaryExpr(Expr):
 
         # Boolean expressions
         if self.bop == 'gt' or self.bop == 'geq' or self.bop == 'lt' or self.bop == 'leq':
-            self.type1 = self.arg1.kind
-            self.type2 = self.arg2.kind
-            if (self.type1 == self.type2 == 'int'):
+            self.type1 = str(self.arg1.typeof())
+            self.type2 = str(self.arg2.typeof())
+            # print 'self.type1', self.type1
+            # print 'self.type2', self.type2
+            if (self.type1== 'int' and self.type2== 'int'):
                 if self.bop == 'gt' :
                     instruction = absmc.GtInstruction(register, registerArg1, registerArg2)
                 if self.bop == 'geq' :
@@ -889,7 +936,7 @@ class BinaryExpr(Expr):
                     instruction = absmc.LeqInstruction(register, registerArg1, registerArg2)
             # Case of float
             else:
-                if (self.type1 == self.type2 == 'float'):
+                if (self.type1 == 'float' and self.type2 == 'float'):
                     pass
                 else:
                     if (self.type1 == 'float'):
@@ -978,6 +1025,8 @@ class AssignExpr(Expr):
         rhsaddr, instructionRHSList = self.rhs.generatecode()
         lhsaddr, instructionLHSList = self.lhs.generatecode()
         absmc.addAll(instructionRHSList)
+        if len(instructionLHSList) >0 :
+            absmc.addAll(instructionLHSList)
         self.lhs.backpatch(rhsaddr);
 
     def __repr__(self):
@@ -1026,9 +1075,10 @@ class AutoExpr(Expr):
         for instr in instructionArg2List:
             instructionList.append(instr)
 
-        # y = ++x ; first assign x = x+1 and then assign the new value of x to y.
+        # y = ++x ; first assign x = x+1 and then assign the new value of x to y.    x++
         if self.oper == 'inc' :
             if self.when == 'post':
+                print 'inside post inc'
                 instructionList.append(absmc.Move_Instruction(registerLHS, registerArg1))
                 instructionList.append(absmc.AddInstruction(registerRHSNew, registerArg1, registerArg2))
                 instructionList.append(absmc.Move_Instruction(registerArg1, registerRHSNew))
