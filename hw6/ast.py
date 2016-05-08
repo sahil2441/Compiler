@@ -637,11 +637,6 @@ class ForStmt(Stmt):
         for instr in instruction2:
             instructionList.append(instr)
 
-        register3, instruction3 = self.update.generatecode()      # from update
-        # add all instructions from instruction1
-        for instr in instruction3:
-            instructionList.append(instr)
-
         # if the cond is true then bnz, else bz
         instructionList.append(absmc.Bnz_Instruction(register2, secondLabel[0:-1]))
         instructionList.append(absmc.Bz_Instruction(register2, thirdLabel[0:-1]))
@@ -653,6 +648,11 @@ class ForStmt(Stmt):
 
         # Add code for block here
         self.body.generatecode()
+
+        register3, instruction3 = self.update.generatecode()      # from update
+        print instruction3
+        # add all instructions from instruction1
+        absmc.addAll(instruction3);
 
         instructionList = []
         instructionList.append(absmc.Jmp_Instruction(firstLabel[0:-1]))
@@ -1006,7 +1006,6 @@ class BinaryExpr(Expr):
         self.arg2.backpatch(registerArg2)
         for instr in instructionArg1List:
             instructionList.append(instr)
-
         register = absmc.generateTemporaryRegister()
 
         if (self.bop == 'and'):
@@ -1028,7 +1027,6 @@ class BinaryExpr(Expr):
         if self.bop == 'add':
             for instr in instructionArg2List:
                 instructionList.append(instr)
-            #print 'registerArg1 ',registerArg1, 'registerArg2',registerArg2
             if (str(self.typeof()) == 'int'):
                 instruction = absmc.AddInstruction(register, registerArg1, registerArg2)
             else:
@@ -1066,6 +1064,8 @@ class BinaryExpr(Expr):
         if self.bop == 'eq' or self.bop == 'gt' or self.bop == 'geq' or self.bop == 'lt' or self.bop == 'leq' or self.bop == 'neq':
             self.type1 = str(self.arg1.typeof())
             self.type2 = str(self.arg2.typeof())
+            for instr in instructionArg2List:
+                instructionList.append(instr)
             if (self.type1== 'int' and self.type2== 'int'):
                 if self.bop == 'gt' :
                     instruction = absmc.GtInstruction(register, registerArg1, registerArg2)
@@ -1747,7 +1747,7 @@ class ArrayAccessExpr(Expr):
         return newRegister, instrList;
 
     def backpatch(self, addr):
-        print 'backpatch'
+        #print 'backpatch'
         global lExpr;
         if (lExpr):
             instrList = []

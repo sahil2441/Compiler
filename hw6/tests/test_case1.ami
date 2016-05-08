@@ -1,19 +1,22 @@
 .static_data 0
 C_1:
-M_g_7:
-move_immed_i t0 15
-move_immed_i t1 0
+M_main_7:
+move_immed_i t0 0
+move_immed_i t1 1
+iadd t2 t0 t1
+move_immed_i t3 0
 label1:
-ilt t3 t1 t2
-move_immed_i t6 1
-move t4 t1
-iadd t5 t1 t6
-move t1 t5
-bnz t3 label2
-bz t3 label3
+move_immed_i t4 10
+ilt t5 t3 t4
+bnz t5 label2
+bz t5 label3
 label2:
-move_immed_i t7 1
-iadd t8 t0 t7
+move_immed_i t6 15
+move_immed_i t9 1
+move t7 t6
+iadd t8 t6 t9
+move t6 t8
 jmp label1
 label3:
+move_immed_i t10 10
 ret
