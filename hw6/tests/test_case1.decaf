@@ -1,14 +1,26 @@
 class A {
-     public static void main()
-     {
-        int i;
-        int j;
-        i = 0;
-        j = i + 1;
-        for (i = 0; i < 10; i++)
-         {
-          i = 15;
-         }
-         j = 10;
-     }
+   public int x;
+   public A () {
+     this.x = 0;
+   }
+   public int f() {
+      return this.x + 1;
+   }
+   public int g() {
+      int i;
+      i = this.f();
+      i++;
+      return i;
+   }
+}
+class B extends A {
+   int y;
+   public A s;
+   public B () {
+     this.y = 2;
+     this.s = new A();
+   }
+   public int f(int k) {
+      return super.f() + k + this.x;
+   }
 }

@@ -1,22 +1,45 @@
 .static_data 0
 C_1:
-M_main_7:
 move_immed_i t0 0
-move_immed_i t1 1
-iadd t2 t0 t1
+move_immed_i t1 0
+hstore a0 t1 t0
+ret
+M_f_7:
 move_immed_i t3 0
-label1:
-move_immed_i t4 10
-ilt t5 t3 t4
-bnz t5 label2
-bz t5 label3
-label2:
-move_immed_i t6 15
+hload t4 a0 t3
+move_immed_i t5 1
+iadd t6 t4 t5
+ret
+M_g_8:
+save a0
+save a0
+call M_f_7
+restore a0
 move_immed_i t9 1
-move t7 t6
-iadd t8 t6 t9
-move t6 t8
-jmp label1
-label3:
-move_immed_i t10 10
+move t7 a0
+iadd t8 a0 t9
+move a0 t8
+ret
+C_2:
+move_immed_i t10 2
+move_immed_i t11 1
+hstore a0 t11 t10
+move_immed_i t14 3
+halloc t13 t14
+save t13
+move a0 t13
+call C_2
+restore t13
+move_immed_i t15 2
+hstore a0 t15 t13
+ret
+M_f_9:
+save a0
+save a0
+call M_f_7
+restore a0
+iadd t17 a0 a1
+move_immed_i t18 0
+hload t19 a0 t18
+iadd t20 t17 t19
 ret

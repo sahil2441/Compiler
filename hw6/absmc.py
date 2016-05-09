@@ -9,6 +9,10 @@ controlStack = []
 dataStack = []
 labelCounter = 0
 labelStack = []
+registerSizeMap = {}
+
+currentLoopInLabel = '' # Track the current Loop's in label in case of continue statement
+currentLoopOutLabel = '' # Track the current Loop's out label in case of break statement
 
 import ast
 import sys

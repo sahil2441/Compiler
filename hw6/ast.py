@@ -351,7 +351,15 @@ class Method:
     def generatecode(self):
         label = 'M_' + self.name+'_'+str(self.id)+":"
         absmc.add(absmc.Label_Instruction(label))
-        self.body.generatecode();
+        counter = 0;
+        if (self.storage != 'static'):
+            counter = 1;
+        for var in self.vars.get_params():
+            absmc.registerMap[var] = 'a' + str(counter);
+            counter = counter + 1
+        r, iList = self.body.generatecode();
+        for instr in iList:
+            absmc.add(instr)
 
 
     def typecheck(self):
@@ -387,11 +395,16 @@ class Constructor:
         return [v.type for v in self.vars.get_params()]
 
     def generatecode(self):
-        instructionList = []
         clabel = 'C_'+str(self.id)+':'
         instruction = absmc.Label_Instruction(clabel)
         absmc.add(instruction)
-        self.body.generatecode()
+        counter = 1
+        for var in self.vars.get_params():
+            absmc.registerMap[var] = 'a' + str(counter);
+            counter = counter + 1
+        register, instructionList = self.body.generatecode()
+        instructionList.append(absmc.Ret_Instruction())
+        absmc.addAll(instructionList)
 
     def typecheck(self):
         self.body.typecheck()
@@ -520,26 +533,29 @@ class IfStmt(Stmt):
         register1, instruction1 = self.condition.generatecode()
         # add all instructions from instruction1
         for instr in instruction1:
-            # print 'instr: ', instr
             instructionList.append(instr)
 
         # if the cond is true then bnz, else bz
         instructionList.append(absmc.Bnz_Instruction(register1, secondLabel[0:-1]))
         instructionList.append(absmc.Bz_Instruction(register1, thirdLabel[0:-1]))
-        absmc.addAll(instructionList)
 
-        instructionList = []
         instructionList.append(absmc.Label_Instruction(secondLabel))       # For middle label
-        absmc.addAll(instructionList)
 
         # Add code for then part here
-        self.thenpart.generatecode()
+        r, iList = self.thenpart.generatecode()
 
-        instructionList = []
+        absmc.labelStack = [] # Resetting the label stack
+        absmc.labelStack.append(firstLabel)
+        absmc.labelStack.append(secondLabel)
+        absmc.labelStack.append(thirdLabel)
+
+        for instr in iList:
+            instructionList.append(instr)
         instructionList.append(absmc.Label_Instruction(thirdLabel))       # For third label
-        absmc.addAll(instructionList)
-
-        self.elsepart.generatecode() # generateCode for last part
+        r, iList = self.elsepart.generatecode() # generateCode for last part
+        for instr in iList:
+            instructionList.append(instr)
+        return r, instructionList
 
 class WhileStmt(Stmt):
     def __init__(self, cond, body, lines):
@@ -568,6 +584,7 @@ class WhileStmt(Stmt):
         # 0 if none, 1 if at least one path has a return, 2 if all paths have a return
         if (self.body.has_return() > 0):
             return 1
+
         else:
             return 0
 
@@ -577,37 +594,40 @@ class WhileStmt(Stmt):
         firstLabel = absmc.generateLabel()                # For first label
         secondLabel = absmc.generateLabel()               # For second label
         thirdLabel = absmc.generateLabel()                # For third label
+        absmc.currentLoopInLabel = firstLabel             # For Continue
+        absmc.currentLoopOutLabel = thirdLabel            # For Break
         absmc.labelStack = []
         absmc.labelStack.append(firstLabel)
         absmc.labelStack.append(secondLabel)
         absmc.labelStack.append(thirdLabel)
         instruction = absmc.Label_Instruction(firstLabel)
         instructionList.append(instruction)
-
         register1, instruction1 = self.cond.generatecode()
-        # print 'self.body: ',self.body
         # add all instructions from instruction1
         for instr in instruction1:
-            # print 'instr: ', instr
             instructionList.append(instr)
 
         # if the cond is true then bnz, else bz
         instructionList.append(absmc.Bnz_Instruction(register1, secondLabel[0:-1]))
         instructionList.append(absmc.Bz_Instruction(register1, thirdLabel[0:-1]))
-        absmc.addAll(instructionList)
-
-        instructionList = []
         instructionList.append(absmc.Label_Instruction(secondLabel))       # For middle label
-        absmc.addAll(instructionList)
 
         # Add code for block here
-        self.body.generatecode()
+        register, instrList = self.body.generatecode()
 
-        instructionList = []
+        absmc.labelStack = [] # Resetting the label stack
+        absmc.labelStack.append(firstLabel)
+        absmc.labelStack.append(secondLabel)
+        absmc.labelStack.append(thirdLabel)
+        absmc.currentLoopInLabel = firstLabel             # For Continue resetting after the body is called
+        absmc.currentLoopOutLabel = thirdLabel            # For Break resetting after the body is called
+
+        for instr in instrList:
+            instructionList.append(instr);
+
         instructionList.append(absmc.Jmp_Instruction(firstLabel[0:-1]))
         instructionList.append(absmc.Label_Instruction(thirdLabel))       # For last label
-        absmc.addAll(instructionList)
-        # return register, instructionList
+        return None, instructionList
 
 class ForStmt(Stmt):
     def __init__(self, init, cond, update, body, lines):
@@ -623,6 +643,8 @@ class ForStmt(Stmt):
         firstLabel = absmc.generateLabel()                # For first label
         secondLabel = absmc.generateLabel()               # For second label
         thirdLabel = absmc.generateLabel()                # For third label
+        absmc.currentLoopInLabel = firstLabel;
+        absmc.currentLoopOutLabel = thirdLabel;
         absmc.labelStack = []
         absmc.labelStack.append(firstLabel)
         absmc.labelStack.append(secondLabel)
@@ -630,7 +652,9 @@ class ForStmt(Stmt):
         instruction = absmc.Label_Instruction(firstLabel)
         instructionList.append(instruction)
 
-        self.init.generatecode()    # from initial
+        r, instrList = self.init.generatecode()    # from initial
+        for instr in instrList:
+            instructionList.append(instr)
 
         register2, instruction2 = self.cond.generatecode()      # from condn
         # add all instructions from instruction1
@@ -640,24 +664,28 @@ class ForStmt(Stmt):
         # if the cond is true then bnz, else bz
         instructionList.append(absmc.Bnz_Instruction(register2, secondLabel[0:-1]))
         instructionList.append(absmc.Bz_Instruction(register2, thirdLabel[0:-1]))
-        absmc.addAll(instructionList)
 
-        instructionList = []
         instructionList.append(absmc.Label_Instruction(secondLabel))       # For middle label
-        absmc.addAll(instructionList)
 
         # Add code for block here
-        self.body.generatecode()
+        r, instrList = self.body.generatecode()
+        for instr in instrList:
+            instructionList.append(instr)
 
+        absmc.currentLoopInLabel = firstLabel;
+        absmc.currentLoopOutLabel = thirdLabel;
+        absmc.labelStack = [] # Resetting the label stack
+        absmc.labelStack.append(firstLabel)
+        absmc.labelStack.append(secondLabel)
+        absmc.labelStack.append(thirdLabel)
         register3, instruction3 = self.update.generatecode()      # from update
-        print instruction3
         # add all instructions from instruction1
-        absmc.addAll(instruction3);
+        for instr in instruction3:
+            instructionList.append(instr)
 
-        instructionList = []
         instructionList.append(absmc.Jmp_Instruction(firstLabel[0:-1]))
         instructionList.append(absmc.Label_Instruction(thirdLabel))       # For last label
-        absmc.addAll(instructionList)
+        return None, instructionList
 
     def printout(self):
         print "For(",
@@ -709,11 +737,14 @@ class ReturnStmt(Stmt):
         print ")"
 
     def generatecode(self):
+        instructionList = []
         if self.expr != None:
             r, i  = self.expr.generatecode();
-            absmc.addAll(i);
+            for instr in i:
+                instructionList.append(instr)
         instruction = absmc.Ret_Instruction();
-        absmc.add(instruction);
+        instructionList.append(instruction)
+        return None, instructionList
 
     def backpatch(self):
         pass
@@ -749,8 +780,12 @@ class BlockStmt(Stmt):
         print "])"
 
     def generatecode(self):
+        instructionList = [];
         for statement in self.stmtlist:
-            statement.generatecode()
+            r, i = statement.generatecode()
+            for instr in i:
+                instructionList.append(instr)
+        return None, instructionList
 
     def typecheck(self):
         if (self.__typecorrect == None):
@@ -775,6 +810,12 @@ class BreakStmt(Stmt):
     def printout(self):
         print "Break"
 
+    def generatecode(self):
+        instruction = absmc.Jmp_Instruction(absmc.currentLoopOutLabel)
+        instrList = []
+        instrList.append(instruction)
+        return None, instrList;
+
     def typecheck(self):
         return self.__typecorrect
 
@@ -788,6 +829,12 @@ class ContinueStmt(Stmt):
 
     def printout(self):
         print "Continue"
+
+    def generatecode(self):
+        instruction = absmc.Jmp_Instruction(absmc.currentLoopInLabel)
+        instrList = []
+        instrList.append(instruction)
+        return None, instrList;
 
     def typecheck(self):
         return self.__typecorrect
@@ -808,7 +855,8 @@ class ExprStmt(Stmt):
         print ")"
 
     def generatecode(self):
-        self.expr.generatecode();
+        register, instrList = self.expr.generatecode();
+        return register, instrList
 
     def typecheck(self):
         if (self.__typecorrect == None):
@@ -831,7 +879,7 @@ class SkipStmt(Stmt):
         print "Skip"
 
     def generatecode(self):
-        pass
+        return None, []
 
     def backpatch(self):
         pass
@@ -947,8 +995,7 @@ class UnaryExpr(Expr):
     def generatecode(self):
         register = absmc.generateTemporaryRegister()
         instructionList = []
-        print 'uop: ', self.uop
-        print 'arg: ', self.arg
+        registerArg2 = None
         # Multiply the expression on RHS by -1 and then assign to lhs expression
         if self.uop == 'uminus' :
             arg1 =ast.ConstantExpr('int', -1)
@@ -960,8 +1007,10 @@ class UnaryExpr(Expr):
             for instr in instructionArg2List:
                 instructionList.append(instr)
             instructionList.append(absmc.MulInstruction(register, registerArg1, registerArg2))
-
         return register, instructionList
+
+    def backpatch(self, addr):
+        pass
 
     def typeof(self):
         if (self.__typeof == None):
@@ -1192,17 +1241,71 @@ class AssignExpr(Expr):
         self.__typeof = None
 
     def generatecode(self):
+        instructionList = []
+        registerList = []
         rhsaddr, instructionRHSList = self.rhs.generatecode()
-        absmc.addAll(instructionRHSList)
+        for instr in instructionRHSList:
+            instructionList.append(instr)
         global lExpr;
         lExpr = True;
         lhsaddr, instructionLHSList = self.lhs.generatecode()
         lExpr = False;
         if len(instructionLHSList) > 0:
-            absmc.addAll(instructionLHSList)
+            for instr in instructionLHSList:
+                instructionList.append(instr)
         lExpr = True;
-        self.lhs.backpatch(rhsaddr);
+        if isinstance(self.lhs, FieldAccessExpr) and not rhsaddr is None:
+            if (isinstance(self.lhs.base, ClassReferenceExpr)):
+                baseregister = 'sap'
+                instruction = absmc.HstoreInstruction(baseregister, self.lhs.offsetregister, rhsaddr) # base, offset, register
+                instructionList.append(instruction)
+            elif isinstance(self.lhs.base, ThisExpr):
+                baseregister = 'a0'
+                instruction = absmc.HstoreInstruction(baseregister, self.lhs.offsetregister, rhsaddr) # base, offset, register
+                instructionList.append(instruction)
+            elif isinstance(self.lhs.base, SuperExpr):
+                baseregister = 'a0'
+                instruction = absmc.HstoreInstruction(baseregister, self.lhs.offsetregister, rhsaddr) # base, offset, register
+                instructionList.append(instruction)
+            else:
+                baseregister = absmc.registerMap[self.lhs.base.var]
+                instruction = absmc.HstoreInstruction(baseregister, self.lhs.offsetregister, rhsaddr) # base, offset, register
+                instructionList.append(instruction)
+        elif isinstance(self.lhs, ArrayAccessExpr) and not rhsaddr is None:
+            checkbase = self.lhs.base
+            while (not isinstance(checkbase, VarExpr)):
+                checkbase = checkbase.base
+            baseRegister =  absmc.registerMap[checkbase.var]
+            instruction = absmc.HstoreInstruction(baseRegister, lhsaddr, rhsaddr)
+            instructionList.append(instruction)
+        #     instrList = []
+        #     newRegister = absmc.generateTemporaryRegister();
+        #     if isinstance(self.index, ConstantExpr):
+        #         index = self.index.int
+        #         instruction = absmc.Move_Immed_i_Instruction(newRegister, index)
+        #         instrList.append(instruction)
+        #     if isinstance(self.index, VarExpr):
+        #         index = absmc.registerMap[self.index.var]
+        #         instruction = absmc.Move_Immed_i_Instruction(newRegister, index)
+        #         instrList.append(instruction)
+        #     if isinstance(self.base, VarExpr):
+        #         baseRegister = absmc.registerMap[self.base.var]
+        #         tmpRegister = newRegister;
+        #         self.base.var.offset  = tmpRegister;
+        #         instruction = absmc.HstoreInstruction(baseRegister, self.base.var.offset, addr)
+        #         instrList.append(instruction)
+        #     elif isinstance(self.base, ArrayAccessExpr):
+        #         self.base.backpatch(addr)
+        #     #absmc.addAll(instrList)
+        elif isinstance(self.lhs, MethodInvocationExpr) and not rhsaddr is None:
+            heapRegister = absmc.registerMap[self.lhs.base.var]
+            instructionList.append(absmc.Move_Instruction(rhsaddr, heapRegister))
+        elif (lhsaddr is None):
+            self.lhs.backpatch(rhsaddr);
+        elif (not rhsaddr is None):
+            instructionList.append(absmc.Move_Instruction(lhsaddr, rhsaddr))
         lExpr = False;
+        return lhsaddr, instructionList
 
     def __repr__(self):
         return "Assign({0}, {1}, {2}, {3})".format(self.lhs, self.rhs, self.lhs.typeof(), self.rhs.typeof())
@@ -1232,19 +1335,15 @@ class AutoExpr(Expr):
         return "Auto({0}, {1}, {2})".format(self.arg, self.oper, self.when)
 
     def generatecode(self):
-        # print 'Inside generate code of autoExp'
-        # print 'self.arg', self.arg
-        # print 'self.oper', self.oper
-        # print 'self.when', self.when
 
         registerLHS = absmc.generateTemporaryRegister()
-        registerRHSNew = absmc.generateTemporaryRegister()
+        registerRHSNew = absmc.generateTemporaryRegister() # register for storing the result of add/subtract operation for x--/x++ or ++x/--x
         instructionList = []
         arg1 = self.arg
         arg2 =ast.ConstantExpr('int', 1)
 
         registerArg1, instructionArg1List = arg1.generatecode()
-        registerArg2, instructionArg2List = arg2.generatecode()
+        registerArg2, instructionArg2List = arg2.generatecode() # code for constant 1
         for instr in instructionArg1List:
             instructionList.append(instr)
         for instr in instructionArg2List:
@@ -1439,7 +1538,6 @@ class FieldAccessExpr(Expr):
                 tregister = absmc.generateTemporaryRegister()
                 instruction = absmc.HloadInstruction(tregister, 'sap', self.offsetregister)
                 self.instructionList.append(instruction)
-
         else:
             baseregister = absmc.registerMap[self.base.var]
             tregister = absmc.generateTemporaryRegister() # Register to store the current field of class
@@ -1449,26 +1547,7 @@ class FieldAccessExpr(Expr):
         return tregister, self.instructionList
 
     def backpatch(self, addr):
-        self.instructionList = []
-        global lExpr
-        if isinstance(self.base, ThisExpr):
-            pass
-        elif isinstance(self.base, SuperExpr):
-            pass
-        elif isinstance(self.base, ClassReferenceExpr):
-            if (lExpr):
-                baseregister = 'sap'
-                instruction = absmc.HstoreInstruction(baseregister, self.offsetregister, addr) # base, offset, register
-                self.instructionList.append(instruction)
-                absmc.addAll(self.instructionList)
-            pass
-        else:
-            if (lExpr):
-                baseregister = absmc.registerMap[self.base.var]
-                instruction = absmc.HstoreInstruction(baseregister, self.offsetregister, addr) # base, offset, register
-                self.instructionList.append(instruction)
-                absmc.addAll(self.instructionList)
-            pass
+        pass
         
     def __repr__(self):
         return "Field-access({0}, {1}, {2})".format(self.base, self.fname, self.field.id)
@@ -1555,10 +1634,8 @@ class MethodInvocationExpr(Expr):
         return heapRegister, instructionList
 
     def backpatch(self, addr):
-        global lExpr;
-        if lExpr:
-            heapRegister = absmc.registerMap[self.base.var]
-            absmc.add(absmc.Move_Instruction(addr, heapRegister))
+        pass
+
 
 
     def typeof(self):
@@ -1615,30 +1692,33 @@ class NewObjectExpr(Expr):
         argRegisterList = []
         argRegisterList.append(heapRegister)
         saveStack = []
-        dataStack = []
+        if (len(absmc.dataStack) > 0): # Saving the current argument registers which may be defined in the method surrounding new object creation
+            for elem in absmc.dataStack:
+                saveStack.append(elem)
+                instructionList.append(absmc.Save_Instruction(elem))
         if (not self.args is None and len(self.args) > 0):
             for arg in self.args:
                 argRegister, argInstructionList = arg.generatecode()
                 argRegisterList.append(argRegister)
                 for argInstr in argInstructionList:
                     instructionList.append(argInstr)
-        instructionList.append(absmc.Save_Instruction('a0'))
-        dataStack.append('a0')
-        saveStack.append("a0")
         counter = 0
-        if (not self.args is None and len(self.args) > 0):
-            for arg in self.args:
-                counter = counter + 1
-                argReg = ''.join(['a', str(counter)])
-                instructionList.append(absmc.Save_Instruction(argReg))
-                dataStack.append(argReg)
-                saveStack.append(argReg)
+        argRegisterList.append(heapRegister)
+        #if (not self.args is None and len(self.args) > 0):
+        #    for arg in self.args:
+        #        argReg = ''.join(['a', str(counter)])
+        #        instructionList.append(absmc.Save_Instruction(argReg))
+        #        saveStack.append(argReg)
+        #        counter = counter + 1
         instructionList.append(absmc.Save_Instruction(heapRegister))
         saveStack.append(heapRegister)
-        counter = 0
-        for reg in dataStack:
-            instructionList.append(absmc.Move_Instruction(reg, argRegisterList[counter]))
-            counter = counter + 1
+        instructionList.append(absmc.Move_Instruction('a0', heapRegister))
+        counter = 1
+        if (not self.args is None and len(self.args) > 0):
+            for arg in self.args:
+                argReg = ''.join(['a', str(counter)])
+                instructionList.append(absmc.Move_Instruction(argReg, argRegisterList[counter]))
+                counter = counter + 1
         constructor = 'C_' + str(j.id)
         instructionList.append(absmc.Call_Instruction(constructor))
         saveStack.reverse()
@@ -1646,9 +1726,6 @@ class NewObjectExpr(Expr):
             instructionList.append(absmc.Restore_Instruction(reg))
         return heapRegister, instructionList;
 
-        #absmc.Move_Immed_i_Instruction()
-
-        #absmc.instructionList.append()
     def __repr__(self):
         return "New-object({0}, {1})".format(self.classref.name, self.args)
 
@@ -1697,7 +1774,7 @@ class SuperExpr(Expr):
                 self.__typeof = Type('error')
                 signal_type_error("Type error in Super expression: class {0} has no superclass".format(str(current_class)), self.lines)
         return self.__typeof
-    
+
     
 class ClassReferenceExpr(Expr):
     def __init__(self, cref, lines):
@@ -1711,65 +1788,58 @@ class ClassReferenceExpr(Expr):
         if (self.__typeof == None):
             self.__typeof = Type(self.classref, literal=True)
         return self.__typeof
-    
+
+
+registerList = []
+finalInstrList = []
 class ArrayAccessExpr(Expr):
     def __init__(self, base, index, lines):
         self.lines = lines
         self.base = base
         self.index = index
         self.__typeof = None
+
     def __repr__(self):
         return "Array-access({0}, {1})".format(self.base, self.index)
 
     def generatecode(self):
-        index = 0
-        instrList = []
-        newRegister = absmc.generateTemporaryRegister();
-        if isinstance(self.index, ConstantExpr):
-            index = self.index.int
-            instruction = absmc.Move_Immed_i_Instruction(newRegister, index)
-            instrList.append(instruction)
-        if isinstance(self.index, VarExpr):
-            index = absmc.registerMap[self.index.var]
-            instruction = absmc.Move_Immed_i_Instruction(newRegister, index)
-            instrList.append(instruction)
-        if isinstance(self.base, VarExpr):
-            baseRegister = absmc.registerMap[self.base.var]
-            tmpRegister = newRegister;
-            newRegister = absmc.generateTemporaryRegister();
-            self.base.var.offset  = tmpRegister;
-            instruction = absmc.HloadInstruction(newRegister, baseRegister, tmpRegister)
-            instrList.append(instruction)
-        elif isinstance(self.base, ArrayAccessExpr):
-            baseRegister, iList = self.base.generatecode()
-            for i in iList:
-                instrList.append(i)
-        return newRegister, instrList;
+        global registerList
+        finalInstrList = []
+        register, instrList = self.index.generatecode();
+        for i in instrList:
+            finalInstrList.append(i)
+        registerList.append(register)
+        newRegister, iList = self.base.generatecode();
+        if (isinstance(self.base, VarExpr)):
+            if (absmc.registerMap.has_key(self.base.var)):
+                baseRegister =  absmc.registerMap[self.base.var]
+                arraySizeRegisterList = absmc.registerSizeMap[baseRegister]  # Register size list of the base array
+                registerList.reverse()  # Registerlist of the array access
+                arraySizeRegisterList = arraySizeRegisterList[1:]
+                addRegisterList = []
+                for reg in  registerList[:-1]:
+                    newRegister = absmc.generateTemporaryRegister();
+                    finalInstrList.append(absmc.Move_Immed_i_Instruction(newRegister, 1))
+                    finalInstrList.append(absmc.MulInstruction(newRegister, newRegister, reg))
+                    for act in arraySizeRegisterList:
+                        finalInstrList.append(absmc.MulInstruction(newRegister, newRegister, act))
+                    arraySizeRegisterList = arraySizeRegisterList[1:]
+                    addRegisterList.append(newRegister)
+                newRegister = absmc.generateTemporaryRegister();
+                finalInstrList.append(absmc.Move_Immed_i_Instruction(newRegister, 0))
+                for addReg in addRegisterList[:-1]:
+                    finalInstrList.append(absmc.AddInstruction(newRegister, newRegister, addReg))
+                if len(addRegisterList) > 0:
+                    finalInstrList.append(absmc.AddInstruction(newRegister, newRegister, addRegisterList[-1]))
+                if (not lExpr):
+                    finalInstrList.append(absmc.HloadInstruction(newRegister, baseRegister, newRegister))
+                return newRegister, finalInstrList;
+        #print 'newRegister', newRegister, baseRegister
+        return newRegister, finalInstrList;
 
     def backpatch(self, addr):
-        #print 'backpatch'
-        global lExpr;
-        if (lExpr):
-            instrList = []
-            newRegister = absmc.generateTemporaryRegister();
-            if isinstance(self.index, ConstantExpr):
-                index = self.index.int
-                instruction = absmc.Move_Immed_i_Instruction(newRegister, index)
-                instrList.append(instruction)
-            if isinstance(self.index, VarExpr):
-                index = absmc.registerMap[self.index.var]
-                instruction = absmc.Move_Immed_i_Instruction(newRegister, index)
-                instrList.append(instruction)
-            if isinstance(self.base, VarExpr):
-                baseRegister = absmc.registerMap[self.base.var]
-                tmpRegister = newRegister;
-                self.base.var.offset  = tmpRegister;
-                instruction = absmc.HstoreInstruction(baseRegister, self.base.var.offset, addr)
-                instrList.append(instruction)
-            elif isinstance(self.base, ArrayAccessExpr):
-                self.base.backpatch(addr)
-            absmc.addAll(instrList)
         pass
+
     def typeof(self):
         if (self.__typeof == None):
             if (not self.index.typeof().isint()):
@@ -1782,8 +1852,7 @@ class ArrayAccessExpr(Expr):
                 mytype = self.base.typeof().basetype
             self.__typeof = mytype
         return self.__typeof
-                
-                
+
 
 class NewArrayExpr(Expr):
     def __init__(self, basetype, args, lines):
@@ -1798,24 +1867,26 @@ class NewArrayExpr(Expr):
     def generatecode(self):
         instrList = []
         baseRegister = absmc.generateTemporaryRegister();
-        newRegister =  absmc.generateTemporaryRegister();
         #instruction =  absmc.Move_Immed_i_Instruction(newRegister, 1)
         #instrList.append(instruction)
+        mulRegisters = []
         for arg in self.args:
             register, instr2List = arg.generatecode()
             for i in instr2List:
                 instrList.append(i)
-            allocRegister =  absmc.generateTemporaryRegister();
-            instruction = absmc.AddInstruction(allocRegister, newRegister, register)
-            instrList.append(instruction)
-            newRegister = allocRegister;
+            mulRegisters.append(register)
+        allocRegister = absmc.generateTemporaryRegister();
+        instrList.append(absmc.Move_Immed_i_Instruction(allocRegister, 1))
+        for register in mulRegisters:
+           instruction =  absmc.MulInstruction(allocRegister, allocRegister, register)
+           instrList.append(instruction)
         instruction = absmc.HallocInstruction(baseRegister, allocRegister)
         instrList.append(instruction)
+        absmc.registerSizeMap[baseRegister] = mulRegisters
         return baseRegister, instrList
 
     def backpatch(self, addr):
         pass
-
 
     def typeof(self):
         if (self.__typeof == None):
