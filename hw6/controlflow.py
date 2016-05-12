@@ -75,22 +75,28 @@ def processBlocks():
                         currentBlock.successorList.append(block)
                     if stmt.ra not in currentBlock.usedList:
                         currentBlock.usedList.append(stmt.ra)
-                elif isinstance(stmt, absmc.DefUseInstruction):
+                elif isinstance(stmt, absmc.DefUseInstruction) or isinstance(stmt, absmc.HloadInstruction):
                     if stmt.ra not in currentBlock.definedList:
                         currentBlock.definedList.append(stmt.ra)
                     if stmt.rb not in currentBlock.usedList:
                         currentBlock.usedList.append(stmt.rb)
                     if stmt.rc not in currentBlock.usedList:
                         currentBlock.usedList.append(stmt.rc)
-                elif isinstance(stmt, absmc.Move_Immed_i_Instruction) \
-                    or isinstance(stmt, absmc.Move_Immed_f_Instruction):
+                elif isinstance(stmt, absmc.Move_Immed_i_Instruction) or isinstance(stmt, absmc.Move_Immed_f_Instruction):
                     if stmt.ra not in currentBlock.definedList:
                         currentBlock.definedList.append(stmt.ra)
-                elif isinstance(stmt, absmc.Move_Instruction):
+                elif isinstance(stmt, absmc.Move_Instruction) or isinstance((stmt, absmc.HallocInstruction)):
                     if stmt.ra not in currentBlock.definedList:
                         currentBlock.definedList.append(stmt.ra)
                     if stmt.rb not in currentBlock.usedList:
                         currentBlock.usedList.append(stmt.rb)
+                elif isinstance(stmt, absmc.HstoreInstruction):
+                    if stmt.ra not in currentBlock.usedList:
+                        currentBlock.usedList.append(stmt.ra)
+                    if stmt.rb not in currentBlock.definedList:
+                        currentBlock.definedList.append(stmt.rb)
+                    if stmt.rc not in currentBlock.usedList:
+                        currentBlock.usedList.append(stmt.rc)
 
 def analyzeLiveness():
     for function in functionList:
