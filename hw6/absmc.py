@@ -21,8 +21,10 @@ class Instruction:
 	pass
 
 class Misc_Instruction(Instruction):
-    def __init__(self, arg1):
-        self.stmt = arg1;
+    def __init__(self, arg1, arg2):
+        self.arg1 = arg1
+        self.arg2 = arg2
+        self.stmt = " ".join([arg1, arg2]);
 
     def __repr__(self):
         return self.__str__()
@@ -38,7 +40,17 @@ class Label_Instruction(Instruction):
         return self.__str__()
 
     def __str__(self):
-        return self.label
+        return self.label+  ':'
+
+class FunctionLabel_Instruction(Instruction):
+    def __init__(self, arg1):
+        self.label = arg1;
+
+    def __repr__(self):
+        return self.__str__()
+
+    def __str__(self):
+        return self.label + ':'
 
 class Move_Immed_i_Instruction(Instruction):
     def __init__(self, ra, rb):
@@ -561,7 +573,7 @@ def printAMI(filename):
 def generateLabel():
     global labelCounter
     labelCounter += 1
-    labelStr = 'label' + str(labelCounter) + ':';
+    labelStr = 'label' + str(labelCounter);
     return labelStr
 
 
