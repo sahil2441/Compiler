@@ -85,7 +85,7 @@ def processBlocks():
                 elif isinstance(stmt, absmc.Move_Immed_i_Instruction) or isinstance(stmt, absmc.Move_Immed_f_Instruction):
                     if stmt.ra not in currentBlock.definedList:
                         currentBlock.definedList.append(stmt.ra)
-                elif isinstance(stmt, absmc.Move_Instruction) or isinstance((stmt, absmc.HallocInstruction)):
+                elif isinstance(stmt, absmc.Move_Instruction) or isinstance(stmt, absmc.HallocInstruction):
                     if stmt.ra not in currentBlock.definedList:
                         currentBlock.definedList.append(stmt.ra)
                     if stmt.rb not in currentBlock.usedList:
@@ -98,9 +98,61 @@ def processBlocks():
                     if stmt.rc not in currentBlock.usedList:
                         currentBlock.usedList.append(stmt.rc)
 
+
+def deriveInSet(usedList, outVariables, definedList):
+    resultList = usedList[:]
+    unionSet = []
+    for item in outVariables:
+        if item not in definedList:
+            unionSet.append(item)
+
+    for x in unionSet:
+        if x not in resultList:
+            resultList.append(x)
+
+    return resultList
+
+
+def appendUnique(uniqueList, inVariables):
+    for x in inVariables:
+        if x not in uniqueList:
+            uniqueList.append(x)
+
+
+def compareBlockList(oldBlockList, blockList):
+    for index in range(len(oldBlockList)):
+        oldBlock = oldBlockList[index]
+        block = blockList[index]
+        if not set(oldBlock.inVariables) == set(block.inVariables) or\
+            not set(oldBlock.outVariables) == set(block.outVariables) :
+            return False
+    return True
+
+
 def analyzeLiveness():
+    iterationCount = 0
     for function in functionList:
-        for block in function.blockList:
+        n = len(function.blockList)
+        while(True):
+            oldBlockList = function.blockList[:]
+            i = n-1
+            while i > -1:
+                currentBlock = function.blockList[i]
+                if iterationCount is 0:
+                    currentBlock.outVariables = []
+                    currentBlock.inVariables = deriveInSet(currentBlock.usedList, [], [])
+                else:
+                    uniqueList = []
+                    for block in currentBlock.successorList:
+                        currentBlock.outVariables = appendUnique(uniqueList, block.inVariables)
+                    currentBlock.inVariables = deriveInSet(currentBlock.usedList, currentBlock.outVariables,
+                                                           currentBlock.definedList)
+
+                i = i - 1
+            iterationCount = iterationCount + 1
+            if compareBlockList(oldBlockList, function.blockList):
+                break
+
             # getRegistersUsedInBlock(block)
             # getRegistersUsedInBlock(block)
             pass
@@ -121,6 +173,8 @@ def printFucntionList():
             print "block.successorList:  -->",block.successorList
             print "block.usedList:  -->",block.usedList
             print "block.definedList:  -->",block.definedList
+            print "block.inVariables:  -->",block.inVariables
+            print "block.outVariables:  -->",block.outVariables
             print "- - - "
 
 def printMap():
