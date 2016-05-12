@@ -22,8 +22,46 @@ functionList = []
 currentFunc = ''
 currentBlock = ''
 labelBlockMap = dict()
+interferanceGraphMap = dict()
+
+
+def prepareInterferanceGraph():
+    '''
+    This function prepares the intereferance graph for the given set of invariables set
+    :return:
+    '''
+    vertices = [] #set of unique vertices
+    inVariableList = []
+
+    for func in functionList:
+        for block in func.blockList:
+            inVariableList.append(block.inVariables)
+            for var in block.inVariables:
+                if var not in vertices:
+                    vertices.append(var)
+                    interferanceGraphMap[var] = [] # add an empty list corresponding to the key as var
+
+    # iterate over all the unique vertices and find their corresponding edge
+    for v in vertices:
+        for list in inVariableList:
+            if v in list:
+                for x in list:
+                    if x == v :
+                        continue
+                    list  = interferanceGraphMap[v]
+                    if x not in list:
+                        list.append(x)
+
+
+
+
+
 
 def processIntermediateCode():
+    '''
+    Main entry point to process the intermediate code
+    :return:
+    '''
     for instr in absmc.instructionList:
         if isinstance(instr, absmc.Misc_Instruction) and 'static_data' in instr.stmt:
             dotdata = int(instr.arg2)
@@ -45,12 +83,15 @@ def processIntermediateCode():
         else:
             currentBlock.statementList.append(instr)
 
-    # call the below method
-    processBlocks()
-    # analyze liveness
-    analyzeLiveness()
+    processBlocks() # call the below method
+    analyzeLiveness() # analyze liveness
+    prepareInterferanceGraph()
 
 def processBlocks():
+    '''
+    This function processes the block
+    :return:
+    '''
     for func in functionList:
         for index, currentBlock in enumerate(func.blockList):
             if (index + 1 < len(func.blockList)): # for the next block in the list
@@ -174,11 +215,16 @@ def printFucntionList():
             print "block.inVariables:  -->",block.inVariables
             print "block.outVariables:  -->",block.outVariables
             print "- - - "
+    print "--------Graph-----------------"
+    for key in interferanceGraphMap:
+        print key, "-->", interferanceGraphMap[key]
+
 
 def printMap():
     print "----MAP--------------------"
     for key in labelBlockMap:
         print "key: ", key, " value: ", labelBlockMap[key]
+
 
 
 
