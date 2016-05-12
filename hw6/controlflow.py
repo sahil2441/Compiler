@@ -25,16 +25,20 @@ labelBlockMap = dict()
 interferanceGraphMap = dict()
 graphColorMap = dict() # map to hold mapping of node and the associated color with it
 
+funcToInterferenceGraphMap = dict()
+funcToGraphColorMap = dict()
+
 
 def prepareInterferanceGraph():
     '''
     This function prepares the intereferance graph for the given set of invariables set
     :return:
     '''
-    vertices = [] #set of unique vertices
-    inVariableList = []
 
     for func in functionList:
+        vertices = [] #set of unique vertices
+        inVariableList = []
+        interferanceGraphMap = dict()
         for block in func.blockList:
             inVariableList.append(block.inVariables)
             for var in block.inVariables:
@@ -42,40 +46,44 @@ def prepareInterferanceGraph():
                     vertices.append(var)
                     interferanceGraphMap[var] = [] # add an empty list corresponding to the key as var
 
-    # iterate over all the unique vertices and find their corresponding edge
-    for v in vertices:
-        for list in inVariableList:
-            if v in list:
-                for x in list:
-                    if x == v :
-                        continue
-                    list  = interferanceGraphMap[v]
-                    if x not in list:
-                        list.append(x)
-
+        # iterate over all the unique vertices and find their corresponding edge
+        for v in vertices:
+            for list in inVariableList:
+                if v in list:
+                    for x in list:
+                        if x == v :
+                            continue
+                        listValue  = interferanceGraphMap[v]
+                        if x not in listValue:
+                            listValue.append(x)
+        funcToInterferenceGraphMap[func] = interferanceGraphMap
 
 def colorTheGraph():
-    colorIndex = 1
-    usedColor = []
-    neighborColorList = []
-    for key in interferanceGraphMap:
-        # check if any used color can be used, by ensuring that it's not its neighbor
-        listNeighbor = interferanceGraphMap[key] # prepare the neighbor colors list first
-        for x in listNeighbor:
-            if x in graphColorMap:
-                neighborColorList.append(graphColorMap[x])
-        flag = False
-        for color in usedColor:
-            # assign the node the used color if none of its neighborhas been assigned the same color
-            if color not in neighborColorList:
-                graphColorMap[key] = color
-                flag = True
-                break
+    for func in funcToInterferenceGraphMap:
+        interferanceGraphMap = funcToInterferenceGraphMap[func]
+        colorIndex = 1
+        usedColor = []
+        neighborColorList = []
+        graphColorMap = dict() # map to hold mapping of node and the associated color with it
 
-        if not flag:
-            graphColorMap[key] = colorIndex
-            usedColor.append(colorIndex)
-            colorIndex = colorIndex + 1
+        for key in interferanceGraphMap:
+            # check if any used color can be used, by ensuring that it's not its neighbor
+            listNeighbor = interferanceGraphMap[key] # prepare the neighbor colors list first
+            for x in listNeighbor:
+                if x in graphColorMap:
+                    neighborColorList.append(graphColorMap[x])
+            flag = False
+            for color in usedColor:
+                # assign the node the used color if none of its neighborhas been assigned the same color
+                if color not in neighborColorList:
+                    graphColorMap[key] = color
+                    flag = True
+                    break
+            if not flag:
+                graphColorMap[key] = colorIndex
+                usedColor.append(colorIndex)
+                colorIndex = colorIndex + 1
+        funcToGraphColorMap[func] = graphColorMap
 
 
 def translateToMips():
@@ -247,12 +255,18 @@ def printFucntionList():
             print "block.outVariables:  -->",block.outVariables
             print "- - - "
     print "--------Graph-----------------"
-    for key in interferanceGraphMap:
-        print key, "-->", interferanceGraphMap[key]
+    for func in funcToInterferenceGraphMap:
+        interferanceGraphMap = funcToInterferenceGraphMap[func]
+        print "func --> ", func
+        for x in interferanceGraphMap:
+            print x, "-->", interferanceGraphMap[x]
 
     print "--------Graph Coloring-----------------"
-    for key in graphColorMap:
-        print key,"-->",graphColorMap[key]
+    for func in funcToGraphColorMap:
+        graphColorMap = funcToGraphColorMap[func]
+        print "func --> ", func
+        for key in graphColorMap:
+            print key,"-->",graphColorMap[key]
 
 def printMap():
     print "----MAP--------------------"
