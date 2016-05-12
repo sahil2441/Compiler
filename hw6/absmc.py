@@ -576,4 +576,17 @@ def generateLabel():
     labelStr = 'label' + str(labelCounter);
     return labelStr
 
+######################################################################
+######################################################################
 
+class Block:
+    def __init__(self, registerList):
+        self.registerList= registerList
+
+class Function:
+    def __init__(self):
+        pass
+
+class Program:
+    def __init__(self):
+        pass

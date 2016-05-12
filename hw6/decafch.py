@@ -8,7 +8,7 @@ import getopt
 
 import decafparser
 import ast
-import absmc
+import absmc, controlflow
 
 class Usage(Exception):
     def __init__(self, msg):
@@ -18,7 +18,7 @@ class Usage(Exception):
 def main(argv=None):
     if argv is None:
         argv = sys.argv
-    argv.append('tests/test_case1.decaf')
+    argv.append('tests/test_case_0.decaf')
     # parse command line options
     try:
         try:
@@ -41,10 +41,12 @@ def main(argv=None):
         if decafparser.from_file(infile):
             if (ast.typecheck()):
                 ast.generatecode();
-                absmc.printAMI(filename);
+                # absmc.printAMI(filename);
+                controlflow.processIntermediateCode()
+                controlflow.printInstructionList()
+                controlflow.printFucntionList()
+                controlflow.printMap()
                 #ast.print_ast()
-
-
         else:
             print "Failure: there were errors."
     except Usage, err:
