@@ -18,7 +18,7 @@ class Usage(Exception):
 def main(argv=None):
     if argv is None:
         argv = sys.argv
-    argv.append('tests/test_case1.decaf')
+    argv.append('tests/test_case_0.decaf')
     # parse command line options
     try:
         try:

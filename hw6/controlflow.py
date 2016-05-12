@@ -77,6 +77,15 @@ def colorTheGraph():
             usedColor.append(colorIndex)
             colorIndex = colorIndex + 1
 
+
+def translateToMips():
+    '''
+    This function translates to MIPS code
+    :return:
+    '''
+    pass
+
+
 def processIntermediateCode():
     '''
     Main entry point to process the intermediate code
@@ -107,6 +116,7 @@ def processIntermediateCode():
     analyzeLiveness() # analyze liveness
     prepareInterferanceGraph() # prepare the interferance graph and prepare the map interferanceGraphMap
     colorTheGraph() #color the graph
+    translateToMips() # to translate code to MIPS code
 
 def processBlocks():
     '''
