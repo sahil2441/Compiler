@@ -625,7 +625,7 @@ class WhileStmt(Stmt):
         for instr in instrList:
             instructionList.append(instr);
 
-        instructionList.append(absmc.Jmp_Instruction(firstLabel[0:-1]))
+        instructionList.append(absmc.Jmp_Instruction(firstLabel))
         instructionList.append(absmc.Label_Instruction(thirdLabel))       # For last label
         return None, instructionList
 
@@ -686,7 +686,7 @@ class ForStmt(Stmt):
             for instr in instruction3:
                 instructionList.append(instr)
 
-        instructionList.append(absmc.Jmp_Instruction(firstLabel[0:-1]))
+        instructionList.append(absmc.Jmp_Instruction(firstLabel))
         instructionList.append(absmc.Label_Instruction(thirdLabel))       # For last label
         return None, instructionList
 
@@ -814,7 +814,7 @@ class BreakStmt(Stmt):
         print "Break"
 
     def generatecode(self):
-        instruction = absmc.Jmp_Instruction(absmc.currentLoopOutLabel[:-1])
+        instruction = absmc.Jmp_Instruction(absmc.currentLoopOutLabel)
         instrList = []
         instrList.append(instruction)
         return None, instrList;
@@ -834,7 +834,7 @@ class ContinueStmt(Stmt):
         print "Continue"
 
     def generatecode(self):
-        instruction = absmc.Jmp_Instruction(absmc.currentLoopInLabel[:-1])
+        instruction = absmc.Jmp_Instruction(absmc.currentLoopInLabel)
         instrList = []
         instrList.append(instruction)
         return None, instrList;
