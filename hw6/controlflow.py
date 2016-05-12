@@ -23,6 +23,7 @@ currentFunc = ''
 currentBlock = ''
 labelBlockMap = dict()
 interferanceGraphMap = dict()
+graphColorMap = dict() # map to hold mapping of node and the associated color with it
 
 
 def prepareInterferanceGraph():
@@ -53,9 +54,28 @@ def prepareInterferanceGraph():
                         list.append(x)
 
 
+def colorTheGraph():
+    colorIndex = 1
+    usedColor = []
+    neighborColorList = []
+    for key in interferanceGraphMap:
+        # check if any used color can be used, by ensuring that it's not its neighbor
+        listNeighbor = interferanceGraphMap[key] # prepare the neighbor colors list first
+        for x in listNeighbor:
+            if x in graphColorMap:
+                neighborColorList.append(graphColorMap[x])
+        flag = False
+        for color in usedColor:
+            # assign the node the used color if none of its neighborhas been assigned the same color
+            if color not in neighborColorList:
+                graphColorMap[key] = color
+                flag = True
+                break
 
-
-
+        if not flag:
+            graphColorMap[key] = colorIndex
+            usedColor.append(colorIndex)
+            colorIndex = colorIndex + 1
 
 def processIntermediateCode():
     '''
@@ -85,7 +105,8 @@ def processIntermediateCode():
 
     processBlocks() # call the below method
     analyzeLiveness() # analyze liveness
-    prepareInterferanceGraph()
+    prepareInterferanceGraph() # prepare the interferance graph and prepare the map interferanceGraphMap
+    colorTheGraph() #color the graph
 
 def processBlocks():
     '''
@@ -219,6 +240,9 @@ def printFucntionList():
     for key in interferanceGraphMap:
         print key, "-->", interferanceGraphMap[key]
 
+    print "--------Graph Coloring-----------------"
+    for key in graphColorMap:
+        print key,"-->",graphColorMap[key]
 
 def printMap():
     print "----MAP--------------------"
