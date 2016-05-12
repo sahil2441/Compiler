@@ -15,10 +15,7 @@ class Block:
         self.outVariables = []
 
 class Statement:
-    def __init__(self):
-        self.liveList = []
-        self.inSet = []
-        self.outSet = []
+    pass
 
 dotdata = 0
 functionList = []
@@ -50,6 +47,8 @@ def processIntermediateCode():
 
     # call the below method
     processBlocks()
+    # analyze liveness
+    analyzeLiveness()
 
 def processBlocks():
     for func in functionList:
@@ -67,18 +66,18 @@ def processBlocks():
                     block = labelBlockMap[stmt.rb]
                     if block not in currentBlock.successorList:
                         currentBlock.successorList.append(block)
-                    if stmt.ra not in currentBlock.usedList:
+                    if stmt.ra not in currentBlock.usedList and stmt.ra not in currentBlock.definedList:
                         currentBlock.usedList.append(stmt.ra)
                 elif isinstance(stmt, absmc.Bnz_Instruction):
                     block = labelBlockMap[stmt.rb]
                     if block not in currentBlock.successorList:
                         currentBlock.successorList.append(block)
-                    if stmt.ra not in currentBlock.usedList:
+                    if stmt.ra not in currentBlock.usedList and stmt.ra not in currentBlock.definedList:
                         currentBlock.usedList.append(stmt.ra)
                 elif isinstance(stmt, absmc.DefUseInstruction) or isinstance(stmt, absmc.HloadInstruction):
                     if stmt.ra not in currentBlock.definedList:
                         currentBlock.definedList.append(stmt.ra)
-                    if stmt.rb not in currentBlock.usedList:
+                    if stmt.rb not in currentBlock.usedList and stmt.rb not in currentBlock.definedList:
                         currentBlock.usedList.append(stmt.rb)
                     if stmt.rc not in currentBlock.usedList:
                         currentBlock.usedList.append(stmt.rc)
@@ -88,14 +87,14 @@ def processBlocks():
                 elif isinstance(stmt, absmc.Move_Instruction) or isinstance(stmt, absmc.HallocInstruction):
                     if stmt.ra not in currentBlock.definedList:
                         currentBlock.definedList.append(stmt.ra)
-                    if stmt.rb not in currentBlock.usedList:
+                    if stmt.rb not in currentBlock.usedList  and stmt.rb not in currentBlock.definedList:
                         currentBlock.usedList.append(stmt.rb)
                 elif isinstance(stmt, absmc.HstoreInstruction):
-                    if stmt.ra not in currentBlock.usedList:
+                    if stmt.ra not in currentBlock.usedList and stmt.ra not in currentBlock.definedList:
                         currentBlock.usedList.append(stmt.ra)
                     if stmt.rb not in currentBlock.definedList:
                         currentBlock.definedList.append(stmt.rb)
-                    if stmt.rc not in currentBlock.usedList:
+                    if stmt.rc not in currentBlock.usedList and stmt.rc not in currentBlock.definedList:
                         currentBlock.usedList.append(stmt.rc)
 
 
@@ -117,6 +116,7 @@ def appendUnique(uniqueList, inVariables):
     for x in inVariables:
         if x not in uniqueList:
             uniqueList.append(x)
+    return uniqueList
 
 
 def compareBlockList(oldBlockList, blockList):
@@ -139,7 +139,6 @@ def analyzeLiveness():
             while i > -1:
                 currentBlock = function.blockList[i]
                 if iterationCount is 0:
-                    currentBlock.outVariables = []
                     currentBlock.inVariables = deriveInSet(currentBlock.usedList, [], [])
                 else:
                     uniqueList = []
@@ -156,7 +155,6 @@ def analyzeLiveness():
             # getRegistersUsedInBlock(block)
             # getRegistersUsedInBlock(block)
             pass
-
 
 # print methods for debug
 
