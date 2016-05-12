@@ -8,8 +8,8 @@ move_immed_i t2 0
 label1:
 move_immed_i t3 10
 ilt t4 t0 t3
-bnz t4 label
-bz t4 label
+bnz t4 label2
+bz t4 label3
 label2:
 iadd t5 t1 t0
 move t1 t5

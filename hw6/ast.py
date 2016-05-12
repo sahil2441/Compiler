@@ -608,8 +608,8 @@ class WhileStmt(Stmt):
             instructionList.append(instr)
 
         # if the cond is true then bnz, else bz
-        instructionList.append(absmc.Bnz_Instruction(register1, secondLabel[0:-1]))
-        instructionList.append(absmc.Bz_Instruction(register1, thirdLabel[0:-1]))
+        instructionList.append(absmc.Bnz_Instruction(register1, secondLabel))
+        instructionList.append(absmc.Bz_Instruction(register1, thirdLabel))
         instructionList.append(absmc.Label_Instruction(secondLabel))       # For middle label
 
         # Add code for block here
@@ -663,8 +663,8 @@ class ForStmt(Stmt):
             instructionList.append(instr)
 
         # if the cond is true then bnz, else bz
-        instructionList.append(absmc.Bnz_Instruction(register2, secondLabel[0:-1]))
-        instructionList.append(absmc.Bz_Instruction(register2, thirdLabel[0:-1]))
+        instructionList.append(absmc.Bnz_Instruction(register2, secondLabel))
+        instructionList.append(absmc.Bz_Instruction(register2, thirdLabel))
 
         instructionList.append(absmc.Label_Instruction(secondLabel))       # For middle label
 
@@ -1062,7 +1062,7 @@ class BinaryExpr(Expr):
 
         if (self.bop == 'and'):
             if len(absmc.labelStack) > 0:  # Shortcircuit evaluation, jumping to end of the condition
-                instruction = absmc.Bz_Instruction(registerArg1, absmc.labelStack[-1][0:-1])
+                instruction = absmc.Bz_Instruction(registerArg1, absmc.labelStack[-1])
                 instructionList.append(instruction)
             for instr in instructionArg2List:
                 instructionList.append(instr)
@@ -1070,7 +1070,7 @@ class BinaryExpr(Expr):
 
         if (self.bop == 'or'):
             if len(absmc.labelStack) > 0:  # Shortcircuit evaluation, jumping to end of the condition
-                instruction = absmc.Bnz_Instruction(registerArg1, absmc.labelStack[1][0:-1])
+                instruction = absmc.Bnz_Instruction(registerArg1, absmc.labelStack[1])
                 instructionList.append(instruction)
             for instr in instructionArg2List:
                 instructionList.append(instr)
@@ -1131,7 +1131,7 @@ class BinaryExpr(Expr):
                     instruction = absmc.LeqInstruction(register, registerArg1, registerArg2)
                     instructionList.append(instruction)
                     if len(absmc.labelStack) > 0:
-                        instruction = absmc.Bz_Instruction(register, absmc.labelStack[-1][0:-1])
+                        instruction = absmc.Bz_Instruction(register, absmc.labelStack[-1])
                         instructionList.append(instruction)
                     shortcircuitLabel = absmc.generateLabel()
                     instructionList.append(absmc.Label_Instruction(shortcircuitLabel))
@@ -1140,7 +1140,7 @@ class BinaryExpr(Expr):
                     instruction = absmc.LtInstruction(register, registerArg1, registerArg2)
                     instructionList.append(instruction)
                     if len(absmc.labelStack) > 0:
-                        instruction = absmc.Bnz_Instruction(register, absmc.labelStack[1][0:-1])
+                        instruction = absmc.Bnz_Instruction(register, absmc.labelStack[1])
                         instructionList.append(instruction)
                     shortcircuitLabel = absmc.generateLabel()
                     instructionList.append(absmc.Label_Instruction(shortcircuitLabel))
@@ -1168,7 +1168,7 @@ class BinaryExpr(Expr):
                     instruction = absmc.LeqInstruction(register, registerArg1, registerArg2)
                     instructionList.append(instruction)
                     if len(absmc.labelStack) > 0:
-                        instruction = absmc.Bz_Instruction(register, absmc.labelStack[-1][0:-1])
+                        instruction = absmc.Bz_Instruction(register, absmc.labelStack[-1])
                         instructionList.append(instruction)
                     shortcircuitLabel = absmc.generateLabel()
                     instructionList.append(absmc.Label_Instruction(shortcircuitLabel))
@@ -1177,7 +1177,7 @@ class BinaryExpr(Expr):
                     instruction = absmc.LtInstruction(register, registerArg1, registerArg2)
                     instructionList.append(instruction)
                     if len(absmc.labelStack) > 0:
-                        instruction = absmc.Bnz_Instruction(register, absmc.labelStack[1][0:-1])
+                        instruction = absmc.Bnz_Instruction(register, absmc.labelStack[1])
                         instructionList.append(instruction)
                     shortcircuitLabel = absmc.generateLabel()
                     instructionList.append(absmc.Label_Instruction(shortcircuitLabel))
