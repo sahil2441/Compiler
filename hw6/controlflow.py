@@ -91,6 +91,10 @@ def prepareInterferanceGraphForStatement():
                     if var not in vertices:
                         vertices.append(var)
                         interferanceGraphMap[var] = [] # add an empty list corresponding to the key as var
+                for var in stmt.outVariables:
+                    if var not in vertices:
+                        vertices.append(var)
+                        interferanceGraphMap[var] = [] # add an empty list corresponding to the key as var
 
         # iterate over all the unique vertices and find their corresponding edge
         for v in vertices:
@@ -170,7 +174,7 @@ def translateToMips(filename):
     for instr in absmc.instructionList:
         print instr.translateToMips()
 
-    orig_std63out = sys.stdout
+    orig_stdout = sys.stdout
     filename = filename + '.asm'
     f = open(filename, 'w')
     # sys.stdout = f
@@ -211,7 +215,8 @@ def processIntermediateCode():
         instr.function = currentFunc;
 
     processBlocks() # call the below method
-    analyzeLivenessStatement() # analyze liveness
+    analyzeLiveness() # analyze liveness for each block
+    analyzeLivenessStatement() # analyze liveness for each statement
     prepareInterferanceGraphForStatement() # prepare the interferance graph and prepare the map interferanceGraphMap
     colorTheGraph() #color the graph
 
@@ -341,7 +346,8 @@ def analyzeLivenessStatement():
                 while i > -1:
                     currentStatement = block.statementList[i]
                     if iterationCount is 0:
-                        currentStatement.inVariables = deriveInSet(currentStatement.usedList, [], [])
+                        currentStatement.inVariables = deriveInSet(currentStatement.usedList, currentStatement.definedList, currentStatement.definedList)
+                        currentStatement.outVariables = currentStatement.definedList
                     else:
                         uniqueList = []
                         for inst in currentStatement.successorList:
