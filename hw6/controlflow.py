@@ -170,7 +170,7 @@ def translateToMips(filename):
     for instr in absmc.instructionList:
         print instr.translateToMips()
 
-    orig_stdout = sys.stdout
+    orig_std63out = sys.stdout
     filename = filename + '.asm'
     f = open(filename, 'w')
     # sys.stdout = f

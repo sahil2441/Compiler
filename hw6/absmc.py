@@ -653,6 +653,11 @@ class Save_Instruction(Instruction):
     def __init__(self, ra):
         self.ra = ra
 
+    def translateToMips(self):
+
+        controlflow.MIPS.STACK.append()
+        return 'jr $ra'
+
     def __repr__(self):
         return self.__str__()
 
