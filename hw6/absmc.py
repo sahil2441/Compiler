@@ -16,9 +16,10 @@ currentLoopOutLabel = '' # Track the current Loop's out label in case of break s
 
 import ast
 import sys
+import controlflow
 
 class Instruction:
-	pass
+    pass
 
 class DefUseInstruction(Instruction):
     pass
@@ -31,6 +32,13 @@ class Misc_Instruction(Instruction):
         self.arg1 = arg1
         self.arg2 = arg2
         self.stmt = " ".join([arg1, arg2]);
+        self.block = None
+
+    def translateToMips(self):
+        if ("static" in self.arg1):
+            return '.data ' + str(self.arg2)
+        return ''
+
 
     def __repr__(self):
         return self.__str__()
@@ -42,6 +50,9 @@ class Label_Instruction(Instruction):
     def __init__(self, arg1):
         self.label = arg1;
 
+    def translateToMips(self):
+        return self.__str__()
+
     def __repr__(self):
         return self.__str__()
 
@@ -51,6 +62,11 @@ class Label_Instruction(Instruction):
 class FunctionLabel_Instruction(Instruction):
     def __init__(self, arg1):
         self.label = arg1;
+
+    def translateToMips(self):
+        if 'M_main_' in self.label:
+            return 'main_entry_point:'
+        return self.__str__()
 
     def __repr__(self):
         return self.__str__()
@@ -63,6 +79,12 @@ class Move_Immed_i_Instruction(Instruction):
         self.ra = ra
         self.rb = rb
 
+    def translateToMips(self):
+        graphcolorMap = controlflow.funcToGraphColorMap[self.function];
+        mappedRegister = graphcolorMap[self.ra];
+        mappedRegister = controlflow.getMipsTemporaryRegister(mappedRegister)
+        return ' '.join(['li', mappedRegister, str(self.rb)])
+
     def __repr__(self):
         return self.__str__()
 
@@ -74,6 +96,12 @@ class Move_Immed_f_Instruction(Instruction):
         self.ra = ra
         self.rb = rb
 
+    def translateToMips(self):
+        graphcolorMap = controlflow.funcToGraphColorMap[self.function];
+        mappedRegister = graphcolorMap[self.ra];
+        mappedRegister = controlflow.getMipsTemporaryRegister(mappedRegister)
+        return ' '.join(['li', mappedRegister, str(self.rb)])
+
     def __repr__(self):
         return self.__str__()
 
@@ -84,6 +112,14 @@ class Move_Instruction(Instruction):
     def __init__(self, ra, rb):
         self.ra = ra
         self.rb = rb
+
+    def translateToMips(self):
+        graphcolorMap = controlflow.funcToGraphColorMap[self.function];
+        mappedRegisterA = graphcolorMap[self.ra];
+        mappedRegisterA = controlflow.getMipsTemporaryRegister(mappedRegisterA)
+        mappedRegisterB = graphcolorMap[self.rb];
+        mappedRegisterB = controlflow.getMipsTemporaryRegister(mappedRegisterB)
+        return " ".join(["move", mappedRegisterA, mappedRegisterB])
 
     def __repr__(self):
         return self.__str__()
@@ -102,6 +138,16 @@ class AddInstruction(DefUseInstruction):
         self.rb = rb
         self.rc = rc
 
+    def translateToMips(self):
+        graphcolorMap = controlflow.funcToGraphColorMap[self.function];
+        mappedRegisterA = graphcolorMap[self.ra];
+        mappedRegisterA = controlflow.getMipsTemporaryRegister(mappedRegisterA)
+        mappedRegisterB = graphcolorMap[self.rb];
+        mappedRegisterB = controlflow.getMipsTemporaryRegister(mappedRegisterB)
+        mappedRegisterC = graphcolorMap[self.rc];
+        mappedRegisterC = controlflow.getMipsTemporaryRegister(mappedRegisterC)
+        return ' '.join(['add', mappedRegisterA, mappedRegisterB, mappedRegisterC])
+
     def __repr__(self):
         return self.__str__()
 
@@ -113,6 +159,13 @@ class SubInstruction(DefUseInstruction):
         self.ra = ra
         self.rb = rb
         self.rc = rc
+
+    def translateToMips(self):
+        graphcolorMap = controlflow.funcToGraphColorMap[self.function];
+        mappedRegisterA = graphcolorMap[self.ra];
+        mappedRegisterB = graphcolorMap[self.rb];
+        mappedRegisterC = graphcolorMap[self.rc];
+        return ' '.join(['sub', mappedRegisterA, mappedRegisterB, mappedRegisterC])
 
     def __repr__(self):
         return self.__str__()
@@ -126,6 +179,13 @@ class MulInstruction(DefUseInstruction):
         self.rb = rb
         self.rc = rc
 
+    def translateToMips(self):
+        graphcolorMap = controlflow.funcToGraphColorMap[self.function];
+        mappedRegisterA = graphcolorMap[self.ra];
+        mappedRegisterB = graphcolorMap[self.rb];
+        mappedRegisterC = graphcolorMap[self.rc];
+        return ' '.join(['mul', mappedRegisterA, mappedRegisterB, mappedRegisterC])
+
     def __repr__(self):
         return self.__str__()
 
@@ -137,6 +197,13 @@ class DivInstruction(DefUseInstruction):
         self.ra = ra
         self.rb = rb
         self.rc = rc
+
+    def translateToMips(self):
+        graphcolorMap = controlflow.funcToGraphColorMap[self.function];
+        mappedRegisterA = graphcolorMap[self.ra];
+        mappedRegisterB = graphcolorMap[self.rb];
+        mappedRegisterC = graphcolorMap[self.rc];
+        return ' '.join(['div', mappedRegisterA, mappedRegisterB, mappedRegisterC])
 
     def __repr__(self):
         return self.__str__()
@@ -150,6 +217,13 @@ class ModInstruction(DefUseInstruction):
         self.rb = rb
         self.rc = rc
 
+    def translateToMips(self):
+        graphcolorMap = controlflow.funcToGraphColorMap[self.function];
+        mappedRegisterA = graphcolorMap[self.ra];
+        mappedRegisterB = graphcolorMap[self.rb];
+        mappedRegisterC = graphcolorMap[self.rc];
+        return ' '.join(['rem', mappedRegisterA, mappedRegisterB, mappedRegisterC])
+
     def __repr__(self):
         return self.__str__()
 
@@ -161,6 +235,13 @@ class GtInstruction(DefUseInstruction):
         self.ra = ra
         self.rb = rb
         self.rc = rc
+
+    def translateToMips(self):
+        graphcolorMap = controlflow.funcToGraphColorMap[self.function];
+        mappedRegisterA = graphcolorMap[self.ra];
+        mappedRegisterB = graphcolorMap[self.rb];
+        mappedRegisterC = graphcolorMap[self.rc];
+        return ' '.join(['sgt', mappedRegisterA, mappedRegisterB, mappedRegisterC])
 
     def __repr__(self):
         return self.__str__()
@@ -174,6 +255,13 @@ class GeqInstruction(DefUseInstruction):
         self.rb = rb
         self.rc = rc
 
+    def translateToMips(self):
+        graphcolorMap = controlflow.funcToGraphColorMap[self.function];
+        mappedRegisterA = graphcolorMap[self.ra];
+        mappedRegisterB = graphcolorMap[self.rb];
+        mappedRegisterC = graphcolorMap[self.rc];
+        return ' '.join(['sge', mappedRegisterA, mappedRegisterB, mappedRegisterC])
+
     def __repr__(self):
         return self.__str__()
 
@@ -185,6 +273,13 @@ class LtInstruction(DefUseInstruction):
         self.ra = ra
         self.rb = rb
         self.rc = rc
+
+    def translateToMips(self):
+        graphcolorMap = controlflow.funcToGraphColorMap[self.function];
+        mappedRegisterA = graphcolorMap[self.ra];
+        mappedRegisterB = graphcolorMap[self.rb];
+        mappedRegisterC = graphcolorMap[self.rc];
+        return ' '.join(['slt', mappedRegisterA, mappedRegisterB, mappedRegisterC])
 
     def __repr__(self):
         return self.__str__()
@@ -198,23 +293,18 @@ class LeqInstruction(DefUseInstruction):
         self.rb = rb
         self.rc = rc
 
+    def translateToMips(self):
+        graphcolorMap = controlflow.funcToGraphColorMap[self.function];
+        mappedRegisterA = graphcolorMap[self.ra];
+        mappedRegisterB = graphcolorMap[self.rb];
+        mappedRegisterC = graphcolorMap[self.rc];
+        return ' '.join(['sle', mappedRegisterA, mappedRegisterB, mappedRegisterC])
+
     def __repr__(self):
         return self.__str__()
 
     def __str__(self):
         return " ".join([INSTRUCTION.ILEQ, self.ra, self.rb , self.rc])
-
-class LtInstruction(DefUseInstruction):
-    def __init__(self, ra, rb, rc):
-        self.ra = ra
-        self.rb = rb
-        self.rc = rc
-
-    def __repr__(self):
-        return self.__str__()
-
-    def __str__(self):
-        return " ".join([INSTRUCTION.ILT, self.ra, self.rb , self.rc])
 
 ######################################################################
 ######################################################################
@@ -226,6 +316,13 @@ class AddInstructionFloat(DefUseInstruction):
         self.ra = ra
         self.rb = rb
         self.rc = rc
+
+    def translateToMips(self):
+        graphcolorMap = controlflow.funcToGraphColorMap[self.function];
+        mappedRegisterA = graphcolorMap[self.ra];
+        mappedRegisterB = graphcolorMap[self.rb];
+        mappedRegisterC = graphcolorMap[self.rc];
+        return ' '.join(['add', mappedRegisterA, mappedRegisterB, mappedRegisterC])
 
     def __repr__(self):
         return self.__str__()
@@ -239,6 +336,13 @@ class SubInstructionFloat(DefUseInstruction):
         self.rb = rb
         self.rc = rc
 
+    def translateToMips(self):
+        graphcolorMap = controlflow.funcToGraphColorMap[self.function];
+        mappedRegisterA = graphcolorMap[self.ra];
+        mappedRegisterB = graphcolorMap[self.rb];
+        mappedRegisterC = graphcolorMap[self.rc];
+        return ' '.join(['sub', mappedRegisterA, mappedRegisterB, mappedRegisterC])
+
     def __repr__(self):
         return self.__str__()
 
@@ -250,6 +354,13 @@ class MulInstructionFloat(DefUseInstruction):
         self.ra = ra
         self.rb = rb
         self.rc = rc
+
+    def translateToMips(self):
+        graphcolorMap = controlflow.funcToGraphColorMap[self.function];
+        mappedRegisterA = graphcolorMap[self.ra];
+        mappedRegisterB = graphcolorMap[self.rb];
+        mappedRegisterC = graphcolorMap[self.rc];
+        return ' '.join(['mul', mappedRegisterA, mappedRegisterB, mappedRegisterC])
 
     def __repr__(self):
         return self.__str__()
@@ -263,6 +374,13 @@ class DivInstructionFloat(DefUseInstruction):
         self.rb = rb
         self.rc = rc
 
+    def translateToMips(self):
+        graphcolorMap = controlflow.funcToGraphColorMap[self.function];
+        mappedRegisterA = graphcolorMap[self.ra];
+        mappedRegisterB = graphcolorMap[self.rb];
+        mappedRegisterC = graphcolorMap[self.rc];
+        return ' '.join(['div', mappedRegisterA, mappedRegisterB, mappedRegisterC])
+
     def __repr__(self):
         return self.__str__()
 
@@ -274,6 +392,13 @@ class ModInstructionFloat(DefUseInstruction):
         self.ra = ra
         self.rb = rb
         self.rc = rc
+
+    def translateToMips(self):
+        graphcolorMap = controlflow.funcToGraphColorMap[self.function];
+        mappedRegisterA = graphcolorMap[self.ra];
+        mappedRegisterB = graphcolorMap[self.rb];
+        mappedRegisterC = graphcolorMap[self.rc];
+        return ' '.join(['rem', mappedRegisterA, mappedRegisterB, mappedRegisterC])
 
     def __repr__(self):
         return self.__str__()
@@ -287,6 +412,13 @@ class GtInstructionFloat(DefUseInstruction):
         self.rb = rb
         self.rc = rc
 
+    def translateToMips(self):
+        graphcolorMap = controlflow.funcToGraphColorMap[self.function];
+        mappedRegisterA = graphcolorMap[self.ra];
+        mappedRegisterB = graphcolorMap[self.rb];
+        mappedRegisterC = graphcolorMap[self.rc];
+        return ' '.join(['sgt', mappedRegisterA, mappedRegisterB, mappedRegisterC])
+
     def __repr__(self):
         return self.__str__()
 
@@ -298,6 +430,13 @@ class GeqInstructionFloat(DefUseInstruction):
         self.ra = ra
         self.rb = rb
         self.rc = rc
+
+    def translateToMips(self):
+        graphcolorMap = controlflow.funcToGraphColorMap[self.function];
+        mappedRegisterA = graphcolorMap[self.ra];
+        mappedRegisterB = graphcolorMap[self.rb];
+        mappedRegisterC = graphcolorMap[self.rc];
+        return ' '.join(['sge', mappedRegisterA, mappedRegisterB, mappedRegisterC])
 
     def __repr__(self):
         return self.__str__()
@@ -311,6 +450,13 @@ class LtInstructionFloat(DefUseInstruction):
         self.rb = rb
         self.rc = rc
 
+    def translateToMips(self):
+        graphcolorMap = controlflow.funcToGraphColorMap[self.function];
+        mappedRegisterA = graphcolorMap[self.ra];
+        mappedRegisterB = graphcolorMap[self.rb];
+        mappedRegisterC = graphcolorMap[self.rc];
+        return ' '.join(['slt', mappedRegisterA, mappedRegisterB, mappedRegisterC])
+
     def __repr__(self):
         return self.__str__()
 
@@ -323,6 +469,13 @@ class LeqInstructionFloat(DefUseInstruction):
         self.rb = rb
         self.rc = rc
 
+    def translateToMips(self):
+        graphcolorMap = controlflow.funcToGraphColorMap[self.function];
+        mappedRegisterA = graphcolorMap[self.ra];
+        mappedRegisterB = graphcolorMap[self.rb];
+        mappedRegisterC = graphcolorMap[self.rc];
+        return ' '.join(['sle', mappedRegisterA, mappedRegisterB, mappedRegisterC])
+
     def __repr__(self):
         return self.__str__()
 
@@ -334,6 +487,13 @@ class LtInstructionFloat(DefUseInstruction):
         self.ra = ra
         self.rb = rb
         self.rc = rc
+
+    def translateToMips(self):
+        graphcolorMap = controlflow.funcToGraphColorMap[self.function];
+        mappedRegisterA = graphcolorMap[self.ra];
+        mappedRegisterB = graphcolorMap[self.rb];
+        mappedRegisterC = graphcolorMap[self.rc];
+        return ' '.join(['slt', mappedRegisterA, mappedRegisterB, mappedRegisterC])
 
     def __repr__(self):
         return self.__str__()
@@ -375,6 +535,9 @@ class HloadInstruction(DefUseInstruction):
         self.rb = rb
         self.rc = rc
 
+    def translateToMips(self):
+        return 'TODO HLOAD'
+
     def __repr__(self):
         return self.__str__()
 
@@ -387,6 +550,9 @@ class HstoreInstruction(Instruction):
         self.rb = rb
         self.rc = rc
 
+    def translateToMips(self):
+        return 'TODO HLOAD'
+
     def __repr__(self):
         return self.__str__()
 
@@ -397,6 +563,9 @@ class HallocInstruction(Instruction):
     def __init__(self, ra, rb):
         self.ra = ra
         self.rb = rb
+
+    def translateToMips(self):
+        return 'TODO HALLOC'
 
     def __repr__(self):
         return self.__str__()
@@ -412,6 +581,11 @@ class Bz_Instruction(Instruction):
         self.ra = ra
         self.rb = rb
 
+    def translateToMips(self):
+        graphcolorMap = controlflow.funcToGraphColorMap[self.function];
+        mappedRegisterA = graphcolorMap[self.ra];
+        return ' '.join(['beqz', mappedRegisterA, self.rb])
+
     def __repr__(self):
         return self.__str__()
 
@@ -423,6 +597,11 @@ class Bnz_Instruction(Instruction):
         self.ra = ra
         self.rb = rb
 
+    def translateToMips(self):
+        graphcolorMap = controlflow.funcToGraphColorMap[self.function];
+        mappedRegisterA = graphcolorMap[self.ra];
+        return ' '.join(['bneqz', mappedRegisterA, self.rb])
+
     def __repr__(self):
         return self.__str__()
 
@@ -432,6 +611,9 @@ class Bnz_Instruction(Instruction):
 class Jmp_Instruction(Instruction):
     def __init__(self, ra):
         self.ra = ra
+
+    def translateToMips(self):
+        return ' '.join(['j', self.ra])
 
     def __repr__(self):
         return self.__str__()
@@ -446,6 +628,9 @@ class Call_Instruction(Instruction):
     def __init__(self, ra):
         self.ra = ra
 
+    def translateToMips(self):
+        return ' '.join(['jal', self.ra])
+
     def __repr__(self):
         return self.__str__()
 
@@ -454,6 +639,9 @@ class Call_Instruction(Instruction):
 
 class Ret_Instruction(Instruction):
     def __init__(self): pass
+
+    def translateToMips(self):
+        return 'jr $ra'
 
     def __repr__(self):
         return self.__str__()
@@ -585,14 +773,3 @@ def generateLabel():
 ######################################################################
 ######################################################################
 
-class Block:
-    def __init__(self, registerList):
-        self.registerList= registerList
-
-class Function:
-    def __init__(self):
-        pass
-
-class Program:
-    def __init__(self):
-        pass

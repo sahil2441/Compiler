@@ -18,7 +18,7 @@ class Usage(Exception):
 def main(argv=None):
     if argv is None:
         argv = sys.argv
-    argv.append('tests/test_case_0.decaf')
+    argv.append('tests/test_case1.decaf')
     # parse command line options
     try:
         try:
@@ -41,11 +41,12 @@ def main(argv=None):
         if decafparser.from_file(infile):
             if (ast.typecheck()):
                 ast.generatecode();
-                # absmc.printAMI(filename);
-                controlflow.processIntermediateCode()
-                controlflow.printInstructionList()
-                controlflow.printFucntionList()
-                controlflow.printMap()
+                #absmc.printAMI(filename);
+                controlflow.processIntermediateCode()    # Process and parse intermediate code for data flow analysis and register allocation
+                #controlflow.printInstructionList()
+                #controlflow.printFucntionList()
+                #controlflow.printMap()
+                controlflow.translateToMips(filename)    # Translate the instructions to MIPS code
                 #ast.print_ast()
         else:
             print "Failure: there were errors."
