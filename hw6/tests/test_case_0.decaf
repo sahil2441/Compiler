@@ -1,0 +1,17 @@
+class A {
+     public static void main() {
+      int i;
+      for(i=0; i<10; i++){
+
+      }
+   }
+
+    public static void foo(int x){
+        int y;
+        y=10;
+      int i;
+      for(i=0; i<10; i++){
+
+      }
+    }
+}

@@ -1,0 +1,18 @@
+.static_data  0
+C_1:
+ret
+M_main_7:
+label1:
+move_immed_i t0 0
+move_immed_i t1 10
+ilt t2 t0 t1
+bnz t2 label2
+bz t2 label3
+label2:
+move_immed_i t5 1
+move t3 t0
+iadd t4 t0 t5
+move t0 t4
+jmp label1
+label3:
+ret
